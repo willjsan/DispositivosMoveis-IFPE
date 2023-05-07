@@ -20,5 +20,6 @@
     <string name="device_banner_consumption_label">Consumption</string>
     <string name="device_banner_localization_label">Device Localization</string>
     <string name="device_banner_miscellaneous_label">Miscellaneous</string>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>

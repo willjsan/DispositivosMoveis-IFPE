@@ -14,8 +14,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_detail);
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        //ActionBar ab = getSupportActionBar();
+        //ab.setDisplayHomeAsUpEnabled(true);
 
     }
 }
