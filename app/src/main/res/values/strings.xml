@@ -1,3 +1,16 @@
+<!-- Resources naming strategy -->
+<!-- <associated screen>_<element type>_<item>_<specific>-->
 <resources>
-    <string name="app_name">AirPower</string>
+<!--    <string name="menu_label">Menu Label</string>-->
+    <string name="all_text_app_title">AirPower</string>
+    <string name="all_button_menu_home">Home</string>
+    <string name="all_button_menu_dashboard">Board</string>
+    <string name="all_button_menu_devices">Devices</string>
+    <string name="all_button_menu_profile">Profile</string>
+    <string name="all_button_menu_context">Context Button</string>
+
+    <string name="main_text_item_label">Item Label</string>
+    <string name="main_text_item_description">Item Description</string>
+    <string name="main_image_item_description">"menu item icon "</string>
+
 </resources>

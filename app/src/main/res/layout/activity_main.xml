@@ -7,38 +7,93 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!--  TODO change layout height to wrap_content  -->
+    <!-- ID definition rules -->
+    <!-- <element type>_<associated screen>_<item>_<specific> -->
     <LinearLayout
-        android:id="@+id/top_horizontal_layout"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-    <ListView
-        android:id="@+id/main_layout"
-        android:layout_width="0pt"
-        android:layout_height="0pt"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_horizontal_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_horizontal_layout">
-    </ListView>
-
-    <!--  TODO change layout height to wrap_content  -->
-    <LinearLayout
-        android:id="@+id/bottom_horizontal_layout"
+        android:id="@+id/linear_main_menu_top"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic">
+
+        <Button
+            android:id="@+id/button_main_menu_context"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/all_button_menu_context" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_main_items"
+        android:layout_width="0pt"
+        android:layout_height="0pt"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linear_main_menu_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_main_menu_top"
+        tools:listitem="@layout/main_list_item">
+
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/linear_main_menu_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        tools:srcCompat="@tools:sample/backgrounds/scenic">
 
+        <Button
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:id="@+id/button_main_menu_home"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/all_button_menu_home" />
+
+        <Button
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:id="@+id/button_main_menu_dashboard"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/all_button_menu_dashboard" />
+
+        <Button
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:id="@+id/button_main_menu_devices"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/all_button_menu_devices" />
+
+        <Button
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:id="@+id/button_main_menu_profile"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/all_button_menu_profile" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
