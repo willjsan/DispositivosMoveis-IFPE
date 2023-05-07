@@ -1,7 +1,7 @@
 <!-- Resources naming strategy -->
 <!-- <associated screen>_<element type>_<item>_<specific>-->
 <resources>
-<!--    <string name="menu_label">Menu Label</string>-->
+    <!--    <string name="menu_label">Menu Label</string>-->
     <string name="all_text_app_title">AirPower</string>
     <string name="all_button_menu_home">Home</string>
     <string name="all_button_menu_dashboard">Board</string>
@@ -12,5 +12,13 @@
     <string name="main_text_item_label">Item Label</string>
     <string name="main_text_item_description">Item Description</string>
     <string name="main_image_item_description">"menu item icon "</string>
+    <string name="detail_button_menu_context">Detail context button</string>
+    <string name="detail_button_menu_1">1</string>
+    <string name="detail_button_menu_2">2</string>
+    <string name="detail_button_menu_3">3</string>
+    <string name="detail_button_menu_4">4</string>
+    <string name="device_banner_consumption_label">Consumption</string>
+    <string name="device_banner_localization_label">Device Localization</string>
+    <string name="device_banner_miscellaneous_label">Miscellaneous</string>
 
 </resources>

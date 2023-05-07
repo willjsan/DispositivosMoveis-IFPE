@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.DeviceDetailActivity">
 
     <!-- ID definition rules -->
-    <!-- <element type>_<item>_<specific> -->
+    <!-- <element type>_<associated screen>_<item>_<specific> -->
     <LinearLayout
         android:id="@+id/linear_menu_top"
         android:layout_width="match_parent"
@@ -26,11 +25,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/all_button_menu_context" />
+            android:text="@string/detail_button_menu_context" />
 
     </LinearLayout>
 
-    <ListView
+    <ScrollView
         android:id="@+id/scroll_items"
         android:layout_width="0pt"
         android:layout_height="0pt"
@@ -42,7 +41,21 @@
         app:layout_constraintTop_toBottomOf="@+id/linear_menu_top"
         tools:listitem="@layout/main_list_item">
 
-    </ListView>
+        <LinearLayout
+            android:id="@+id/constraint_scroll_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/device_detail_item_consumption" />
+
+            <include layout="@layout/device_detail_item_localization" />
+
+            <include layout="@layout/device_detail_item_miscellaneous" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/linear_menu_bottom"
@@ -62,7 +75,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_home" />
+            android:text="@string/detail_button_menu_1" />
 
         <Button
             android:id="@+id/button_menu_dashboard"
@@ -72,7 +85,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_dashboard" />
+            android:text="@string/detail_button_menu_2" />
 
         <Button
             android:id="@+id/button_menu_devices"
@@ -82,7 +95,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_devices" />
+            android:text="@string/detail_button_menu_3" />
 
         <Button
             android:id="@+id/button_menu_profile"
@@ -92,7 +105,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_profile" />
+            android:text="@string/detail_button_menu_4" />
 
     </LinearLayout>
 
