@@ -1,5 +1,11 @@
 package recife.ifpe.edu.airpower.ui;
 
+/*
+ * Dispositivos Móveis - IFPE 2023
+ * Author: Willian Santos
+ * Project: AirPower
+ */
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 

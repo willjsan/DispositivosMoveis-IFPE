@@ -31,7 +31,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/scroll_items"
+        android:id="@+id/list_items"
         android:layout_width="0pt"
         android:layout_height="0pt"
         android:divider="@null"
