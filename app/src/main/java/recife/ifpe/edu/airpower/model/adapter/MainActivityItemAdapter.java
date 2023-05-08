@@ -23,11 +23,6 @@ public class MainActivityItemAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final List<AirPowerDevice> mItems;
-    private ImageView mDeviceIcon;
-    private TextView mDeviceLabel;
-    private TextView mDeviceDescription;
-    private View mView = null;
-
 
     public MainActivityItemAdapter(List<AirPowerDevice> items, Context context) {
         this.mContext = context;
@@ -51,19 +46,32 @@ public class MainActivityItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-            mView = LayoutInflater.from(mContext)
+        View view;
+        ViewHolder holder;
+        if (convertView == null) {
+            view = LayoutInflater.from(mContext)
                     .inflate(R.layout.main_list_item, parent, false);
-            mDeviceIcon = mView.findViewById(R.id.image_main_item_icon);
-            mDeviceLabel = mView.findViewById(R.id.text_main_item_label);
-            mDeviceDescription = mView.findViewById(R.id.text_main_item_description);
+            holder = new ViewHolder();
+            holder.deviceDescription = view.findViewById(R.id.text_main_item_description);
+            holder.deviceIcon = view.findViewById(R.id.image_main_item_icon);
+            holder.deviceLabel = view.findViewById(R.id.text_main_item_label);
+            view.setTag(holder);
+        } else {
+            view = convertView;
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-            AirPowerDevice item = mItems.get(position);
-            mDeviceLabel.setText(item.getName());
-            mDeviceDescription.setText(item.getDescription());
+        AirPowerDevice item = mItems.get(position);
+        Drawable icon = AirPowerUtil.getDrawable(item.getIcon(), mContext);
+        holder.deviceIcon.setImageDrawable(icon);
+        holder.deviceLabel.setText(item.getName());
+        holder.deviceDescription.setText(item.getDescription());
+        return view;
+    }
 
-            Drawable icon = AirPowerUtil.getDrawable(mItems.get(position).getIcon(), mContext);
-            mDeviceIcon.setImageDrawable(icon);
-        return mView;
+    private static class ViewHolder {
+        private ImageView deviceIcon;
+        private TextView deviceLabel;
+        private TextView deviceDescription;
     }
 }

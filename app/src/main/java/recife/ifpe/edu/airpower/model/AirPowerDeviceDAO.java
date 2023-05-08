@@ -27,7 +27,7 @@ public class AirPowerDeviceDAO implements Serializable {
                         "Condicionado 3", "Mais um Ar"),
                 new AirPowerDevice(4, "127", "7.0",
                         "-19483738378,-475637467", "air_conditioner_icon",
-                        "Condicionado4", "Outro Ar")
+                        "Condicionador 4", "Outro Ar")
         ));
     }
 }
