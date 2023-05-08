@@ -4,8 +4,6 @@ package recife.ifpe.edu.airpower.model;/*
  * Project: AirPower
  */
 
-import android.graphics.drawable.Drawable;
-
 public class AirPowerDevice {
 
     private int mId;
@@ -16,7 +14,8 @@ public class AirPowerDevice {
     private String mName;
     private String mDescription;
 
-    public AirPowerDevice() {}
+    public AirPowerDevice() {
+    }
 
     public AirPowerDevice(int mId, String mVoltage, String mCurrent, String mLocalization,
                           String mIcon, String mName, String description) {

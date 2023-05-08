@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.5">
 
         <ImageView
-            android:id="@+id/image_device_banner_miscellaneous"
+            android:id="@+id/image_device_banner_consumption"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#9FB0EA" />
@@ -41,6 +41,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.080" />
+
+            <TextView
+                android:id="@+id/text_device_banner_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/main_text_item_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
