@@ -6,10 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.DeviceDetailActivity">
 
-    <!-- ID definition rules -->
-    <!-- <element type>_<associated screen>_<item>_<specific> -->
     <LinearLayout
-        android:id="@+id/linear_menu_top"
+        android:id="@+id/linear_device_detail_menu_top"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -20,29 +18,29 @@
         tools:srcCompat="@tools:sample/backgrounds/scenic">
 
         <Button
-            android:id="@+id/button_menu_context"
+            android:id="@+id/button_device_detail_menu_context"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/detail_button_menu_context" />
+            android:text="@string/device_detail_button_menu_context" />
 
     </LinearLayout>
 
     <ScrollView
-        android:id="@+id/list_items"
+        android:id="@+id/list_device_detail_items"
         android:layout_width="0pt"
         android:layout_height="0pt"
         android:divider="@null"
         android:dividerHeight="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linear_menu_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/linear_device_detail_menu_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_menu_top"
+        app:layout_constraintTop_toBottomOf="@+id/linear_device_detail_menu_top"
         tools:listitem="@layout/main_list_item">
 
         <LinearLayout
-            android:id="@+id/constraint_scroll_items"
+            android:id="@+id/constraint_device_detail_scroll_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -58,7 +56,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/linear_menu_bottom"
+        android:id="@+id/linear_device_detail_menu_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -68,44 +66,44 @@
         tools:srcCompat="@tools:sample/backgrounds/scenic">
 
         <Button
-            android:id="@+id/button_menu_home"
+            android:id="@+id/button_device_detail_menu_home"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/detail_button_menu_1" />
+            android:text="@string/device_detail_button_menu_1" />
 
         <Button
-            android:id="@+id/button_menu_dashboard"
+            android:id="@+id/button_device_detail_menu_dashboard"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/detail_button_menu_2" />
+            android:text="@string/device_detail_button_menu_2" />
 
         <Button
-            android:id="@+id/button_menu_devices"
+            android:id="@+id/button_device_detail_menu_devices"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/detail_button_menu_3" />
+            android:text="@string/device_detail_button_menu_3" />
 
         <Button
-            android:id="@+id/button_menu_profile"
+            android:id="@+id/button_device_detail_menu_profile"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/detail_button_menu_4" />
+            android:text="@string/device_detail_button_menu_4" />
 
     </LinearLayout>
 

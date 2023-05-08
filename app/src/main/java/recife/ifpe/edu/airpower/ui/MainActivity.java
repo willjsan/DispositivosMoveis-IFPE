@@ -8,8 +8,6 @@ package recife.ifpe.edu.airpower.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -30,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView mListView;
     private List<AirPowerDevice> mDevices;
+    private Button test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +37,22 @@ public class MainActivity extends AppCompatActivity {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
 
         mDevices = new AirPowerDeviceDAO().getDevices();
-        mListView = findViewById(R.id.list_items);
+        mListView = findViewById(R.id.list_device_detail_items);
         mListView.setAdapter(new MainActivityItemAdapter(mDevices, this));
         mListView.setOnItemClickListener((parent, view, position, id) -> {
             startActivity(mDevices.get(position));
+        });
+
+        test = findViewById(R.id.button_device_detail_menu_dashboard);
+        test.setOnClickListener(v -> {
+            Intent b = new Intent(MainActivity.this, DeviceInsertionActivity.class);
+
+            try {
+                startActivity(b);
+            } catch (Exception e) {
+                if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, e.toString());
+            }
+
         });
     }
 

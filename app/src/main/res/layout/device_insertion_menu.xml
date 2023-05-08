@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--    Todo mudar width e height para wrapp content-->
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_device_insertion_menu"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginLeft="10dp"
@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.5">
 
         <ImageView
-            android:id="@+id/image_device_banner_consumption"
+            android:id="@+id/image_device_insertion_menu_banner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#9FB0EA" />
@@ -30,27 +30,37 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/text_device_banner_label_consumption"
+                android:id="@+id/text_device_insertion_menu_banner_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/device_detail_banner_consumption_label"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="25dp"
+                android:text="@string/device_insertion_menu_banner_label"
+                android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.500"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.080" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/text_device_banner_description"
+            <Button
+                android:id="@+id/button_device_insertion_menu_discard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/main_text_item_description"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="60dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/device_insertion_button_menu_discard"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_device_insertion_menu_banner_label" />
+
+            <Button
+                android:id="@+id/button_device_insertion_menu_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="60dp"
+                android:text="@string/device_insertion_button_menu_save"
+                app:layout_constraintBottom_toBottomOf="@+id/button_device_insertion_menu_discard"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_device_insertion_menu_discard"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

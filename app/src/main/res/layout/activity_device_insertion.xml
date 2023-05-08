@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.DeviceInsertionActivity">
 
     <!-- ID definition rules -->
-    <!-- <element type>_<item>_<specific> -->
+    <!-- <element type>_<associated screen>_<item>_<specific> -->
     <LinearLayout
-        android:id="@+id/linear_device_detail_menu_top"
+        android:id="@+id/linear_menu_top_device_insertion"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -21,31 +20,47 @@
         tools:srcCompat="@tools:sample/backgrounds/scenic">
 
         <Button
-            android:id="@+id/button_device_detail_menu_context"
+            android:id="@+id/button_menu_context_device_insertion"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/all_button_menu_context" />
+            android:text="@string/device_detail_button_menu_context" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/list_device_detail_items"
+    <ScrollView
+        android:id="@+id/list_items_device_insertion"
         android:layout_width="0pt"
         android:layout_height="0pt"
         android:divider="@null"
         android:dividerHeight="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linear_device_detail_menu_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/linear_menu_bottom_device_insertion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_device_detail_menu_top"
+        app:layout_constraintTop_toBottomOf="@+id/linear_menu_top_device_insertion"
         tools:listitem="@layout/main_list_item">
 
-    </ListView>
+        <LinearLayout
+            android:id="@+id/constraint_scroll_items_device_insertion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/device_insertion_info" />
+
+            <include layout="@layout/device_insertion_appearance" />
+
+            <include layout="@layout/device_insertion_localization" />
+
+            <include layout="@layout/device_insertion_menu" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
-        android:id="@+id/linear_device_detail_menu_bottom"
+        android:id="@+id/linear_menu_bottom_device_insertion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -55,44 +70,44 @@
         tools:srcCompat="@tools:sample/backgrounds/scenic">
 
         <Button
-            android:id="@+id/button_device_detail_menu_home"
+            android:id="@+id/button_menu_home_device_insertion"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_home" />
+            android:text="@string/device_detail_button_menu_1" />
 
         <Button
-            android:id="@+id/button_device_detail_menu_dashboard"
+            android:id="@+id/button_menu_dashboard_device_insertion"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_dashboard" />
+            android:text="@string/device_detail_button_menu_2" />
 
         <Button
-            android:id="@+id/button_device_detail_menu_devices"
+            android:id="@+id/button_menu_devices_device_insertion"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_devices" />
+            android:text="@string/device_detail_button_menu_3" />
 
         <Button
-            android:id="@+id/button_device_detail_menu_profile"
+            android:id="@+id/button_menu_profile_device_insertion"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/all_button_menu_profile" />
+            android:text="@string/device_detail_button_menu_4" />
 
     </LinearLayout>
 
