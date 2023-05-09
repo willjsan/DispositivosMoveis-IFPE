@@ -1,25 +1,43 @@
-package recife.ifpe.edu.airpower.model;/*
+package recife.ifpe.edu.airpower.model.repo.model;/*
  * Dispositivos Móveis - IFPE 2023
  * Author: Willian Santos
  * Project: AirPower
  */
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "AIR_POWER_DEVICE")
 public class AirPowerDevice {
 
+    @PrimaryKey(autoGenerate = true)
     private int mId;
+    @ColumnInfo(name = "DEVICE_VOLTAGE")
     private String mVoltage;
+    @ColumnInfo(name = "DEVICE_CURRENT")
     private String mCurrent;
+    @ColumnInfo(name = "DEVICE_LOCALIZATION")
     private String mLocalization;
+    @ColumnInfo(name = "DEVICE_ICON")
     private String mIcon;
+    @ColumnInfo(name = "DEVICE_NAME")
     private String mName;
+    @ColumnInfo(name = "DEVICE_DESCRIPTION")
     private String mDescription;
 
     public AirPowerDevice() {
     }
 
-    public AirPowerDevice(int mId, String mVoltage, String mCurrent, String mLocalization,
+    public AirPowerDevice(String name, String description, String localization, String icon){
+        this.mName = name;
+        this.mDescription = description;
+        this.mLocalization = localization;
+        this.mIcon = icon;
+    }
+
+    public AirPowerDevice(String mVoltage, String mCurrent, String mLocalization,
                           String mIcon, String mName, String description) {
-        this.mId = mId;
         this.mVoltage = mVoltage;
         this.mCurrent = mCurrent;
         this.mLocalization = mLocalization;

@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 import recife.ifpe.edu.airpower.R;
-import recife.ifpe.edu.airpower.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.AirPowerDeviceDAO;
 import recife.ifpe.edu.airpower.model.adapter.MainActivityItemAdapter;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private List<AirPowerDevice> mDevices;
     private Button test;
+    private Button testeEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
                 if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, e.toString());
             }
 
+        });
+
+        // teste de ediçao
+        testeEdit = findViewById(R.id.button_device_detail_menu_devices);
+        testeEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, DeviceInsertionActivity.class);
+            intent.putExtra("teste", "teste");
+            startActivity(intent);
         });
     }
 

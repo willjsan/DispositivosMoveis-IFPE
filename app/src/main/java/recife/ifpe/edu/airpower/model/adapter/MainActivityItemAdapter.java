@@ -16,7 +16,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import recife.ifpe.edu.airpower.R;
-import recife.ifpe.edu.airpower.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 public class MainActivityItemAdapter extends BaseAdapter {
