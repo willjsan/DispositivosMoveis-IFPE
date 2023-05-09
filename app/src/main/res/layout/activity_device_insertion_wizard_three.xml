@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.insertionwizard.DeviceInsertionWizardThreeActivity">
+
+    <TextView
+        android:id="@+id/text_device_insertion_wizard_three_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Device Detail"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.18" />
+
+    <TextView
+        android:id="@+id/text_device_insertion_wizard_three_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Device Name"
+        app:layout_constraintBottom_toTopOf="@+id/edit_device_insertion_wizard_three_name"
+        app:layout_constraintStart_toStartOf="@+id/edit_device_insertion_wizard_three_name" />
+
+    <EditText
+        android:id="@+id/edit_device_insertion_wizard_three_name"
+        android:layout_width="195dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="84dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_device_insertion_wizard_three_status" />
+
+    <TextView
+        android:id="@+id/text_device_insertion_wizard_three_icon_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Icon"
+        app:layout_constraintStart_toStartOf="@+id/spinner_device_insertion_wizard_three_icon"
+        app:layout_constraintTop_toTopOf="@+id/text_device_insertion_wizard_three_name_label" />
+
+    <Spinner
+        android:id="@+id/spinner_device_insertion_wizard_three_icon"
+        android:layout_width="112dp"
+        android:layout_height="101dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_device_insertion_wizard_three_name" />
+
+<!--    TODO include map fragment view here-->
+
+    <Button
+        android:id="@+id/button_device_insertion_wizard_three_sumbit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_device_insertion_wizard_three_name"
+        app:layout_constraintVertical_bias="0.338" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

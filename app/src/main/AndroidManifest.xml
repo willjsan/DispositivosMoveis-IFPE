@@ -13,6 +13,27 @@
         android:theme="@style/Theme.AirPower"
         tools:targetApi="31">
         <activity
+            android:name=".ui.insertionwizard.DeviceInsertionWizardThreeActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.insertionwizard.DeviceInsertionWizardTwoActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.insertionwizard.DeviceInsertionWizardOneActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.DeviceInsertionActivity"
             android:exported="false">
             <meta-data

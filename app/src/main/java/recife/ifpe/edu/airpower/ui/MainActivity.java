@@ -19,6 +19,7 @@ import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.AirPowerDeviceDAO;
 import recife.ifpe.edu.airpower.model.adapter.MainActivityItemAdapter;
+import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceInsertionWizardOneActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
@@ -31,11 +32,20 @@ public class MainActivity extends AppCompatActivity {
     private Button test;
     private Button testeEdit;
 
+    private Button mButtonInsert;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
+
+        mButtonInsert = findViewById(R.id.button_device_detail_menu_profile);
+        mButtonInsert.setOnClickListener(v -> {
+            Intent i = new Intent(MainActivity.this, DeviceInsertionWizardOneActivity.class);
+            startActivity(i);
+        });
+
 
         mDevices = new AirPowerDeviceDAO().getDevices();
         mListView = findViewById(R.id.list_device_detail_items);
