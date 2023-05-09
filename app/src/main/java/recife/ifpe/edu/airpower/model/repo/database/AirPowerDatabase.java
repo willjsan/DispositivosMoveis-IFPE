@@ -11,10 +11,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceTelemetry;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
-@Database(entities = {AirPowerDevice.class, DeviceTelemetry.class}, version = 2, exportSchema = false)
+@Database(entities = {AirPowerDevice.class}, version = 2, exportSchema = false)
 public abstract class AirPowerDatabase extends RoomDatabase {
 
     public static final String TAG = AirPowerDatabase.class.getSimpleName();
@@ -33,6 +32,4 @@ public abstract class AirPowerDatabase extends RoomDatabase {
     }
 
     public abstract DeviceDAO getDeviceDAOInstance();
-
-    public abstract TelemetryDAO getTelemetryDAOInstance();
 }

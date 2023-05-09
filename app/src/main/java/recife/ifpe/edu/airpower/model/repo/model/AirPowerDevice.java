@@ -13,37 +13,27 @@ public class AirPowerDevice {
 
     @PrimaryKey(autoGenerate = true)
     private int mId;
-    @ColumnInfo(name = "DEVICE_VOLTAGE")
-    private String mVoltage;
-    @ColumnInfo(name = "DEVICE_CURRENT")
-    private String mCurrent;
-    @ColumnInfo(name = "DEVICE_LOCALIZATION")
-    private String mLocalization;
-    @ColumnInfo(name = "DEVICE_ICON")
-    private String mIcon;
     @ColumnInfo(name = "DEVICE_NAME")
     private String mName;
     @ColumnInfo(name = "DEVICE_DESCRIPTION")
     private String mDescription;
+    @ColumnInfo(name = "DEVICE_LOCALIZATION")
+    private String mLocalization;
+    @ColumnInfo(name = "DEVICE_ICON")
+    private String mIcon;
+    @ColumnInfo(name = "DEVICE_TOKEN")
+    private String mToken;
 
     public AirPowerDevice() {
     }
 
-    public AirPowerDevice(String name, String description, String localization, String icon){
-        this.mName = name;
-        this.mDescription = description;
-        this.mLocalization = localization;
-        this.mIcon = icon;
-    }
-
-    public AirPowerDevice(String mVoltage, String mCurrent, String mLocalization,
-                          String mIcon, String mName, String description) {
-        this.mVoltage = mVoltage;
-        this.mCurrent = mCurrent;
+    public AirPowerDevice(String mName, String mDescription, String mLocalization,
+                          String mIcon, String mToken) {
+        this.mName = mName;
+        this.mDescription = mDescription;
         this.mLocalization = mLocalization;
         this.mIcon = mIcon;
-        this.mName = mName;
-        this.mDescription = description;
+        this.mToken = mToken;
     }
 
     public int getId() {
@@ -54,20 +44,20 @@ public class AirPowerDevice {
         this.mId = mId;
     }
 
-    public String getVoltage() {
-        return mVoltage;
+    public String getName() {
+        return mName;
     }
 
-    public void setVoltage(String mVoltage) {
-        this.mVoltage = mVoltage;
+    public void setName(String mName) {
+        this.mName = mName;
     }
 
-    public String getCurrent() {
-        return mCurrent;
+    public String getDescription() {
+        return mDescription;
     }
 
-    public void setCurrent(String mCurrent) {
-        this.mCurrent = mCurrent;
+    public void setDescription(String mDescription) {
+        this.mDescription = mDescription;
     }
 
     public String getLocalization() {
@@ -86,19 +76,11 @@ public class AirPowerDevice {
         this.mIcon = mIcon;
     }
 
-    public String getName() {
-        return mName;
+    public String getToken() {
+        return mToken;
     }
 
-    public void setName(String mName) {
-        this.mName = mName;
-    }
-
-    public String getDescription() {
-        return this.mDescription;
-    }
-
-    public void setDescription(String description) {
-        this.mDescription = description;
+    public void setToken(String mToken) {
+        this.mToken = mToken;
     }
 }

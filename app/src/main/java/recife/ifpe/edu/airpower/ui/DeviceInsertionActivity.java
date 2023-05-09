@@ -3,7 +3,6 @@ package recife.ifpe.edu.airpower.ui;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,10 +14,10 @@ public class DeviceInsertionActivity extends AppCompatActivity {
 
     private EditText mDeviceName;
     private EditText mDeviceDescription;
-    private Button mLocalizationSet;
-    private Button mLocalizationReset;
-    private Button mDeviceSave;
-    private Button mDeviceDiscard;
+    private Button mButtonLocalizationSet;
+    private Button mButtonLocalizationReset;
+    private Button mButtonSave;
+    private Button mButtonDiscard;
     private AirPowerRepository mRepo;
 
     @Override
@@ -26,38 +25,27 @@ public class DeviceInsertionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_insertion);
 
+        mRepo = AirPowerRepository.getInstance(getApplicationContext());
+
         mDeviceName = findViewById(R.id.text_device_insertion_info_name_edit);
         mDeviceDescription = findViewById(R.id.text_device_insertion_info_description_edit);
-        mLocalizationSet = findViewById(R.id.button_device_insertion_localization_set);
-        mLocalizationReset = findViewById(R.id.button_device_insertion_localization_reset);
-        mDeviceSave = findViewById(R.id.button_device_insertion_menu_save);
-        mDeviceDiscard = findViewById(R.id.button_device_insertion_menu_discard);
-
-        mRepo = AirPowerRepository.getInstance(getApplicationContext());
+        mButtonLocalizationSet = findViewById(R.id.button_device_insertion_localization_set);
+        mButtonLocalizationReset = findViewById(R.id.button_device_insertion_localization_reset);
+        mButtonSave = findViewById(R.id.button_device_insertion_menu_save); // TODO mudar botão na view
+        mButtonDiscard = findViewById(R.id.button_device_insertion_menu_discard); // TODO mudar botão na view
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        mDeviceSave.setOnClickListener(v -> {
+        mButtonSave.setOnClickListener(v -> {
             AirPowerDevice device = new AirPowerDevice(
                     mDeviceName.getText().toString(),
                     mDeviceDescription.getText().toString(),
-                    "ainda nao é assim", "icone"
+                    "1111,11111", "air_conditioner_icon", "token"
             );
-
             mRepo.insert(device);
-            String name = mRepo.getDevices().get(0).getName();
-            int size = mRepo.getDevices().size();
-            Toast.makeText(this, name + " " + size + " itens salvos ", Toast.LENGTH_LONG).show();
         });
-
-//        Intent intent = getIntent();
-//        String teste = intent.getStringExtra("teste");
-//        if (teste.equals("teste")) {
-//            AirPowerDevice device = mRepo.getDevices().get(1);
-//            mDeviceName.setText(device.getName());
-//        }
     }
 }
