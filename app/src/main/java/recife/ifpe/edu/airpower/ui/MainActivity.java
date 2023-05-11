@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         // teste de ediçao
         testeEdit = findViewById(R.id.button_device_detail_menu_devices);
         testeEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, DeviceInsertionActivity.class);
-            intent.putExtra("teste", "teste");
+            Intent intent = new Intent(MainActivity.this, MainHolderActivity.class);
             startActivity(intent);
         });
     }
