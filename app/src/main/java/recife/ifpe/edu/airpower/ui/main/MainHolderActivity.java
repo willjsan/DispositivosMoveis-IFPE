@@ -1,4 +1,4 @@
-package recife.ifpe.edu.airpower.ui;
+package recife.ifpe.edu.airpower.ui.main;
 
 /*
  * Dispositivos Móveis - IFPE 2023
@@ -17,13 +17,11 @@ import androidx.navigation.NavController;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import recife.ifpe.edu.airpower.R;
-import recife.ifpe.edu.airpower.databinding.ActivityMainBinding;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 public class MainHolderActivity extends AppCompatActivity {
 
     private static final String TAG = MainHolderActivity.class.getSimpleName();
-    private ActivityMainBinding binding;
     private NavController navController;
     private Fragment mainFragmentHolder;
     private BottomNavigationView navigationView;
