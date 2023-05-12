@@ -13,7 +13,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.model.AirPowerDeviceDAO;
+import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
@@ -33,8 +37,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            String description = intent.getStringExtra(AirPowerConstants.KEY_DEVICE_DESCRIPTION);
-            mDescription.setText(description);
+            int itemIndex = intent.getIntExtra(AirPowerConstants.DEVICE_ITEM_INDEX, -1);
+            List<AirPowerDevice> devices = new AirPowerDeviceDAO().getDevices();
+
+            if( !(itemIndex < 0 || itemIndex > devices.size())) {
+                AirPowerDevice airPowerDevice = devices.get(itemIndex);
+                mDescription.setText(airPowerDevice.getDescription());
+            }
+
         }
     }
 }

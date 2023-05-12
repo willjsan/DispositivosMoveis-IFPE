@@ -16,10 +16,10 @@ public class AirPowerDeviceDAO implements Serializable {
     public List<AirPowerDevice> getDevices() {
         return new ArrayList<>(Arrays.asList(
                 new AirPowerDevice("Device 1", "Device1", "111,1111", "air_conditioner_icon", "01010"),
-                new AirPowerDevice("Device 1", "Device1", "111,1111", "air_conditioner_icon", "01010"),
-                new AirPowerDevice("Device 1", "Device1", "111,1111", "air_conditioner_icon", "01010"),
-                new AirPowerDevice("Device 1", "Device1", "111,1111", "air_conditioner_icon", "01010"),
-                new AirPowerDevice("Device 1", "Device1", "111,1111", "air_conditioner_icon", "01010")
+                new AirPowerDevice("Device 2", "Device2", "111,1111", "air_conditioner_icon", "01010"),
+                new AirPowerDevice("Device 3", "Device3", "111,1111", "air_conditioner_icon", "01010"),
+                new AirPowerDevice("Device 4", "Device4", "111,1111", "air_conditioner_icon", "01010"),
+                new AirPowerDevice("Device 5", "Device5", "111,1111", "air_conditioner_icon", "01010")
         ));
     }
 }

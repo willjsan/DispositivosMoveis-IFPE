@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
@@ -24,7 +25,9 @@ import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.AirPowerDeviceDAO;
 import recife.ifpe.edu.airpower.model.adapter.MainActivityItemAdapter;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.ui.DeviceDetailActivity;
 import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
+import recife.ifpe.edu.airpower.util.AirPowerConstants;
 
 
 public class MyDevicesFragment extends Fragment {
@@ -56,6 +59,12 @@ public class MyDevicesFragment extends Fragment {
         listView = view.findViewById(R.id.list_device_detail_items);
         listView.setAdapter(new MainActivityItemAdapter(new AirPowerDeviceDAO().getDevices(),
                 getContext())); // TODO does need to setup the adapter to real data source
+
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            Intent i = new Intent(getContext(), DeviceDetailActivity.class);
+            i.putExtra(AirPowerConstants.DEVICE_ITEM_INDEX, position);
+            startActivity(i);
+        });
 
 
         mFloatingActionButton = view.findViewById(R.id.floatingActionButton);

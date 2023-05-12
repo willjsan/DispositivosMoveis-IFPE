@@ -10,4 +10,5 @@ public interface AirPowerConstants {
 
     String KEY_COD_DRAWABLE = "drawable";
     String KEY_DEVICE_DESCRIPTION = "device_description";
+    String DEVICE_ITEM_INDEX = "device_iem_intex";
 }
