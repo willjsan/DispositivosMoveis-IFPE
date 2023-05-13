@@ -24,17 +24,27 @@ public class AirPowerDevice {
     private String mIcon;
     @ColumnInfo(name = "DEVICE_TOKEN")
     private String mToken;
+    @ColumnInfo(name = "DEVICE_SSID")
+    private String mDeviceSSID;
+    @ColumnInfo(name = "DEVICE_PASSWORD")
+    private String mDevicePassword;
+    @ColumnInfo(name = "DEVICE_URL")
+    private String mDeviceURL;
 
     public AirPowerDevice() {
     }
 
     public AirPowerDevice(String mName, String mDescription, String mLocalization,
-                          String mIcon, String mToken) {
+                          String mIcon, String mToken, String mDeviceSSID,
+                          String mDevicePassword, String mDeviceURL) {
         this.mName = mName;
         this.mDescription = mDescription;
         this.mLocalization = mLocalization;
         this.mIcon = mIcon;
         this.mToken = mToken;
+        this.mDeviceSSID = mDeviceSSID;
+        this.mDevicePassword = mDevicePassword;
+        this.mDeviceURL = mDeviceURL;
     }
 
     public int getId() {
@@ -83,5 +93,29 @@ public class AirPowerDevice {
 
     public void setToken(String mToken) {
         this.mToken = mToken;
+    }
+
+    public String getDeviceSSID() {
+        return mDeviceSSID;
+    }
+
+    public void setDeviceSSID(String mDeviceSSID) {
+        this.mDeviceSSID = mDeviceSSID;
+    }
+
+    public String getDevicePassword() {
+        return mDevicePassword;
+    }
+
+    public void setDevicePassword(String mDevicePassword) {
+        this.mDevicePassword = mDevicePassword;
+    }
+
+    public String getDeviceURL() {
+        return mDeviceURL;
+    }
+
+    public void setDeviceURL(String mDeviceURL) {
+        this.mDeviceURL = mDeviceURL;
     }
 }
