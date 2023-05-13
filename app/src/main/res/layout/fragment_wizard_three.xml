@@ -8,7 +8,8 @@
         android:id="@+id/text_device_insertion_wizard_three_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Device Detail"
+        android:text="Device Info"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,18 +22,19 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:text="Device Name"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/edit_device_insertion_wizard_three_name"
         app:layout_constraintStart_toStartOf="@+id/edit_device_insertion_wizard_three_name" />
 
     <EditText
         android:id="@+id/edit_device_insertion_wizard_three_name"
         android:layout_width="195dp"
-        android:layout_height="57dp"
+        android:layout_height="60dp"
         android:layout_marginTop="84dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.18"
+        app:layout_constraintEnd_toStartOf="@+id/spinner_device_insertion_wizard_three_icon"
+        app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_device_insertion_wizard_three_status" />
 
@@ -41,15 +43,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Icon"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/spinner_device_insertion_wizard_three_icon"
         app:layout_constraintTop_toTopOf="@+id/text_device_insertion_wizard_three_name_label" />
 
     <Spinner
         android:id="@+id/spinner_device_insertion_wizard_three_icon"
-        android:layout_width="112dp"
-        android:layout_height="101dp"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/edit_device_insertion_wizard_three_name" />
 
@@ -57,7 +60,7 @@
         android:id="@+id/button_device_insertion_wizard_three_sumbit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:text="Finish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

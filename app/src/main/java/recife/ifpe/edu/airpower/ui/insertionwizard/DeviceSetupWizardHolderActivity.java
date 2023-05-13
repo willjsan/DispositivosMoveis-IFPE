@@ -19,13 +19,12 @@ import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
-public class DeviceSetupWizardHolderActivity extends AppCompatActivity
-        implements WizardOneFragment.WizardOneListener {
+public class DeviceSetupWizardHolderActivity extends AppCompatActivity {
 
     private static final String TAG = DeviceSetupWizardHolderActivity.class.getSimpleName();
     private AirPowerRepository mRepo;
     private AirPowerDevice mDevice = null;
-    private boolean mIsDeviceEditRoutine = false;
+    private int mAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +34,12 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
         // Retrieve repo instance
         mRepo = AirPowerRepository.getInstance(getApplicationContext());
 
-        // Check if it is device editable routine
+        // Retrieve intent
         Intent intent = getIntent();
-        mIsDeviceEditRoutine =
-                intent.getBooleanExtra(AirPowerConstants.KEY_EDIT_DEVICE, false);
-        if (mIsDeviceEditRoutine) {
+        mAction = intent.getIntExtra(AirPowerConstants.KEY_ACTION, AirPowerConstants.ACTION_NONE);
+
+        // Device editable routine
+        if (mAction == AirPowerConstants.ACTION_EDIT_DEVICE) {
             mDevice = mRepo.getDeviceById(intent
                     .getIntExtra(AirPowerConstants.KEY_DEVICE_ID, -1));
             if (mDevice == null) {
@@ -47,11 +47,13 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
                 return;
             }
             setTitle("Edit Device");
-            Fragment editFragment = WizardTwoFragment.newInstance(mDevice);
+            Fragment editFragment =
+                    WizardTwoFragment.newInstance(mDevice, AirPowerConstants.ACTION_EDIT_DEVICE);
             openFragment(editFragment);
             return;
         }
 
+        // Device creation routine
         Fragment wizard = WizardOneFragment.newInstance();
         openFragment(wizard);
     }
@@ -65,14 +67,5 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Fail when getting fragment manager");
         }
-    }
-
-    @Override
-    public void onDone(String deviceIPAddress) {
-        AirPowerDevice airPowerDevice = new AirPowerDevice();
-        airPowerDevice.setName(deviceIPAddress);
-        airPowerDevice.setDescription(deviceIPAddress);
-        airPowerDevice.setIcon("air_conditioner_icon");
-        mRepo.insert(airPowerDevice);
     }
 }
