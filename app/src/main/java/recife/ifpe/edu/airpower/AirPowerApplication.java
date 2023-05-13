@@ -4,11 +4,13 @@ package recife.ifpe.edu.airpower;/*
  * Project: AirPower
  */
 
+import android.app.Application;
 import android.content.Context;
 
+import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.database.AirPowerDatabase;
 
-public class AirPowerApplication extends android.app.Application {
+public class AirPowerApplication extends Application {
 
     @Override
     public void onCreate() {
@@ -18,5 +20,6 @@ public class AirPowerApplication extends android.app.Application {
 
     private void getDataBaseInstance(Context context) {
         AirPowerDatabase.getDataBaseInstance(context);
+        AirPowerRepository.getInstance(context);
     }
 }

@@ -6,6 +6,7 @@ package recife.ifpe.edu.airpower.ui.insertionwizard;
  * Project: AirPower
  */
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -28,6 +30,7 @@ public class WizardOneFragment extends Fragment {
     private TextView mAddressLabel;
     private EditText mAddress;
     private Button mConnect;
+    private WizardOneListener mWizardOneListener;
 
     public WizardOneFragment() {
         // Required empty public constructor
@@ -57,6 +60,7 @@ public class WizardOneFragment extends Fragment {
         mConnect = view.findViewById(R.id.button_device_insertion_wizard_connect);
 
         mConnect.setOnClickListener(v -> {
+            mWizardOneListener.onDone(mAddress.getText().toString());
             Fragment wizardTwo = WizardTwoFragment.newInstance();
             openFragment(wizardTwo);
         });
@@ -76,5 +80,20 @@ public class WizardOneFragment extends Fragment {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Fail when getting fragment manager");
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            mWizardOneListener = (WizardOneListener) context;
+        } catch (Exception e) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Can't get listener implementation");
+        }
+    }
+
+    interface WizardOneListener {
+        void onDone(String deviceIPAddress);
     }
 }

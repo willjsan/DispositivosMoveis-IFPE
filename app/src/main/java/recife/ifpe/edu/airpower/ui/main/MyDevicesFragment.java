@@ -11,8 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -22,12 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import recife.ifpe.edu.airpower.R;
-import recife.ifpe.edu.airpower.model.AirPowerDeviceDAO;
 import recife.ifpe.edu.airpower.model.adapter.MainActivityItemAdapter;
+import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.ui.DeviceDetailActivity;
 import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
+import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 
 public class MyDevicesFragment extends Fragment {
@@ -35,7 +36,9 @@ public class MyDevicesFragment extends Fragment {
     private static final String TAG = MyDevicesFragment.class.getSimpleName();
     private FloatingActionButton mFloatingActionButton;
     private ListView listView;
-    private List<AirPowerDevice> devices = new ArrayList<>();
+    private List<AirPowerDevice> mDevices = new ArrayList<>();
+    private AirPowerRepository mRepo;
+    private TextView mNoDevices;
 
     public MyDevicesFragment() {
         // Required empty public constructor
@@ -48,25 +51,35 @@ public class MyDevicesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
+        mRepo = AirPowerRepository.getInstance(getContext());
+        mDevices = mRepo.getDevices();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_my_devices, container, false);
 
-        listView = view.findViewById(R.id.list_device_detail_items);
-        listView.setAdapter(new MainActivityItemAdapter(new AirPowerDeviceDAO().getDevices(),
-                getContext())); // TODO does need to setup the adapter to real data source
+        // Text view no devices
+        mNoDevices = view.findViewById(R.id.text_mydevices_no_devices);
+        mNoDevices.setEnabled(false);
+        if (mDevices.isEmpty()) {
+            mNoDevices.setEnabled(true);
+            mNoDevices.setText("No Devices");
+        }
 
+        // Devices list view
+        listView = view.findViewById(R.id.list_device_detail_items);
+        listView.setAdapter(new MainActivityItemAdapter(mDevices, getContext()));
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Intent i = new Intent(getContext(), DeviceDetailActivity.class);
             i.putExtra(AirPowerConstants.DEVICE_ITEM_INDEX, position);
             startActivity(i);
         });
 
-
+        // Floating button
         mFloatingActionButton = view.findViewById(R.id.floatingActionButton);
         mFloatingActionButton.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), DeviceSetupWizardHolderActivity.class);
@@ -74,5 +87,12 @@ public class MyDevicesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResume");
+
     }
 }

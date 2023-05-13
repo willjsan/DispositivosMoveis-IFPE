@@ -1,4 +1,5 @@
-package recife.ifpe.edu.airpower.model.adapter;/*
+package recife.ifpe.edu.airpower.model.adapter;
+/*
  * Dispositivos Móveis - IFPE 2023
  * Author: Willian Santos
  * Project: AirPower
@@ -13,20 +14,28 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.util.AirPowerLog;
 import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 public class MainActivityItemAdapter extends BaseAdapter {
 
+    private static final String TAG = MainActivityItemAdapter.class.getSimpleName();
     private final Context mContext;
-    private final List<AirPowerDevice> mItems;
+    private List<AirPowerDevice> mItems;
 
     public MainActivityItemAdapter(List<AirPowerDevice> items, Context context) {
         this.mContext = context;
         this.mItems = items;
+
+        if (items == null) {
+            this.mItems = new ArrayList<>();
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "Item list is null");
+        }
     }
 
     @Override

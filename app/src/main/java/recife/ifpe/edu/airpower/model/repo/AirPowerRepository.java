@@ -67,6 +67,18 @@ public class AirPowerRepository {
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't get devices from db");
+            AirPowerLog.e(TAG, e.getMessage());
+        }
+        return null;
+    }
+
+    public AirPowerDevice getDeviceById(int id) {
+        try {
+            return mDeviceDAO.getDeviceById(id);
+        } catch (Exception e) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Couldn't get device by id from db");
+            AirPowerLog.e(TAG, e.getMessage());
         }
         return null;
     }

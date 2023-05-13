@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey;
 public class AirPowerDevice {
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "DEVICE_ID")
     private int mId;
     @ColumnInfo(name = "DEVICE_NAME")
     private String mName;

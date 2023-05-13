@@ -19,6 +19,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
+import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
@@ -30,15 +32,23 @@ public class WizardThreeFragment extends Fragment {
     private EditText mName;
     private Spinner mIcons;
     private Button mSubmit;
+    private final AirPowerDevice mEditDevice;
 
     public WizardThreeFragment() {
-        // Required empty public constructor
+        this.mEditDevice = null;
+    }
+
+    private WizardThreeFragment(AirPowerDevice device) {
+        this.mEditDevice = device;
     }
 
     public static WizardThreeFragment newInstance() {
-        WizardThreeFragment fragment = new WizardThreeFragment();
 
-        return fragment;
+        return new WizardThreeFragment();
+    }
+
+    public static WizardThreeFragment newInstance(AirPowerDevice device) {
+        return new WizardThreeFragment(device);
     }
 
     @Override
@@ -69,6 +79,22 @@ public class WizardThreeFragment extends Fragment {
                     AirPowerLog.e(TAG, "Fail when getting Activity");
             }
         });
+
+        // Device edit routine
+        if (mEditDevice != null) {
+            mName.setText(mEditDevice.getName());
+
+            mSubmit.setOnClickListener(v -> {
+                AirPowerRepository instance = AirPowerRepository.getInstance(getContext());
+                instance.update(mEditDevice);
+                try {
+                    getActivity().finish();
+                } catch (NullPointerException e) {
+                    if (AirPowerLog.ISLOGABLE)
+                        AirPowerLog.e(TAG, "Fail when getting Activity");
+                }
+            });
+        }
 
         return view;
     }

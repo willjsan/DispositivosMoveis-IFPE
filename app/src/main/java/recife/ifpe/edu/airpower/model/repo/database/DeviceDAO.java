@@ -28,4 +28,7 @@ public interface DeviceDAO {
 
     @Query("SELECT * from AIR_POWER_DEVICE")
     List<AirPowerDevice> getDevices();
+
+    @Query("SELECT * from AIR_POWER_DEVICE WHERE DEVICE_ID = :id ")
+    AirPowerDevice getDeviceById(int id);
 }

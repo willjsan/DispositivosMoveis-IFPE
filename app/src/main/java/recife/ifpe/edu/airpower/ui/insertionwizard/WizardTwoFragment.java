@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 
@@ -28,13 +29,22 @@ public class WizardTwoFragment extends Fragment {
     private EditText mSSID;
     private EditText mPassword;
     private Button mSubmit;
+    private final AirPowerDevice mEditDevice;
 
     public WizardTwoFragment() {
-        // Required empty public constructor
+        this.mEditDevice = null;
+    }
+
+    private WizardTwoFragment(AirPowerDevice device) {
+        this.mEditDevice = device;
     }
 
     public static WizardTwoFragment newInstance() {
         return new WizardTwoFragment();
+    }
+
+    public static WizardTwoFragment newInstance(AirPowerDevice device) {
+        return new WizardTwoFragment(device);
     }
 
     @Override
@@ -48,6 +58,7 @@ public class WizardTwoFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_wizard_two, container, false);
+
         mStatus = view.findViewById(R.id.text_device_insertion_wizard_two_status);
         mSSID = view.findViewById(R.id.edit_device_insertion_wizard_two_ssid);
         mPassword = view.findViewById(R.id.edit_device_insertion_wizard_two_pwrd);
@@ -56,6 +67,18 @@ public class WizardTwoFragment extends Fragment {
             Fragment wizardThree = WizardThreeFragment.newInstance();
             openFragment(wizardThree);
         });
+
+        // Device edit routine
+        if (mEditDevice != null) {
+            mSSID.setText(mEditDevice.getDescription());
+            mPassword.setText(mEditDevice.getName());
+
+            mSubmit.setOnClickListener(v -> {
+                mEditDevice.setName(mSSID.getText().toString());
+                Fragment wizardThree = WizardThreeFragment.newInstance(mEditDevice);
+                openFragment(wizardThree);
+            });
+        }
 
         return view;
     }
