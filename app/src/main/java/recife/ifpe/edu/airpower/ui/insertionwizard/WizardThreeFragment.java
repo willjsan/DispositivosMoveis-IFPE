@@ -109,7 +109,22 @@ public class WizardThreeFragment extends Fragment {
                     }
                 });
                 break;
+
             case AirPowerConstants.ACTION_EDIT_DEVICE:
+                mName.setText(mDevice.getName());
+                mSubmit.setOnClickListener(v -> {
+                    mDevice.setName(mName.getText().toString());
+                    mRepo.update(mDevice);
+                    // TODO -- ensure fragments were removed from sack
+                    Intent i = new Intent(getContext(), MainHolderActivity.class);
+                    startActivity(i);
+                    try {
+                        getActivity().finish();
+                    } catch (NullPointerException e) {
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.e(TAG, "Fail when getting Activity");
+                    }
+                });
                 break;
         }
         return view;

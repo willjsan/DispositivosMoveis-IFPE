@@ -64,6 +64,20 @@ public class WizardTwoFragment extends Fragment {
                     mPassword.setEnabled(true);
                     mSubmit.setEnabled(true);
                     break;
+
+                case AirPowerConstants.EDIT_NETWORK_CONNECTION_SUCCESS:
+                    mStatus.setText("Network Connected");
+                    mSubmit.setText("Next");
+                    mSubmit.setEnabled(true);
+                    // Change the Button behavior
+                    mSubmit.setOnClickListener(v1 -> {
+                        mDevice.setDeviceSSID(mSSID.getText().toString());
+                        mDevice.setDevicePassword(mPassword.getText().toString());
+                        Fragment fragment = WizardThreeFragment
+                                .newInstance(mDevice, AirPowerConstants.ACTION_EDIT_DEVICE);
+                        openFragment(fragment);
+                    });
+                    break;
             }
         }
     };
@@ -133,14 +147,26 @@ public class WizardTwoFragment extends Fragment {
                 break;
 
             case AirPowerConstants.ACTION_EDIT_DEVICE:
-                mSSID.setText(mDevice.getDescription());
-                mPassword.setText(mDevice.getName());
+                mSSID.setText(mDevice.getDeviceSSID());
+                mPassword.setText("");
 
                 mSubmit.setOnClickListener(v -> {
-                    mDevice.setName(mSSID.getText().toString());
-                    Fragment wizardThree = WizardThreeFragment
-                            .newInstance(mDevice, AirPowerConstants.ACTION_EDIT_DEVICE);
-                    openFragment(wizardThree);
+                    mStatus.setText("Connecting with Network...");
+                    mStatus.setTextColor(getResources().getColor(R.color.purple_200));
+                    mSSID.setEnabled(false);
+                    mPassword.setEnabled(false);
+                    mSubmit.setEnabled(false);
+
+                    new Thread(() -> {
+                        // TODO this routine should be replaced by network connection routine
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mHandler.sendEmptyMessage(AirPowerConstants
+                                .EDIT_NETWORK_CONNECTION_SUCCESS);
+                    }).start();
                 });
                 break;
         }

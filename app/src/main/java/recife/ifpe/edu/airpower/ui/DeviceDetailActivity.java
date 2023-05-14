@@ -69,6 +69,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
         mDeleteDevice.setOnClickListener(v -> {
             mRepo.delete(mDevice);
             // TODO improve this implementation to just update listview items instead going to main activity
+            // TODO change implementation to be similar with edit device
             Toast.makeText(this, "Device Removed", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(DeviceDetailActivity.this, MainHolderActivity.class);
             startActivity(i);

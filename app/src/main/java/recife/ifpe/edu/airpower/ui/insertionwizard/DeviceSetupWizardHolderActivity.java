@@ -38,24 +38,27 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mAction = intent.getIntExtra(AirPowerConstants.KEY_ACTION, AirPowerConstants.ACTION_NONE);
 
-        // Device editable routine
-        if (mAction == AirPowerConstants.ACTION_EDIT_DEVICE) {
-            mDevice = mRepo.getDeviceById(intent
-                    .getIntExtra(AirPowerConstants.KEY_DEVICE_ID, -1));
-            if (mDevice == null) {
-                if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "Device is null, cancelling");
-                return;
-            }
-            setTitle("Edit Device");
-            Fragment editFragment =
-                    WizardTwoFragment.newInstance(mDevice, AirPowerConstants.ACTION_EDIT_DEVICE);
-            openFragment(editFragment);
-            return;
-        }
+        switch (mAction) {
+            case AirPowerConstants.ACTION_EDIT_DEVICE:
+                mDevice = mRepo.getDeviceById(intent
+                        .getIntExtra(AirPowerConstants.KEY_DEVICE_ID, -1));
+                if (mDevice == null) {
+                    if (AirPowerLog.ISLOGABLE)
+                        AirPowerLog.e(TAG, "Device is null, cancelling");
+                    return;
+                }
+                setTitle("Edit Device");
+                Fragment editFragment = WizardTwoFragment
+                        .newInstance(mDevice, AirPowerConstants.ACTION_EDIT_DEVICE);
+                openFragment(editFragment);
+                break;
 
-        // Device creation routine
-        Fragment wizard = WizardOneFragment.newInstance();
-        openFragment(wizard);
+            case AirPowerConstants.ACTION_NONE:
+                // Device creation routine
+                Fragment wizard = WizardOneFragment.newInstance();
+                openFragment(wizard);
+                break;
+        }
     }
 
     private void openFragment(Fragment fragment) {
