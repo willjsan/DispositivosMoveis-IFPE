@@ -7,12 +7,22 @@ package recife.ifpe.edu.airpower.ui;
  */
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +30,8 @@ import java.util.List;
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.server.AirPowerServerDummy;
 import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -29,12 +41,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
     private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
-    private List<AirPowerDevice> mDevices = new ArrayList<>();
+    private final List<AirPowerDevice> mDevices = new ArrayList<>();
     private AirPowerRepository mRepo;
     private Button mDeleteDevice;
     private Button mEditDevice;
     private AirPowerDevice mDevice;
-    private TextView mDescription;
+    private Button mContextButton;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +57,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
         // Retrieve repo instance
         mRepo = AirPowerRepository.getInstance(getApplicationContext());
-
-        // Device Description
-        mDescription = findViewById(R.id.text_device_banner_description);
 
         // Retrieve selected item
         Intent intent = getIntent();
@@ -60,7 +70,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
             }
             if (!(selectedItemIndex < 0 || selectedItemIndex > devices.size())) {
                 mDevice = devices.get(selectedItemIndex);
-                //mDescription.setText(mDevice.getDescription());
             }
         }
 
@@ -87,5 +96,43 @@ public class DeviceDetailActivity extends AppCompatActivity {
             finish();
         });
 
+        mContextButton = findViewById(R.id.button_device_detail_menu_context);
+        mContextButton.setOnClickListener(f -> {
+            startActivity(new Intent(DeviceDetailActivity.this, ChartTest.class));
+        });
+
+        // Chart
+        BarChart chart = findViewById(R.id.my_chart2);
+
+        AirPowerServerDummy airPowerServer = new AirPowerServerDummy();
+        DeviceMeasurement measureSet = airPowerServer
+                .getMeasurementByDeviceToken(mDevice.getToken());
+        BarDataSet dataSet = new BarDataSet(measureSet.getMeasurementSet(), "Day/KWh");
+        dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setValueTextSize(0);
+
+        BarData barChart = new BarData(dataSet);
+
+        chart.setFitBars(true);
+        chart.setData(barChart);
+        chart.getDescription().setText("Daily Consumption");
+        chart.animateY(2000);
+
+        // Maps
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+
+        if (mapFragment == null) {
+            return;
+        }
+        mapFragment.getMapAsync(googleMap -> {
+            mMap = googleMap;
+
+            // Add a marker in Sydney and move the camera
+            LatLng recife = new LatLng(-8.04993041384011, -34.933112917530515);
+            mMap.addMarker(new MarkerOptions().position(recife).title("Marker in Recife"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(recife, 17F));
+        });
     }
 }
