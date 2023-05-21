@@ -19,7 +19,7 @@ public interface AirPowerConstants {
     int DEVICE_CONNECTION_FAIL = 2;
     int NETWORK_CONNECTION_SUCCESS = 3;
     int EDIT_NETWORK_CONNECTION_SUCCESS = 4;
-    int NETWORK_CONNECTION_FAIL = 5;
+    int NETWORK_CONNECTION_FAILURE = 5;
 
     int ACTION_NONE = -1;
     int ACTION_NEW_DEVICE = 1;

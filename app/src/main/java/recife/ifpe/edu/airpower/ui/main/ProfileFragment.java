@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 
 public class ProfileFragment extends Fragment {
@@ -31,6 +32,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
     }
 
     @Override

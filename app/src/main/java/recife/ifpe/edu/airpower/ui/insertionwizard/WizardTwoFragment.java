@@ -57,7 +57,7 @@ public class WizardTwoFragment extends Fragment {
                     });
                     break;
 
-                case AirPowerConstants.NETWORK_CONNECTION_FAIL:
+                case AirPowerConstants.NETWORK_CONNECTION_FAILURE:
                     mStatus.setText("Network NOT Connected");
                     mStatus.setTextColor(getResources().getColor(R.color.teal_700));
                     mSSID.setEnabled(true);

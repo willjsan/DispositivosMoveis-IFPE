@@ -11,16 +11,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 
 public class HomeFragment extends Fragment {
 
     private static final String TAG = HomeFragment.class.getSimpleName();
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -32,6 +35,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
     }
 
 
@@ -41,6 +45,10 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        Button bt = view.findViewById(R.id.button);
+        bt.setOnClickListener(a -> {
+
+        });
         return view;
     }
 

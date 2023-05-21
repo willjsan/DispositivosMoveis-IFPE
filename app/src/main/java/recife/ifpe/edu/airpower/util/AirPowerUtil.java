@@ -11,6 +11,10 @@ import android.graphics.drawable.Drawable;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import recife.ifpe.edu.airpower.R;
 
 public class AirPowerUtil {
@@ -35,5 +39,20 @@ public class AirPowerUtil {
                     .getDrawable(resources, R.drawable.ic_launcher_background, null);
         }
         return drawable;
+    }
+
+    public static String inputStreamToString(InputStream inputStream)  {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader =
+                     new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (Exception e) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Error while reading input stream");
+        }
+        return stringBuilder.toString();
     }
 }

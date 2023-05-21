@@ -29,6 +29,7 @@ public class MainHolderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
         setContentView(R.layout.activity_main_holder);
         setUpBottomNavigationView();
         showUpMainFragment();
