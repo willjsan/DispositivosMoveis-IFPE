@@ -24,7 +24,9 @@ class AirPowerConnectionManager implements
     public static final int SERVER_UNREGISTER = 2;
     public static final int SERVER_MEASURE = 3;
 
-    private static final String API_URL = "http://192.168.11.3:8080/api/endpoint";
+    private static final String NOTEBOOK = "100.67.85.226";
+    private static final String DESKTOP = "192.168.11.3";
+    private static String API_URL = "http://" + NOTEBOOK + ":8080/api/endpoint";
 
     @Override
     public AirPowerConnection getAirPowerConnection(String deviceToken, int requestType) {
