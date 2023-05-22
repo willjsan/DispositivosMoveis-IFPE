@@ -154,11 +154,11 @@ public class WizardThreeFragment extends Fragment {
                     AirPowerLog.d(TAG, "Action new device");
                 mSubmitButton.setOnClickListener(v -> {
                     mDevice.setName(mName.getText().toString());
-                    //mStatus.setText("Registering device on Server");
-                    //mStatus.setTextColor(getResources().getColor(R.color.purple_200));
-                    //mName.setEnabled(false);
-                    //mIcons.setEnabled(false);
-                    //mSubmitButton.setEnabled(false);
+                    mStatus.setText("Registering device on Server");
+                    mStatus.setTextColor(getResources().getColor(R.color.purple_200));
+                    mName.setEnabled(false);
+                    mIcons.setEnabled(false);
+                    mSubmitButton.setEnabled(false);
                     AirPowerLog.d(TAG, "device name: " + mDevice.getName());
                     AirPowerServerManager.getInstance().registerDevice(mHandler,
                             token -> {

@@ -72,7 +72,8 @@ class AirPowerConnectionManager implements
                 InputStream inputStream = connection.getInputStream();
                 String msg = AirPowerUtil.inputStreamToString(inputStream);
                 callback.onSuccess(msg);
-                AirPowerLog.w(TAG, "to no certo"); //TODO remover
+            } else {
+                callback.onFailure("error: " + connection.getResponseCode());
             }
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
