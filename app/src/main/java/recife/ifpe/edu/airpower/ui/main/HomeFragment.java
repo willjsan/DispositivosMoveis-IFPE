@@ -45,10 +45,6 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        Button bt = view.findViewById(R.id.button);
-        bt.setOnClickListener(a -> {
-
-        });
         return view;
     }
 

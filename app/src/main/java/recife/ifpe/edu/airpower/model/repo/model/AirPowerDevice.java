@@ -6,6 +6,7 @@ package recife.ifpe.edu.airpower.model.repo.model;/*
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "AIR_POWER_DEVICE")
@@ -34,6 +35,7 @@ public class AirPowerDevice {
     public AirPowerDevice() {
     }
 
+    @Ignore
     public AirPowerDevice(String mName, String mDescription, String mLocalization,
                           String mIcon, String mToken, String mDeviceSSID,
                           String mDevicePassword, String mDeviceURL) {

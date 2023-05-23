@@ -19,20 +19,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="Button" />
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:textAlignment="center"
                 android:text="Home Fragment" />
-
-<!--            TODO put layouts here -->
 
         </LinearLayout>
 
