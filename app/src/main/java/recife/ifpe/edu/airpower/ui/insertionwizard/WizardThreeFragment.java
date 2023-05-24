@@ -27,10 +27,13 @@ import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.DeviceIconAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.server.AirPowerServerManager;
+import recife.ifpe.edu.airpower.model.server.retrofit.Manager;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class WizardThreeFragment extends Fragment {
@@ -159,20 +162,26 @@ public class WizardThreeFragment extends Fragment {
                     mName.setEnabled(false);
                     mIcons.setEnabled(false);
                     mSubmitButton.setEnabled(false);
-                    AirPowerLog.d(TAG, "device name: " + mDevice.getName());
-                    AirPowerServerManager.getInstance().registerDevice(mHandler,
-                            token -> {
-                                if (token == null) {
-                                    if (AirPowerLog.ISLOGABLE)
-                                        AirPowerLog.d(TAG, "Token is null");
-                                    return;
-                                }
-                                AirPowerLog.d(TAG, "device token: " + token);
-                                mDevice.setToken(token);
-                                mRepo.insert(mDevice);
-                                if (AirPowerLog.ISLOGABLE)
-                                    AirPowerLog.d(TAG, "Device Registered");
-                            });
+
+                    Manager manager = new Manager();
+                    manager.performHelloWorld(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if (response.isSuccessful()) {
+                                mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_SUCCESS);
+                                AirPowerLog.w(TAG, "onResponse: " + response.body());
+                            } else {
+                                mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_FAILURE);
+                                AirPowerLog.w(TAG, "onResponse: Deu merda: " + response);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_FAILURE);
+                            AirPowerLog.w(TAG, "onFailure: " + t.getMessage());
+                        }
+                    });
                 });
                 break;
 
