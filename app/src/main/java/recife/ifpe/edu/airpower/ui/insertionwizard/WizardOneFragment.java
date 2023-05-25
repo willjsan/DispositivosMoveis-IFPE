@@ -45,7 +45,7 @@ public class WizardOneFragment extends Fragment {
                         AirPowerDevice newDevice = new AirPowerDevice();
                         newDevice.setDeviceURL(mDeviceAddress.getText().toString());
                         Fragment wizardTwo = WizardTwoFragment
-                                .newInstance(newDevice, AirPowerConstants.ACTION_NEW_DEVICE);
+                                .newInstance(newDevice, AirPowerConstants.ACTION_REGISTER_DEVICE);
                         openFragment(wizardTwo);
                     });
                     break;
@@ -90,7 +90,7 @@ public class WizardOneFragment extends Fragment {
             new Thread(() -> {
                 // TODO this routine should be replaced by URLHTTPSConnection routine
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

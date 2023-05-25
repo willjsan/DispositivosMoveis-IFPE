@@ -11,13 +11,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import recife.ifpe.edu.airpower.R;
-import recife.ifpe.edu.airpower.model.server.retrofit.Manager;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 

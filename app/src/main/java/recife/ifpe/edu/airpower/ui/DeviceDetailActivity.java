@@ -31,7 +31,6 @@ import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
-import recife.ifpe.edu.airpower.model.server.AirPowerServerDummy;
 import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -102,22 +101,22 @@ public class DeviceDetailActivity extends AppCompatActivity {
         });
 
         // Chart
-        BarChart chart = findViewById(R.id.my_chart2);
-
-        AirPowerServerDummy airPowerServer = new AirPowerServerDummy();
-        DeviceMeasurement measureSet = airPowerServer
-                .getMeasurementByDeviceToken(mDevice.getToken());
-        BarDataSet dataSet = new BarDataSet(measureSet.getMeasurementSet(), "Day/KWh");
-        dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
-        dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(0);
-
-        BarData barChart = new BarData(dataSet);
-
-        chart.setFitBars(true);
-        chart.setData(barChart);
-        chart.getDescription().setText("Daily Consumption");
-        chart.animateY(2000);
+//        BarChart chart = findViewById(R.id.my_chart2);
+//
+//        AirPowerServerDummy airPowerServer = new AirPowerServerDummy();
+//        DeviceMeasurement measureSet = airPowerServer
+//                .getMeasurementByDeviceToken(mDevice.getToken());
+//        BarDataSet dataSet = new BarDataSet(measureSet.getMeasurementSet(), "Day/KWh");
+//        dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+//        dataSet.setValueTextColor(Color.BLACK);
+//        dataSet.setValueTextSize(0);
+//
+//        BarData barChart = new BarData(dataSet);
+//
+//        chart.setFitBars(true);
+//        chart.setData(barChart);
+//        chart.getDescription().setText("Daily Consumption");
+//        chart.animateY(2000);
 
         // Maps
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

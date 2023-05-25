@@ -14,110 +14,111 @@ public class AirPowerDevice {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "DEVICE_ID")
-    private int mId;
+    private int id;
     @ColumnInfo(name = "DEVICE_NAME")
-    private String mName;
+    private String name;
     @ColumnInfo(name = "DEVICE_DESCRIPTION")
-    private String mDescription;
+    private String description;
     @ColumnInfo(name = "DEVICE_LOCALIZATION")
-    private String mLocalization;
+    private String localization;
     @ColumnInfo(name = "DEVICE_ICON")
-    private String mIcon;
+    private String icon;
     @ColumnInfo(name = "DEVICE_TOKEN")
-    private String mToken;
+    private String token;
     @ColumnInfo(name = "DEVICE_SSID")
-    private String mDeviceSSID;
+    private String deviceSSID;
     @ColumnInfo(name = "DEVICE_PASSWORD")
-    private String mDevicePassword;
+    private String devicePassword;
     @ColumnInfo(name = "DEVICE_URL")
-    private String mDeviceURL;
+    private String deviceURL;
 
     public AirPowerDevice() {
     }
 
     @Ignore
-    public AirPowerDevice(String mName, String mDescription, String mLocalization,
-                          String mIcon, String mToken, String mDeviceSSID,
-                          String mDevicePassword, String mDeviceURL) {
-        this.mName = mName;
-        this.mDescription = mDescription;
-        this.mLocalization = mLocalization;
-        this.mIcon = mIcon;
-        this.mToken = mToken;
-        this.mDeviceSSID = mDeviceSSID;
-        this.mDevicePassword = mDevicePassword;
-        this.mDeviceURL = mDeviceURL;
+    public AirPowerDevice(int id, String name, String description, String localization,
+                          String icon, String token, String deviceSSID,
+                          String devicePassword, String deviceURL) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.localization = localization;
+        this.icon = icon;
+        this.token = token;
+        this.deviceSSID = deviceSSID;
+        this.devicePassword = devicePassword;
+        this.deviceURL = deviceURL;
     }
 
     public int getId() {
-        return mId;
+        return id;
     }
 
-    public void setId(int mId) {
-        this.mId = mId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
-    public void setName(String mName) {
-        this.mName = mName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
-        return mDescription;
+        return description;
     }
 
-    public void setDescription(String mDescription) {
-        this.mDescription = mDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLocalization() {
-        return mLocalization;
+        return localization;
     }
 
-    public void setLocalization(String mLocalization) {
-        this.mLocalization = mLocalization;
+    public void setLocalization(String localization) {
+        this.localization = localization;
     }
 
     public String getIcon() {
-        return mIcon;
+        return icon;
     }
 
-    public void setIcon(String mIcon) {
-        this.mIcon = mIcon;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getToken() {
-        return mToken;
+        return token;
     }
 
-    public void setToken(String mToken) {
-        this.mToken = mToken;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getDeviceSSID() {
-        return mDeviceSSID;
+        return deviceSSID;
     }
 
-    public void setDeviceSSID(String mDeviceSSID) {
-        this.mDeviceSSID = mDeviceSSID;
+    public void setDeviceSSID(String deviceSSID) {
+        this.deviceSSID = deviceSSID;
     }
 
     public String getDevicePassword() {
-        return mDevicePassword;
+        return devicePassword;
     }
 
-    public void setDevicePassword(String mDevicePassword) {
-        this.mDevicePassword = mDevicePassword;
+    public void setDevicePassword(String devicePassword) {
+        this.devicePassword = devicePassword;
     }
 
     public String getDeviceURL() {
-        return mDeviceURL;
+        return deviceURL;
     }
 
-    public void setDeviceURL(String mDeviceURL) {
-        this.mDeviceURL = mDeviceURL;
+    public void setDeviceURL(String deviceURL) {
+        this.deviceURL = deviceURL;
     }
 }

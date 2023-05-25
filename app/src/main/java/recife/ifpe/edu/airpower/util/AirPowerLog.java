@@ -5,7 +5,11 @@ package recife.ifpe.edu.airpower.util;
  * Author: Willian Santos
  * Project: AirPower
  */
+
 import android.util.Log;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class AirPowerLog {
     private static final String TAG = "AirPowerApp";
@@ -25,5 +29,13 @@ public class AirPowerLog {
 
     public static void w(String subtag, String message) {
         Log.w(TAG, " [" + subtag + "] : " + message);
+    }
+
+    public static OkHttpClient.Builder getLoggerClient() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClient.addInterceptor(loggingInterceptor);
+        return httpClient;
     }
 }

@@ -52,7 +52,7 @@ public class WizardTwoFragment extends Fragment {
                         mDevice.setDeviceSSID(mSSID.getText().toString());
                         mDevice.setDevicePassword(mPassword.getText().toString());
                         Fragment fragment = WizardThreeFragment
-                                .newInstance(mDevice, AirPowerConstants.ACTION_NEW_DEVICE);
+                                .newInstance(mDevice, AirPowerConstants.ACTION_REGISTER_DEVICE);
                         openFragment(fragment);
                     });
                     break;
@@ -126,7 +126,7 @@ public class WizardTwoFragment extends Fragment {
         }
 
         switch (mAction) {
-            case AirPowerConstants.ACTION_NEW_DEVICE:
+            case AirPowerConstants.ACTION_REGISTER_DEVICE:
                 mSubmit.setOnClickListener(v -> {
                     mStatus.setText("Connecting with Network...");
                     mStatus.setTextColor(getResources().getColor(R.color.purple_200));
@@ -137,7 +137,7 @@ public class WizardTwoFragment extends Fragment {
                     new Thread(() -> {
                         // TODO this routine should be replaced by network connection routine
                         try {
-                            Thread.sleep(2000);
+                            Thread.sleep(200);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -160,7 +160,7 @@ public class WizardTwoFragment extends Fragment {
                     new Thread(() -> {
                         // TODO this routine should be replaced by network connection routine
                         try {
-                            Thread.sleep(2000);
+                            Thread.sleep(200);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

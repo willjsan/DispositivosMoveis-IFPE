@@ -27,13 +27,11 @@ import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.DeviceIconAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.server.retrofit.Manager;
+import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
+import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class WizardThreeFragment extends Fragment {
@@ -47,6 +45,7 @@ public class WizardThreeFragment extends Fragment {
     private Button mSubmitButton;
     private Context mContext;
     private AirPowerRepository mRepo;
+    private ServerInterfaceWrapper.IServerManager mServerManager;
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
             final int what = message.what;
@@ -56,8 +55,6 @@ public class WizardThreeFragment extends Fragment {
             }
             switch (what) {
                 case AirPowerConstants.NETWORK_CONNECTION_SUCCESS:
-                    if (AirPowerLog.ISLOGABLE)
-                        AirPowerLog.d(TAG, "Connection success");
                     mStatus.setText("Done");
                     mName.setEnabled(false);
                     mIcons.setEnabled(false);
@@ -77,7 +74,6 @@ public class WizardThreeFragment extends Fragment {
                     break;
 
                 case AirPowerConstants.NETWORK_CONNECTION_FAILURE:
-                    AirPowerLog.w(TAG, "NETWORK_CONNECTION_FAILURE"); // TODO remove it
                     mStatus.setText("Couldn't register device on server");
                     mSubmitButton.setText("Close");
                     mSubmitButton.setEnabled(true);
@@ -119,25 +115,32 @@ public class WizardThreeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mContext = getContext();
         mRepo = AirPowerRepository.getInstance(mContext);
+        mServerManager = ServerManagerImpl.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_wizard_three, container, false);
-
-        mStatus = view.findViewById(R.id.text_device_insertion_wizard_three_status);
-        mName = view.findViewById(R.id.edit_device_insertion_wizard_three_name);
-        mIcons = view.findViewById(R.id.spinner_device_insertion_wizard_three_icon);
-        mSubmitButton = view.findViewById(R.id.button_device_insertion_wizard_three_sumbit);
-
+        findViewsById(view);
         if (mDevice == null) {
             if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "Instance device is null");
             return view;
         }
+        iconSpinnerSetup();
+        switch (mAction) {
+            case AirPowerConstants.ACTION_REGISTER_DEVICE:
+                performRegisterDeviceAction();
+                break;
 
-        // Spinner setup
+            case AirPowerConstants.ACTION_EDIT_DEVICE:
+                performEditDeviceAction();
+                break;
+        }
+        return view;
+    }
+
+    private void iconSpinnerSetup() {
         mIcons.setAdapter(new DeviceIconAdapter(getContext()));
         mIcons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -150,58 +153,69 @@ public class WizardThreeFragment extends Fragment {
 
             }
         });
+    }
 
-        switch (mAction) {
-            case AirPowerConstants.ACTION_NEW_DEVICE:
+    private void findViewsById(View view) {
+        mStatus = view.findViewById(R.id.text_device_insertion_wizard_three_status);
+        mName = view.findViewById(R.id.edit_device_insertion_wizard_three_name);
+        mIcons = view.findViewById(R.id.spinner_device_insertion_wizard_three_icon);
+        mSubmitButton = view.findViewById(R.id.button_device_insertion_wizard_three_sumbit);
+    }
+
+    /**
+     * This method performs the edition of
+     * device info on data base. This action
+     * is independent of server communication
+     * because the type of info that can be
+     * edited is not relevant for server.
+     */
+    private void performEditDeviceAction() {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "Action edit device");
+        mName.setText(mDevice.getName());
+        mSubmitButton.setOnClickListener(v -> {
+            mDevice.setName(mName.getText().toString());
+            mRepo.update(mDevice);
+            startActivity(new Intent(getContext(), MainHolderActivity.class));
+            try {
+                getActivity().finish();
+            } catch (NullPointerException e) {
                 if (AirPowerLog.ISLOGABLE)
-                    AirPowerLog.d(TAG, "Action new device");
-                mSubmitButton.setOnClickListener(v -> {
-                    mDevice.setName(mName.getText().toString());
-                    mStatus.setText("Registering device on Server");
-                    mStatus.setTextColor(getResources().getColor(R.color.purple_200));
-                    mName.setEnabled(false);
-                    mIcons.setEnabled(false);
-                    mSubmitButton.setEnabled(false);
+                    AirPowerLog.e(TAG, "Fail when getting Activity");
+            }
+        });
+    }
 
-                    Manager manager = new Manager();
-                    manager.performHelloWorld(new Callback<String>() {
+    /**
+     * This method performs the device registry
+     * on server
+     */
+    private void performRegisterDeviceAction() {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "Action new device");
+        mSubmitButton.setOnClickListener(v -> {
+            mDevice.setName(mName.getText().toString());
+            mStatus.setText("Registering device on Server");
+            mStatus.setTextColor(getResources().getColor(R.color.purple_200));
+            mName.setEnabled(false);
+            mIcons.setEnabled(false);
+            mSubmitButton.setEnabled(false);
+            mServerManager.registerDevice(mDevice,
+                    new ServerInterfaceWrapper.RegisterCallback() {
                         @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            if (response.isSuccessful()) {
-                                mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_SUCCESS);
-                                AirPowerLog.w(TAG, "onResponse: " + response.body());
-                            } else {
-                                mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_FAILURE);
-                                AirPowerLog.w(TAG, "onResponse: Deu merda: " + response);
-                            }
+                        public void onResult(AirPowerDevice device) {
+                            AirPowerLog.d(TAG, "onResult");
+                            mRepo.insert(device);
+                            mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_SUCCESS);
                         }
 
                         @Override
-                        public void onFailure(Call<String> call, Throwable t) {
+                        public void onFailure(String message) {
+                            AirPowerLog.w(TAG, "onFailure");
                             mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_FAILURE);
-                            AirPowerLog.w(TAG, "onFailure: " + t.getMessage());
                         }
                     });
-                });
-                break;
 
-            case AirPowerConstants.ACTION_EDIT_DEVICE:
-                mName.setText(mDevice.getName());
-                mSubmitButton.setOnClickListener(v -> {
-                    mDevice.setName(mName.getText().toString());
-                    mRepo.update(mDevice);
-                    // TODO -- ensure fragments were removed from sack
-                    Intent i = new Intent(getContext(), MainHolderActivity.class);
-                    startActivity(i);
-                    try {
-                        getActivity().finish();
-                    } catch (NullPointerException e) {
-                        if (AirPowerLog.ISLOGABLE)
-                            AirPowerLog.e(TAG, "Fail when getting Activity");
-                    }
-                });
-                break;
-        }
-        return view;
+        });
     }
 }

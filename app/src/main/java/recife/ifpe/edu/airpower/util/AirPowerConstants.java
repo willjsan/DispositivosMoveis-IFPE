@@ -22,6 +22,6 @@ public interface AirPowerConstants {
     int NETWORK_CONNECTION_FAILURE = 5;
 
     int ACTION_NONE = -1;
-    int ACTION_NEW_DEVICE = 1;
+    int ACTION_REGISTER_DEVICE = 1;
     int ACTION_EDIT_DEVICE = 2;
 }
