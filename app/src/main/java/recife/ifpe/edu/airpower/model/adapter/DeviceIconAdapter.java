@@ -1,4 +1,6 @@
-package recife.ifpe.edu.airpower.model.adapter;/*
+package recife.ifpe.edu.airpower.model.adapter;
+
+/*
  * Dispositivos Móveis - IFPE 2023
  * Author: Willian Santos
  * Project: AirPower

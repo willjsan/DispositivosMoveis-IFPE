@@ -16,15 +16,18 @@ import androidx.fragment.app.FragmentTransaction;
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
-public class DeviceSetupWizardHolderActivity extends AppCompatActivity {
+public class DeviceSetupWizardHolderActivity extends AppCompatActivity
+        implements WizardThreeFragment.INavigate {
 
     private static final String TAG = DeviceSetupWizardHolderActivity.class.getSimpleName();
     private AirPowerRepository mRepo;
     private AirPowerDevice mDevice = null;
     private int mAction;
+    private boolean mCanBackPress = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +68,36 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity {
         try {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.device_wizard_fragment_holder, fragment);
+            transaction.addToBackStack(null);
             transaction.commit();
         } catch (NullPointerException e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Fail when getting fragment manager");
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.device_wizard_fragment_holder);
+        if (fragment instanceof WizardThreeFragment) {
+            if (!mCanBackPress) {
+                if (AirPowerLog.ISLOGABLE)
+                    AirPowerLog.d(TAG, "CanBackPress: false");
+                return;
+            }
+        } else if (fragment instanceof WizardOneFragment) {
+            Intent intent = new Intent(DeviceSetupWizardHolderActivity.this,
+                    MainHolderActivity.class);
+            intent.setAction(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES);
+            startActivity(intent);
+            finish();
+        }
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void setBackPress(boolean canBackPress) {
+        mCanBackPress = canBackPress;
     }
 }

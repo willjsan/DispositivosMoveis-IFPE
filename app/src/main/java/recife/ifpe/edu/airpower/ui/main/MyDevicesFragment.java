@@ -6,6 +6,7 @@ package recife.ifpe.edu.airpower.ui.main;
  * Project: AirPower
  */
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,6 +28,7 @@ import recife.ifpe.edu.airpower.model.adapter.MainActivityItemAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.ui.DeviceDetailActivity;
+import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
@@ -39,9 +42,10 @@ public class MyDevicesFragment extends Fragment {
     private List<AirPowerDevice> mDevices = new ArrayList<>();
     private AirPowerRepository mRepo;
     private TextView mNoDevices;
+    private MainActivityItemAdapter mDevicesAdapter;
+    private UIInterfaceWrapper.FragmentUtil mFragmentUtil;
 
     public MyDevicesFragment() {
-        // Required empty public constructor
     }
 
     public static MyDevicesFragment newInstance() {
@@ -56,12 +60,14 @@ public class MyDevicesFragment extends Fragment {
         mDevices = mRepo.getDevices();
     }
 
+    ViewGroup mContainer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_my_devices, container, false);
-
+        mContainer = container;
         // Text view no devices
         mNoDevices = view.findViewById(R.id.text_mydevices_no_devices);
         mNoDevices.setEnabled(false);
@@ -72,27 +78,32 @@ public class MyDevicesFragment extends Fragment {
 
         // Devices list view
         listView = view.findViewById(R.id.list_device_detail_items);
-        listView.setAdapter(new MainActivityItemAdapter(mDevices, getContext()));
+        mDevicesAdapter = new MainActivityItemAdapter(mDevices, getContext());
+        listView.setAdapter(mDevicesAdapter);
         listView.setOnItemClickListener((parent, view1, position, id) -> {
-            Intent i = new Intent(getContext(), DeviceDetailActivity.class);
-            i.putExtra(AirPowerConstants.DEVICE_ITEM_INDEX, position);
-            startActivity(i);
+            Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
+            intent.setAction(AirPowerConstants.ACTION_LAUNCH_DETAIL);
+            intent.putExtra(AirPowerConstants.KEY_DEVICE_ID, mDevices.get(position).getId());
+            getActivity().finish();
+            startActivity(intent);
         });
 
         // Floating button
         mFloatingActionButton = view.findViewById(R.id.floatingActionButton);
         mFloatingActionButton.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), DeviceSetupWizardHolderActivity.class);
+            getActivity().finish();
             startActivity(i);
         });
-
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResume");
-
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onAttach");
+        if (context instanceof UIInterfaceWrapper.FragmentUtil) {
+            mFragmentUtil = (UIInterfaceWrapper.FragmentUtil) context;
+        }
     }
 }

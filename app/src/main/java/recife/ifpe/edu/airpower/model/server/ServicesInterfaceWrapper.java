@@ -6,11 +6,14 @@ package recife.ifpe.edu.airpower.model.server;
  * Project: AirPower
  */
 
+import java.util.List;
+
 import okhttp3.RequestBody;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 
 abstract class ServicesInterfaceWrapper {
@@ -19,11 +22,14 @@ abstract class ServicesInterfaceWrapper {
         @POST("/api/endpoint")
         Call<AirPowerDevice> registerDevice(@Body RequestBody requestBody);
 
-        @DELETE("/api/endpoint")
+        @HTTP(method = "DELETE", path = "/api/endpoint", hasBody = true)
         Call<AirPowerDevice> unregisterDevice(@Body RequestBody requestBody);
+
+        @POST("/api/device/measurement")
+        Call<List<DeviceMeasurement>> getDeviceMeasurement(@Body RequestBody requestBody);
     }
 
-    interface UserService{
+    interface UserService {
 
     }
 }

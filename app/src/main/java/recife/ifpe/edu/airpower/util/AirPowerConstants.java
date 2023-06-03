@@ -24,4 +24,6 @@ public interface AirPowerConstants {
     int ACTION_NONE = -1;
     int ACTION_REGISTER_DEVICE = 1;
     int ACTION_EDIT_DEVICE = 2;
+    String ACTION_LAUNCH_MY_DEVICES = "action_launch_my_devices";
+    String ACTION_LAUNCH_DETAIL = "action_launch_detail";
 }

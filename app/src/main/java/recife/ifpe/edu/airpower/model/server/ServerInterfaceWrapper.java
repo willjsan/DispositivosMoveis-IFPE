@@ -9,6 +9,7 @@ package recife.ifpe.edu.airpower.model.server;
 import java.util.List;
 
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
 
 public abstract class ServerInterfaceWrapper {
 
@@ -17,7 +18,7 @@ public abstract class ServerInterfaceWrapper {
 
         void unregisterDevice(AirPowerDevice device, UnregisterCallback callback);
 
-        void getMeasurementByDeviceId(AirPowerDevice device, MeasurementCallback callback);
+        void getDeviceMeasurement(AirPowerDevice device, MeasurementCallback callback);
 
     }
 
@@ -28,13 +29,13 @@ public abstract class ServerInterfaceWrapper {
     }
 
     public interface UnregisterCallback {
-        void onResult(String message);
+        void onSuccess(String message);
 
         void onFailure(String message);
     }
 
     public interface MeasurementCallback {
-        void onResult(List<AirPowerDevice> devices);
+        void onResult(List<DeviceMeasurement> measurements);
 
         void onFailure(String message);
     }

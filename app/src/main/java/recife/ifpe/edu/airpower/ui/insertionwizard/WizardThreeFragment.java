@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import recife.ifpe.edu.airpower.R;
@@ -46,6 +47,12 @@ public class WizardThreeFragment extends Fragment {
     private Context mContext;
     private AirPowerRepository mRepo;
     private ServerInterfaceWrapper.IServerManager mServerManager;
+    private INavigate mNavigateBackPress;
+
+    public interface INavigate {
+        void setBackPress(boolean canBackPress);
+    }
+
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
             final int what = message.what;
@@ -60,9 +67,10 @@ public class WizardThreeFragment extends Fragment {
                     mIcons.setEnabled(false);
                     mSubmitButton.setEnabled(true);
                     mSubmitButton.setText("Finish");
+                    mNavigateBackPress.setBackPress(false);
                     mSubmitButton.setOnClickListener(view -> {
-                        //TODO routine
                         Intent i = new Intent(getContext(), MainHolderActivity.class);
+                        i.setAction(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES);
                         startActivity(i);
                         try {
                             getActivity().finish();
@@ -77,10 +85,12 @@ public class WizardThreeFragment extends Fragment {
                     mStatus.setText("Couldn't register device on server");
                     mSubmitButton.setText("Close");
                     mSubmitButton.setEnabled(true);
+                    mNavigateBackPress.setBackPress(true);
                     mSubmitButton.setOnClickListener(view -> {
-                        Intent i = new Intent(getContext(), MainHolderActivity.class);
-                        startActivity(i);
                         try {
+                            Intent i = new Intent(getContext(), MainHolderActivity.class);
+                            i.setAction(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES);
+                            startActivity(i);
                             getActivity().finish();
                         } catch (NullPointerException e) {
                             if (AirPowerLog.ISLOGABLE)
@@ -108,6 +118,14 @@ public class WizardThreeFragment extends Fragment {
 
     public static WizardThreeFragment newInstance(AirPowerDevice device, int action) {
         return new WizardThreeFragment(device, action);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof INavigate) {
+            mNavigateBackPress = (INavigate) context;
+        }
     }
 
     @Override
@@ -204,18 +222,15 @@ public class WizardThreeFragment extends Fragment {
                     new ServerInterfaceWrapper.RegisterCallback() {
                         @Override
                         public void onResult(AirPowerDevice device) {
-                            AirPowerLog.d(TAG, "onResult");
                             mRepo.insert(device);
                             mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_SUCCESS);
                         }
 
                         @Override
                         public void onFailure(String message) {
-                            AirPowerLog.w(TAG, "onFailure");
                             mHandler.sendEmptyMessage(AirPowerConstants.NETWORK_CONNECTION_FAILURE);
                         }
                     });
-
         });
     }
 }

@@ -6,24 +6,31 @@ package recife.ifpe.edu.airpower.model.repo.model;
  * Project: AirPower
  */
 
-import com.github.mikephil.charting.data.BarEntry;
-
-import java.util.ArrayList;
-
 public class DeviceMeasurement {
-    private final String mDeviceToken;
-    private final ArrayList<BarEntry> mMeasurementSet;
+    private int x;
+    private int y;
 
-    public DeviceMeasurement(String mDeviceToken, ArrayList<BarEntry> measurementSet) {
-        this.mDeviceToken = mDeviceToken;
-        this.mMeasurementSet = measurementSet;
+    public DeviceMeasurement() {
     }
 
-    public ArrayList<BarEntry> getMeasurementSet(){
-        return mMeasurementSet;
+    public DeviceMeasurement(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public String getDeviceToken() {
-        return mDeviceToken;
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

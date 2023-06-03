@@ -6,25 +6,26 @@ package recife.ifpe.edu.airpower.ui.main;
  * Project: AirPower
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
+import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
-public class MainHolderActivity extends AppCompatActivity {
+public class MainHolderActivity extends AppCompatActivity
+        implements UIInterfaceWrapper.FragmentUtil {
 
     private static final String TAG = MainHolderActivity.class.getSimpleName();
-    private NavController navController;
-    private Fragment mainFragmentHolder;
-    private BottomNavigationView navigationView;
+    private BottomNavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +33,22 @@ public class MainHolderActivity extends AppCompatActivity {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
         setContentView(R.layout.activity_main_holder);
         setUpBottomNavigationView();
-        showUpMainFragment();
-
-    }
-
-    private void showUpMainFragment() {
-        Fragment homeFragment = HomeFragment.newInstance();
-        openFragment(homeFragment);
+        Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
+            if (action != null &&
+                    action.equals(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES)) {
+                mNavigationView.setSelectedItemId(R.id.b2);
+                openFragment(MyDevicesFragment.newInstance(), false);
+            } else {
+                openFragment(HomeFragment.newInstance(), false);
+            }
+        }
     }
 
     private void setUpBottomNavigationView() {
-        navigationView = findViewById(R.id.main_bottom_nav);
-        navigationView.setOnItemSelectedListener(item -> {
+        mNavigationView = findViewById(R.id.main_bottom_nav);
+        mNavigationView.setOnItemSelectedListener(item -> {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar == null) {
                 if (AirPowerLog.ISLOGABLE)
@@ -54,27 +59,36 @@ public class MainHolderActivity extends AppCompatActivity {
                 case R.id.b1:
                     actionBar.setTitle("Home");
                     Fragment homeFragment = HomeFragment.newInstance();
-                    openFragment(homeFragment);
+                    openFragment(homeFragment, false);
                     break;
                 case R.id.b2:
                     actionBar.setTitle("My Devices");
                     Fragment myDevicesFragment = MyDevicesFragment.newInstance();
-                    openFragment(myDevicesFragment);
+                    openFragment(myDevicesFragment, false);
                     break;
                 case R.id.b3:
                     actionBar.setTitle("Profile");
                     Fragment profile = ProfileFragment.newInstance();
-                    openFragment(profile);
+                    openFragment(profile, false);
                     break;
             }
             return true;
         });
     }
 
-    private void openFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_holder, fragment);
-        //transaction.addToBackStack(null);
-        transaction.commit();
+    @Override
+    public void openFragment(Fragment fragment, boolean addToBackStack) {
+        try {
+            FragmentTransaction transaction =
+                    getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_holder, fragment);
+            if (addToBackStack) {
+                transaction.addToBackStack(null);
+            }
+            transaction.commit();
+        } catch (NullPointerException e) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Fail when getting fragment manager");
+        }
     }
 }
