@@ -40,19 +40,4 @@ public class AirPowerUtil {
         }
         return drawable;
     }
-
-    public static String inputStreamToString(InputStream inputStream)  {
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader =
-                     new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-        } catch (Exception e) {
-            if (AirPowerLog.ISLOGABLE)
-                AirPowerLog.e(TAG, "Error while reading input stream");
-        }
-        return stringBuilder.toString();
-    }
 }

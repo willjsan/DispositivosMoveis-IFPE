@@ -101,7 +101,6 @@ public class MyDevicesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onAttach");
         if (context instanceof UIInterfaceWrapper.FragmentUtil) {
             mFragmentUtil = (UIInterfaceWrapper.FragmentUtil) context;
         }

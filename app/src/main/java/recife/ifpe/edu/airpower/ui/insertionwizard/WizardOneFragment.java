@@ -6,6 +6,7 @@ package recife.ifpe.edu.airpower.ui.insertionwizard;
  * Project: AirPower
  */
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,11 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
@@ -32,6 +35,7 @@ public class WizardOneFragment extends Fragment {
     private TextView mStatus;
     private EditText mDeviceAddress;
     private Button mButtonConnect;
+    private UIInterfaceWrapper.FragmentUtil mFragmentUtil;
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
             final int what = message.what;
@@ -46,7 +50,8 @@ public class WizardOneFragment extends Fragment {
                         newDevice.setDeviceURL(mDeviceAddress.getText().toString());
                         Fragment wizardTwo = WizardTwoFragment
                                 .newInstance(newDevice, AirPowerConstants.ACTION_REGISTER_DEVICE);
-                        openFragment(wizardTwo);
+                        //openFragment(wizardTwo);
+                        mFragmentUtil.openFragment(wizardTwo, true);
                     });
                     break;
 
@@ -100,16 +105,11 @@ public class WizardOneFragment extends Fragment {
         return view;
     }
 
-    private void openFragment(Fragment fragment) {
-        try {
-            FragmentTransaction transaction =
-                    getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.device_wizard_fragment_holder, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-        } catch (NullPointerException e) {
-            if (AirPowerLog.ISLOGABLE)
-                AirPowerLog.e(TAG, "Fail when getting fragment manager");
+    @Override
+    public void onAttach(@NonNull Context context) {
+        if (context instanceof UIInterfaceWrapper.FragmentUtil) {
+            mFragmentUtil = (UIInterfaceWrapper.FragmentUtil) context;
         }
+        super.onAttach(context);
     }
 }
