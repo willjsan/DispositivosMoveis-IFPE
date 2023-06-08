@@ -86,7 +86,8 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
                     AirPowerLog.d(TAG, "CanBackPress: false");
                 return;
             }
-        } else if (fragment instanceof WizardOneFragment) {
+        } else if (fragment instanceof WizardOneFragment ||
+                fragment instanceof WizardTwoFragment) {
             Intent intent = new Intent(DeviceSetupWizardHolderActivity.this,
                     MainHolderActivity.class);
             intent.setAction(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES);
