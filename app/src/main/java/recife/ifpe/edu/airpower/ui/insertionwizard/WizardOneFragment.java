@@ -6,6 +6,7 @@ package recife.ifpe.edu.airpower.ui.insertionwizard;
  * Project: AirPower
  */
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
+import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 
 public class WizardOneFragment extends Fragment {
@@ -36,6 +38,7 @@ public class WizardOneFragment extends Fragment {
     private EditText mDeviceAddress;
     private Button mButtonConnect;
     private UIInterfaceWrapper.FragmentUtil mFragmentUtil;
+    private ProgressDialog mProgressDialog;
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
             final int what = message.what;
@@ -45,6 +48,7 @@ public class WizardOneFragment extends Fragment {
                     mStatus.setText("Device Connected");
                     mButtonConnect.setText("Next");
                     mButtonConnect.setEnabled(true);
+                    mProgressDialog.dismiss();
                     mButtonConnect.setOnClickListener(v1 -> {
                         AirPowerDevice newDevice = new AirPowerDevice();
                         newDevice.setDeviceURL(mDeviceAddress.getText().toString());
@@ -60,6 +64,7 @@ public class WizardOneFragment extends Fragment {
                     mStatus.setTextColor(getResources().getColor(R.color.teal_700));
                     mDeviceAddress.setEnabled(true);
                     mButtonConnect.setEnabled(true);
+                    mProgressDialog.dismiss();
                     break;
             }
         }
@@ -75,6 +80,7 @@ public class WizardOneFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mProgressDialog = AirPowerUtil.getProgressDialog(getContext(),"waiting");
     }
 
     @Override
@@ -92,10 +98,11 @@ public class WizardOneFragment extends Fragment {
             mStatus.setTextColor(getResources().getColor(R.color.purple_200));
             mDeviceAddress.setEnabled(false);
             mButtonConnect.setEnabled(false);
+            mProgressDialog.show();
             new Thread(() -> {
                 // TODO this routine should be replaced by URLHTTPSConnection routine
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

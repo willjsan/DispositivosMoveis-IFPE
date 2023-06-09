@@ -6,6 +6,7 @@ package recife.ifpe.edu.airpower.ui.insertionwizard;
  * Project: AirPower
  */
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
+import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 
 public class WizardThreeFragment extends Fragment {
@@ -48,6 +50,7 @@ public class WizardThreeFragment extends Fragment {
     private AirPowerRepository mRepo;
     private ServerInterfaceWrapper.IServerManager mServerManager;
     private INavigate mNavigateBackPress;
+    private ProgressDialog mProgressDialog;
 
     public interface INavigate {
         void setBackPress(boolean canBackPress);
@@ -68,6 +71,7 @@ public class WizardThreeFragment extends Fragment {
                     mSubmitButton.setEnabled(true);
                     mSubmitButton.setText("Finish");
                     mNavigateBackPress.setBackPress(false);
+                    mProgressDialog.dismiss();
                     mSubmitButton.setOnClickListener(view -> {
                         Intent i = new Intent(getContext(), MainHolderActivity.class);
                         i.setAction(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES);
@@ -84,8 +88,8 @@ public class WizardThreeFragment extends Fragment {
                 case AirPowerConstants.NETWORK_CONNECTION_FAILURE:
                     mStatus.setText("Couldn't register device on server");
                     mSubmitButton.setText("Close");
-                    mSubmitButton.setEnabled(true);
                     mNavigateBackPress.setBackPress(true);
+                    mProgressDialog.dismiss();
                     mSubmitButton.setOnClickListener(view -> {
                         try {
                             Intent i = new Intent(getContext(), MainHolderActivity.class);
@@ -134,6 +138,7 @@ public class WizardThreeFragment extends Fragment {
         mContext = getContext();
         mRepo = AirPowerRepository.getInstance(mContext);
         mServerManager = ServerManagerImpl.getInstance();
+        mProgressDialog = AirPowerUtil.getProgressDialog(getContext(), "waiting");
     }
 
     @Override
@@ -220,6 +225,7 @@ public class WizardThreeFragment extends Fragment {
             mName.setEnabled(false);
             mIcons.setEnabled(false);
             mSubmitButton.setEnabled(false);
+            mProgressDialog.show();
             mServerManager.registerDevice(mDevice,
                     new ServerInterfaceWrapper.RegisterCallback() {
                         @Override

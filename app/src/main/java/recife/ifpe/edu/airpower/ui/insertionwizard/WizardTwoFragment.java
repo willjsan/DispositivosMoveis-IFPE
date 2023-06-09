@@ -6,6 +6,7 @@ package recife.ifpe.edu.airpower.ui.insertionwizard;
  * Project: AirPower
  */
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
+import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 
 public class WizardTwoFragment extends Fragment {
@@ -38,6 +40,7 @@ public class WizardTwoFragment extends Fragment {
     private EditText mSSID;
     private EditText mPassword;
     private Button mSubmit;
+    private ProgressDialog mProgressDialog;
     private UIInterfaceWrapper.FragmentUtil mFragmentUtil;
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
@@ -51,7 +54,7 @@ public class WizardTwoFragment extends Fragment {
                     mStatus.setText("Network Connected");
                     mSubmit.setText("Next");
                     mSubmit.setEnabled(true);
-                    // Change the Button behavior
+                    mProgressDialog.dismiss();
                     mSubmit.setOnClickListener(v1 -> {
                         mDevice.setDeviceSSID(mSSID.getText().toString());
                         mDevice.setDevicePassword(mPassword.getText().toString());
@@ -67,13 +70,14 @@ public class WizardTwoFragment extends Fragment {
                     mSSID.setEnabled(true);
                     mPassword.setEnabled(true);
                     mSubmit.setEnabled(true);
+                    mProgressDialog.dismiss();
                     break;
 
                 case AirPowerConstants.EDIT_NETWORK_CONNECTION_SUCCESS:
                     mStatus.setText("Network Connected");
                     mSubmit.setText("Next");
                     mSubmit.setEnabled(true);
-                    // Change the Button behavior
+                    mProgressDialog.dismiss();
                     mSubmit.setOnClickListener(v1 -> {
                         mDevice.setDeviceSSID(mSSID.getText().toString());
                         mDevice.setDevicePassword(mPassword.getText().toString());
@@ -107,6 +111,8 @@ public class WizardTwoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
+        mProgressDialog = AirPowerUtil.getProgressDialog(getContext(), "waiting");
     }
 
     @Override
@@ -137,11 +143,11 @@ public class WizardTwoFragment extends Fragment {
                     mSSID.setEnabled(false);
                     mPassword.setEnabled(false);
                     mSubmit.setEnabled(false);
-
+                    mProgressDialog.show();
                     new Thread(() -> {
                         // TODO this routine should be replaced by network connection routine
                         try {
-                            Thread.sleep(200);
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -153,18 +159,17 @@ public class WizardTwoFragment extends Fragment {
             case AirPowerConstants.ACTION_EDIT_DEVICE_:
                 mSSID.setText(mDevice.getDeviceSSID());
                 mPassword.setText("");
-
                 mSubmit.setOnClickListener(v -> {
                     mStatus.setText("Connecting with Network...");
                     mStatus.setTextColor(getResources().getColor(R.color.purple_200));
                     mSSID.setEnabled(false);
                     mPassword.setEnabled(false);
                     mSubmit.setEnabled(false);
-
+                    mProgressDialog.show();
                     new Thread(() -> {
                         // TODO this routine should be replaced by network connection routine
                         try {
-                            Thread.sleep(200);
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

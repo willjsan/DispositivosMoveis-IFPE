@@ -5,6 +5,7 @@ package recife.ifpe.edu.airpower.util;
  * Project: AirPower
  */
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -36,8 +37,15 @@ public class AirPowerUtil {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Can't retrieve drawable resource");
             drawable = ResourcesCompat
-                    .getDrawable(resources, R.drawable.ic_launcher_background, null);
+                    .getDrawable(resources, R.drawable.airpower_launcher_icon, null);
         }
         return drawable;
+    }
+
+    public static ProgressDialog getProgressDialog(Context context, String message) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setMessage(message);
+        dialog.setCancelable(false);
+        return dialog;
     }
 }
