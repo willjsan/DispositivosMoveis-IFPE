@@ -33,7 +33,7 @@ public class WizardTwoFragment extends Fragment {
 
     private static final String TAG = WizardTwoFragment.class.getSimpleName();
     private final AirPowerDevice mDevice;
-    private final int mAction;
+    private final String mAction;
     private TextView mStatus;
     private EditText mSSID;
     private EditText mPassword;
@@ -88,10 +88,10 @@ public class WizardTwoFragment extends Fragment {
 
     public WizardTwoFragment() {
         this.mDevice = null;
-        mAction = AirPowerConstants.ACTION_NONE;
+        this.mAction = null;
     }
 
-    private WizardTwoFragment(AirPowerDevice device, int action) {
+    private WizardTwoFragment(AirPowerDevice device, String action) {
         this.mDevice = device;
         this.mAction = action;
     }
@@ -100,7 +100,7 @@ public class WizardTwoFragment extends Fragment {
         return new WizardTwoFragment();
     }
 
-    public static WizardTwoFragment newInstance(AirPowerDevice device, int action) {
+    public static WizardTwoFragment newInstance(AirPowerDevice device, String action) {
         return new WizardTwoFragment(device, action);
     }
 
@@ -130,7 +130,7 @@ public class WizardTwoFragment extends Fragment {
         }
 
         switch (mAction) {
-            case AirPowerConstants.ACTION_REGISTER_DEVICE:
+            case AirPowerConstants.ACTION_NEW_DEVICE:
                 mSubmit.setOnClickListener(v -> {
                     mStatus.setText("Connecting with Network...");
                     mStatus.setTextColor(getResources().getColor(R.color.purple_200));
@@ -150,7 +150,7 @@ public class WizardTwoFragment extends Fragment {
                 });
                 break;
 
-            case AirPowerConstants.ACTION_EDIT_DEVICE:
+            case AirPowerConstants.ACTION_EDIT_DEVICE_:
                 mSSID.setText(mDevice.getDeviceSSID());
                 mPassword.setText("");
 

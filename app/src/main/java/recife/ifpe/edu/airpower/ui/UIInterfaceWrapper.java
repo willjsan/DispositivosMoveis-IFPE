@@ -6,6 +6,8 @@ package recife.ifpe.edu.airpower.ui;
  * Project: AirPower
  */
 
+import android.content.Intent;
+
 import androidx.fragment.app.Fragment;
 
 public abstract class UIInterfaceWrapper {

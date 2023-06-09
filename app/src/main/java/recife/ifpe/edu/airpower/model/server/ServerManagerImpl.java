@@ -18,6 +18,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
+import recife.ifpe.edu.airpower.util.AirPowerLog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,6 +42,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
 
     @Override
     public void registerDevice(AirPowerDevice device, ServerInterfaceWrapper.RegisterCallback callback) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "registerDevice");
         mConnectionManager
                 .getConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
@@ -50,12 +52,14 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     @Override
                     public void onResponse(@NonNull Call<AirPowerDevice> call,
                                            @NonNull Response<AirPowerDevice> response) {
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResponse");
                         callback.onResult(response.body());
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<AirPowerDevice> call,
                                           @NonNull Throwable t) {
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
                         // callback.onFailure(t.toString()); // TODO uncomment after tests
                         callback.onResult(new AirPowerDevice());// TODO remove it after tests
                     }
@@ -65,6 +69,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
     @Override
     public void unregisterDevice(AirPowerDevice device,
                                  ServerInterfaceWrapper.UnregisterCallback callback) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "unregisterDevice");
         mConnectionManager
                 .getConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
@@ -74,12 +79,14 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     @Override
                     public void onResponse(@NonNull Call<AirPowerDevice> call,
                                            @NonNull Response<AirPowerDevice> response) {
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResponse");
                         callback.onSuccess("success");
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<AirPowerDevice> call,
                                           @NonNull Throwable t) {
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
                         // callback.onFailure(t.getMessage()); // TODO uncomment after tests
                         callback.onSuccess("this is a fake success"); // TODO remove it after tests
                     }

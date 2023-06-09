@@ -57,7 +57,7 @@ public class MyDevicesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
         mRepo = AirPowerRepository.getInstance(getContext());
-        mDevices = mRepo.getDevices();
+
     }
 
     ViewGroup mContainer;
@@ -65,7 +65,7 @@ public class MyDevicesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreateView");
+        mDevices = mRepo.getDevices();
         View view = inflater.inflate(R.layout.fragment_my_devices, container, false);
         mContainer = container;
         // Text view no devices
@@ -84,16 +84,17 @@ public class MyDevicesFragment extends Fragment {
             Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
             intent.setAction(AirPowerConstants.ACTION_LAUNCH_DETAIL);
             intent.putExtra(AirPowerConstants.KEY_DEVICE_ID, mDevices.get(position).getId());
-            getActivity().finish();
             startActivity(intent);
+            getActivity().finish();
         });
 
         // Floating button
         mFloatingActionButton = view.findViewById(R.id.floatingActionButton);
         mFloatingActionButton.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), DeviceSetupWizardHolderActivity.class);
-            getActivity().finish();
+            i.setAction(AirPowerConstants.ACTION_NEW_DEVICE);
             startActivity(i);
+            getActivity().finish();
         });
         return view;
     }

@@ -27,4 +27,6 @@ public interface AirPowerConstants {
     String ACTION_EDIT_DEVICE_ = "action_edit_device";
     String ACTION_LAUNCH_MY_DEVICES = "action_launch_my_devices";
     String ACTION_LAUNCH_DETAIL = "action_launch_detail";
+    int INVALID_DEVICE_ID = -999999999;
+    String ACTION_NEW_DEVICE = "action_new_device";
 }

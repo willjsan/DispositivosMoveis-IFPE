@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.ui.DeviceDetailActivity;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
@@ -39,7 +40,7 @@ public class MainHolderActivity extends AppCompatActivity
             if (action != null &&
                     action.equals(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES)) {
                 mNavigationView.setSelectedItemId(R.id.b2);
-                openFragment(MyDevicesFragment.newInstance(), false);
+                //openFragment(MyDevicesFragment.newInstance(), false); // this make another instantiation of MyDevicesFragment
             } else {
                 openFragment(HomeFragment.newInstance(), false);
             }

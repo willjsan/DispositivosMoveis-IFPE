@@ -49,7 +49,7 @@ public class WizardOneFragment extends Fragment {
                         AirPowerDevice newDevice = new AirPowerDevice();
                         newDevice.setDeviceURL(mDeviceAddress.getText().toString());
                         Fragment wizardTwo = WizardTwoFragment
-                                .newInstance(newDevice, AirPowerConstants.ACTION_REGISTER_DEVICE);
+                                .newInstance(newDevice, AirPowerConstants.ACTION_NEW_DEVICE);
                         //openFragment(wizardTwo);
                         mFragmentUtil.openFragment(wizardTwo, true);
                     });

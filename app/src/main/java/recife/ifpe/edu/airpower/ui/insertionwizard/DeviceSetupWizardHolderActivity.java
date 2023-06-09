@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.ui.DeviceDetailActivity;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -28,7 +29,6 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
     private static final String TAG = DeviceSetupWizardHolderActivity.class.getSimpleName();
     private AirPowerRepository mRepo;
     private AirPowerDevice mDevice = null;
-    private int mIntExtra;
     private boolean mCanBackPress = true;
     private String mAction;
 
@@ -36,30 +36,50 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_setup_wizard_holder);
-        mRepo = AirPowerRepository.getInstance(getApplicationContext());
         Intent intent = getIntent();
-        mIntExtra = intent.getIntExtra(AirPowerConstants.KEY_ACTION, AirPowerConstants.ACTION_NONE);
+        if (intent == null) return;
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
+        mRepo = AirPowerRepository.getInstance(getApplicationContext());
         mAction = intent.getAction();
-        switch (mIntExtra) {
-            case AirPowerConstants.ACTION_EDIT_DEVICE:
-                mDevice = mRepo.getDeviceById(intent
-                        .getIntExtra(AirPowerConstants.KEY_DEVICE_ID, -1));
-                if (mDevice == null) {
-                    if (AirPowerLog.ISLOGABLE)
-                        AirPowerLog.e(TAG, "Device is null, cancelling");
-                    return;
-                }
-                setTitle("Edit Device");
-                Fragment editFragment = WizardTwoFragment
-                        .newInstance(mDevice, AirPowerConstants.ACTION_EDIT_DEVICE);
-                openFragment(editFragment, false);
+        switch (mAction) {
+            case AirPowerConstants.ACTION_EDIT_DEVICE_:
+                actionEditDevice(intent);
                 break;
 
-            case AirPowerConstants.ACTION_NONE:
-                Fragment wizard = WizardOneFragment.newInstance();
-                openFragment(wizard, false);
+            case AirPowerConstants.ACTION_NEW_DEVICE:
+                actionNewDevice();
                 break;
+
+            default:
+                if (AirPowerLog.ISLOGABLE) {
+                    AirPowerLog.e(TAG, "missing action");
+                }
+
         }
+    }
+
+    private void actionNewDevice() {
+        if (AirPowerLog.ISLOGABLE) {
+            AirPowerLog.d(TAG, "actionNewDevice");
+        }
+        Fragment wizard = WizardOneFragment.newInstance();
+        this.openFragment(wizard, false);
+    }
+
+    private void actionEditDevice(Intent intent) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "actionEditDevice");
+        int deviceId = intent.getIntExtra(AirPowerConstants.KEY_DEVICE_ID,
+                AirPowerConstants.INVALID_DEVICE_ID);
+        mDevice = mRepo.getDeviceById(deviceId);
+        if (mDevice == null) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Device is null, cancelling");
+            return;
+        }
+        setTitle("Edit Device");
+        Fragment editFragment = WizardTwoFragment
+                .newInstance(mDevice, AirPowerConstants.ACTION_EDIT_DEVICE_);
+        this.openFragment(editFragment, false);
     }
 
     @Override
@@ -75,11 +95,20 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
         } else if (fragment instanceof WizardOneFragment) {
             launchMainActivity();
         } else if (fragment instanceof WizardTwoFragment) {
-            if(mAction != null && mAction.equals(AirPowerConstants.ACTION_EDIT_DEVICE_) ) {
-                launchMainActivity();
+            if (mAction != null && mAction.equals(AirPowerConstants.ACTION_EDIT_DEVICE_)) {
+                launchDeviceDetailActivity();
             }
         }
         getSupportFragmentManager().popBackStack();
+    }
+
+    private void launchDeviceDetailActivity() {
+        Intent intent = new Intent(DeviceSetupWizardHolderActivity.this,
+                DeviceDetailActivity.class);
+        intent.setAction(AirPowerConstants.ACTION_LAUNCH_DETAIL);
+        intent.putExtra(AirPowerConstants.KEY_DEVICE_ID, mDevice.getId());
+        startActivity(intent);
+        finish();
     }
 
     private void launchMainActivity() {
@@ -100,7 +129,9 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
         try {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.device_wizard_fragment_holder, fragment);
-            transaction.addToBackStack(null);
+            if (addToBackStack) {
+                transaction.addToBackStack(null);
+            }
             transaction.commit();
         } catch (NullPointerException e) {
             if (AirPowerLog.ISLOGABLE)

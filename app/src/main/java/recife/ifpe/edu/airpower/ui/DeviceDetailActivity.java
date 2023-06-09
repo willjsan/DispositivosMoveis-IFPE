@@ -143,7 +143,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 DeviceSetupWizardHolderActivity.class);
         i.setAction(AirPowerConstants.ACTION_EDIT_DEVICE_);
         i.putExtra(AirPowerConstants.KEY_DEVICE_ID, mDevice.getId());
-        i.putExtra(AirPowerConstants.KEY_ACTION, AirPowerConstants.ACTION_EDIT_DEVICE);
         startActivity(i);
         finish();
     }

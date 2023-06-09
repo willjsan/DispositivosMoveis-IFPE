@@ -194,7 +194,9 @@ public class WizardThreeFragment extends Fragment {
         mSubmitButton.setOnClickListener(v -> {
             mDevice.setName(mName.getText().toString());
             mRepo.update(mDevice);
-            startActivity(new Intent(getContext(), MainHolderActivity.class));
+            Intent intent = new Intent(getContext(), MainHolderActivity.class);
+            intent.setAction(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES);
+            startActivity(intent);
             try {
                 getActivity().finish();
             } catch (NullPointerException e) {

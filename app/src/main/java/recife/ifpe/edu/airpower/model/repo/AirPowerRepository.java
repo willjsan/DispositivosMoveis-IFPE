@@ -34,6 +34,8 @@ public class AirPowerRepository {
     }
 
     public void insert(AirPowerDevice device) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "insert");
         try {
             mDeviceDAO.insert(device);
         } catch (Exception e) {
@@ -44,6 +46,8 @@ public class AirPowerRepository {
     }
 
     public void update(AirPowerDevice device) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "update");
         try {
             mDeviceDAO.update(device);
         } catch (Exception e) {
@@ -53,6 +57,8 @@ public class AirPowerRepository {
     }
 
     public void delete(AirPowerDevice device) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "delete");
         try {
             mDeviceDAO.delete(device);
         } catch (Exception e) {
@@ -62,6 +68,8 @@ public class AirPowerRepository {
     }
 
     public List<AirPowerDevice> getDevices() {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "getDevices");
         try {
             return mDeviceDAO.getDevices();
         } catch (Exception e) {
@@ -73,6 +81,8 @@ public class AirPowerRepository {
     }
 
     public AirPowerDevice getDeviceById(int id) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "getDeviceById");
         try {
             return mDeviceDAO.getDeviceById(id);
         } catch (Exception e) {
