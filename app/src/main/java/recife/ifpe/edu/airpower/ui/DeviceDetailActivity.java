@@ -14,9 +14,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.cardview.widget.CardView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,8 +27,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import recife.ifpe.edu.airpower.R;
@@ -33,6 +34,7 @@ import recife.ifpe.edu.airpower.model.adapter.ChartAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
 import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
 import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
@@ -51,6 +53,16 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private Button mContextButton;
     private GoogleMap mMap;
     private ProgressDialog mProgressDialog;
+
+    /**
+     * Status card
+     */
+    private TextView mStatusTVStatus;
+    private TextView mStatusTVIssue;
+    private SwitchCompat mStatusSwActivate;
+    private CardView mStatusCard;
+    private boolean mIsActivatedByUser = true;
+
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
             final int what = message.what;
@@ -90,8 +102,10 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     .getIntExtra(AirPowerConstants.KEY_DEVICE_ID, INVALID_ID));
             if (mDevice == null) return;
         }
+
         findViewsById();
         retrieveDeviceMeasurement();
+        retrieveDeviceStatus();
         setListeners();
 
         // Maps
@@ -100,12 +114,40 @@ public class DeviceDetailActivity extends AppCompatActivity {
         if (mapFragment == null) {
             return;
         }
+
         mapFragment.getMapAsync(googleMap -> {
             mMap = googleMap;
             LatLng recife = new LatLng(-8.04993041384011, -34.933112917530515);
             mMap.addMarker(new MarkerOptions().position(recife).title("Marker in Recife"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(recife, 17F));
         });
+
+        mStatusCard.setOnClickListener(view -> {
+            Intent intent1 = new Intent(DeviceDetailActivity.this,
+                    DeviceStatusActivity.class);
+            startActivity(intent1);
+        });
+    }
+
+
+    private void retrieveDeviceStatus() {
+        ServerManagerImpl.getInstance().getDeviceStatus(mDevice,
+                new ServerInterfaceWrapper.DeviceStatusCallback() {
+                    @Override
+                    public void onSuccess(DeviceStatus deviceStatus) {
+                        mIsActivatedByUser = false;
+                        mStatusSwActivate.setChecked(deviceStatus.isActivated());
+                        mStatusTVStatus.setText(deviceStatus.getStatusMessage());
+                        mStatusTVIssue.setText(deviceStatus.getIssuesValue());
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        mStatusTVStatus.setText("cant retrieve data");
+                        mStatusSwActivate.setEnabled(false);
+                    }
+                });
+
     }
 
     private void setListeners() {
@@ -120,6 +162,25 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
         mContextButton.setOnClickListener(v -> {
         });
+
+        mStatusSwActivate.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (!mIsActivatedByUser) {
+                mIsActivatedByUser = true;
+                return;
+            }
+            enableDisableDevice(isChecked);
+        });
+    }
+
+    private void enableDisableDevice(boolean enable) {
+        ServerManagerImpl.getInstance().enableDisableDevice(mDevice, enable,
+                isComplete -> {
+                    if (!isComplete) {
+                        Toast.makeText(this, "Action not complete", Toast.LENGTH_SHORT).show();
+                        mIsActivatedByUser = false;
+                        mStatusSwActivate.setChecked(!enable);
+                    }
+                });
     }
 
     private void retrieveDeviceMeasurement() {
@@ -187,6 +248,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
         mDeleteDeviceButton = findViewById(R.id.button_miscellaneous_delete_device);
         mEditDeviceButton = findViewById(R.id.button_miscellaneous_edit_device);
         mContextButton = findViewById(R.id.button_device_detail_menu_context);
+
+        // Status card
+        mStatusTVStatus = findViewById(R.id.tv_ddetail_status_status);
+        mStatusTVIssue = findViewById(R.id.tv_ddetail_status_issue_value);
+        mStatusSwActivate = findViewById(R.id.sw_ddetail_status);
+        mStatusCard = findViewById(R.id.card_detail_status);
     }
 
     @Override

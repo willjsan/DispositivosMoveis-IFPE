@@ -11,6 +11,7 @@ import java.util.List;
 import okhttp3.RequestBody;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.HTTP;
@@ -27,6 +28,12 @@ abstract class ServicesInterfaceWrapper {
 
         @POST("/api/device/measurement")
         Call<List<DeviceMeasurement>> getDeviceMeasurement(@Body RequestBody requestBody);
+
+        @POST("/api/device/status")
+        Call<DeviceStatus> getDeviceStatus(@Body RequestBody requestBody);
+
+        @POST("/api/device/enabledisable")
+        Call<Boolean> enableDisableDevice(@Body RequestBody requestBody);
     }
 
     interface UserService {

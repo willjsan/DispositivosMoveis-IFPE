@@ -17,7 +17,10 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceEnableDisable;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
+import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +44,8 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
     }
 
     @Override
-    public void registerDevice(AirPowerDevice device, ServerInterfaceWrapper.RegisterCallback callback) {
+    public void registerDevice(AirPowerDevice device,
+                               ServerInterfaceWrapper.RegisterCallback callback) {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "registerDevice");
         mConnectionManager
                 .getConnection()
@@ -62,6 +66,70 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                         if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
                         // callback.onFailure(t.toString()); // TODO uncomment after tests
                         callback.onResult(new AirPowerDevice());// TODO remove it after tests
+                    }
+                });
+    }
+
+    @Override
+    public void enableDisableDevice(AirPowerDevice device, boolean enable,
+                                    ServerInterfaceWrapper.DeviceEnableDisableCallback callback) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "enableDisableDevice");
+        DeviceEnableDisable enableDisableDevice = new DeviceEnableDisable(device, enable);
+        mConnectionManager
+                .getConnection()
+                .create(ServicesInterfaceWrapper.DeviceService.class)
+                .enableDisableDevice(RequestBody.create(MediaType.parse("application/json"),
+                        new Gson().toJson(enableDisableDevice)))
+                .enqueue(new Callback<Boolean>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Boolean> call,
+                                           @NonNull Response<Boolean> response) {
+
+                        if (response.isSuccessful()
+                                && response.code() == AirPowerConstants.HTTP_OK) {
+                            callback.onResult(Boolean.TRUE.equals(response.body()));
+                        } else {
+                            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "status not OK");
+                            callback.onResult(false);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Boolean> call,
+                                          @NonNull Throwable t) {
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
+                        callback.onResult(false);
+                    }
+                });
+
+    }
+
+    @Override
+    public void getDeviceStatus(AirPowerDevice device,
+                                ServerInterfaceWrapper.DeviceStatusCallback callback) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "getDeviceStatus");
+        mConnectionManager
+                .getConnection()
+                .create(ServicesInterfaceWrapper.DeviceService.class)
+                .getDeviceStatus(RequestBody.create(MediaType.parse("application/json"),
+                        new Gson().toJson(device)))
+                .enqueue(new Callback<DeviceStatus>() {
+                    @Override
+                    public void onResponse(@NonNull Call<DeviceStatus> call,
+                                           @NonNull Response<DeviceStatus> response) {
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResponse");
+                        if (response.isSuccessful()) {
+                            callback.onSuccess(response.body());
+                        } else {
+                            callback.onFailure("status NOT OK");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<DeviceStatus> call, @NonNull Throwable t) {
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure \n"
+                                + t.getMessage());
+                        callback.onFailure(t.getMessage());
                     }
                 });
     }

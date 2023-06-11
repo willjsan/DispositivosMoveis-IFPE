@@ -45,6 +45,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include layout="@layout/device_detail_item_status" />
+
             <include layout="@layout/device_detail_item_consumption" />
 
             <include layout="@layout/device_detail_item_localization" />

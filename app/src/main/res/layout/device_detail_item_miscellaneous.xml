@@ -30,11 +30,11 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/text_device_banner_label_miscellaneous"
+                android:id="@+id/tv_ddetail_miscellaneous_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/device_detail_banner_miscellaneous_label"
-                android:textSize="20sp"
+                android:textSize="@dimen/card_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.500"
@@ -50,7 +50,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/button_miscellaneous_delete_device"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_device_banner_label_miscellaneous"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ddetail_miscellaneous_label"
                 app:layout_constraintVertical_bias="1.0" />
 
             <Button
@@ -61,7 +61,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_device_banner_label_miscellaneous"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ddetail_miscellaneous_label"
                 app:layout_constraintVertical_bias="0.95" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

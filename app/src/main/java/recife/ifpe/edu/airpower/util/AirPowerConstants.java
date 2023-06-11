@@ -29,4 +29,7 @@ public interface AirPowerConstants {
     String ACTION_LAUNCH_DETAIL = "action_launch_detail";
     int INVALID_DEVICE_ID = -999999999;
     String ACTION_NEW_DEVICE = "action_new_device";
+
+    // HTTP constants
+    int HTTP_OK = 200;
 }
