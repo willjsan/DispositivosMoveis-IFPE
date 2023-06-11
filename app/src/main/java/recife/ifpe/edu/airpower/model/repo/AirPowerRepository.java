@@ -38,6 +38,7 @@ public class AirPowerRepository {
             AirPowerLog.d(TAG, "insert");
         try {
             mDeviceDAO.insert(device);
+            AirPowerLog.w(TAG, device.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't insert device on db");
@@ -50,6 +51,7 @@ public class AirPowerRepository {
             AirPowerLog.d(TAG, "update");
         try {
             mDeviceDAO.update(device);
+            AirPowerLog.w(TAG, device.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't update device from db");
@@ -61,6 +63,7 @@ public class AirPowerRepository {
             AirPowerLog.d(TAG, "delete");
         try {
             mDeviceDAO.delete(device);
+            AirPowerLog.w(TAG, device.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't delete device from db");
@@ -84,6 +87,7 @@ public class AirPowerRepository {
         if (AirPowerLog.ISLOGABLE)
             AirPowerLog.d(TAG, "getDeviceById");
         try {
+            AirPowerLog.w(TAG, mDeviceDAO.getDeviceById(id).toString()); // TODO remove it
             return mDeviceDAO.getDeviceById(id);
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)

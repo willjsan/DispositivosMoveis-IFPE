@@ -57,7 +57,12 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     public void onResponse(@NonNull Call<AirPowerDevice> call,
                                            @NonNull Response<AirPowerDevice> response) {
                         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResponse");
-                        callback.onResult(response.body());
+                        if (response.isSuccessful()
+                                && response.code() == AirPowerConstants.HTTP_OK) {
+                            callback.onSuccess(response.body());
+                        } else {
+                            callback.onFailure("status not OK");
+                        }
                     }
 
                     @Override
@@ -65,7 +70,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                                           @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
                         // callback.onFailure(t.toString()); // TODO uncomment after tests
-                        callback.onResult(new AirPowerDevice());// TODO remove it after tests
+                        callback.onSuccess(new AirPowerDevice());// TODO remove it after tests
                     }
                 });
     }

@@ -107,28 +107,40 @@ public class DeviceDetailActivity extends AppCompatActivity {
         retrieveDeviceMeasurement();
         retrieveDeviceStatus();
         setListeners();
+        setupMapFragment();
+    }
 
-        // Maps
+    private void setupMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment == null) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "maps fragment is null");
             return;
         }
-
         mapFragment.getMapAsync(googleMap -> {
             mMap = googleMap;
-            LatLng recife = new LatLng(-8.04993041384011, -34.933112917530515);
-            mMap.addMarker(new MarkerOptions().position(recife).title("Marker in Recife"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(recife, 17F));
-        });
-
-        mStatusCard.setOnClickListener(view -> {
-            Intent intent1 = new Intent(DeviceDetailActivity.this,
-                    DeviceStatusActivity.class);
-            startActivity(intent1);
+            String localization = mDevice.getLocalization();
+            if (localization == null) {
+                if (AirPowerLog.ISLOGABLE)
+                    AirPowerLog.w(TAG, "device localization is null");
+                Toast.makeText(this, "Localization not set", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String[] split = localization.split(",");
+            String lat = split[0];
+            String lon = split[1];
+            if (lon.isEmpty() || lat.isEmpty()) {
+                if (AirPowerLog.ISLOGABLE)
+                    AirPowerLog.w(TAG, "device latitude or longitude is empty");
+                return;
+            }
+            LatLng deviceLocation = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+            mMap.addMarker(new MarkerOptions()
+                    .position(deviceLocation).title("Device Localization"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 17F));
         });
     }
-
 
     private void retrieveDeviceStatus() {
         ServerManagerImpl.getInstance().getDeviceStatus(mDevice,
@@ -169,6 +181,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 return;
             }
             enableDisableDevice(isChecked);
+        });
+
+        mStatusCard.setOnClickListener(view -> {
+            Intent i = new Intent(DeviceDetailActivity.this,
+                    DeviceStatusActivity.class);
+            startActivity(i);
         });
     }
 

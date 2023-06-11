@@ -121,4 +121,19 @@ public class AirPowerDevice {
     public void setDeviceURL(String deviceURL) {
         this.deviceURL = deviceURL;
     }
+
+    @Override
+    public String toString() {
+        return "AirPowerDevice{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", localization='" + localization + '\'' +
+                ", icon='" + icon + '\'' +
+                ", token='" + token + '\'' +
+                ", deviceSSID='" + deviceSSID + '\'' +
+                ", devicePassword='" + devicePassword + '\'' +
+                ", deviceURL='" + deviceURL + '\'' +
+                '}';
+    }
 }

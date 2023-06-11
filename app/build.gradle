@@ -55,6 +55,7 @@ dependencies {
 
     // Google Maps
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     // Charts
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'

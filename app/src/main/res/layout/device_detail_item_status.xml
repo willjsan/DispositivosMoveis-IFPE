@@ -24,7 +24,7 @@
             android:id="@+id/image_device_banner_consumption"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#9FB0EA" />
+            android:background="@color/airpower_banner" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

@@ -28,7 +28,7 @@ public abstract class ServerInterfaceWrapper {
     }
 
     public interface RegisterCallback {
-        void onResult(AirPowerDevice device);
+        void onSuccess(AirPowerDevice device);
 
         void onFailure(String message);
     }
