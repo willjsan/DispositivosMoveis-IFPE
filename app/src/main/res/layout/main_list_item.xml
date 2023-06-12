@@ -32,6 +32,7 @@
                 android:id="@+id/card_main_item_icon"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:background="@color/black"
                 app:cardCornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -42,10 +43,10 @@
 
                 <ImageView
                     android:id="@+id/image_main_item_icon"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_margin="0dp"
-                    android:background="@color/airpower_mydevices_icon_background"
+                    android:layout_gravity="center"
                     android:contentDescription="@string/main_image_item_description"
                     android:padding="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"

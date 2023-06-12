@@ -63,6 +63,7 @@ public class MainActivityItemAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.deviceDescription = view.findViewById(R.id.text_main_item_description);
             holder.deviceIcon = view.findViewById(R.id.image_main_item_icon);
+            holder.deviceIcon.setAlpha(0.5f);
             holder.deviceLabel = view.findViewById(R.id.text_main_item_label);
             view.setTag(holder);
         } else {
