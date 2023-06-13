@@ -1,4 +1,4 @@
-package recife.ifpe.edu.airpower.ui.insertionwizard;
+package recife.ifpe.edu.airpower.ui.deviceinsertionwizard;
 
 /*
  * Dispositivos Móveis - IFPE 2023
@@ -43,6 +43,7 @@ import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
 import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
+import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
@@ -61,15 +62,10 @@ public class WizardThreeFragment extends Fragment {
     private Context mContext;
     private AirPowerRepository mRepo;
     private ServerInterfaceWrapper.IServerManager mServerManager;
-    private INavigate mNavigateBackPress;
     private ProgressDialog mProgressDialog;
-
-    //localization
     private Button mSetLocalizationButton;
+    private UIInterfaceWrapper.INavigate mNavigateBackPress;
 
-    public interface INavigate {
-        void setBackPress(boolean canBackPress);
-    }
 
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
@@ -142,8 +138,8 @@ public class WizardThreeFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof INavigate) {
-            mNavigateBackPress = (INavigate) context;
+        if (context instanceof UIInterfaceWrapper.INavigate) {
+            mNavigateBackPress = (UIInterfaceWrapper.INavigate) context;
         }
     }
 

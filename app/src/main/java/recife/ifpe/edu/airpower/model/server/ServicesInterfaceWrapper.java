@@ -34,6 +34,9 @@ abstract class ServicesInterfaceWrapper {
 
         @POST("/api/device/enabledisable")
         Call<Boolean> enableDisableDevice(@Body RequestBody requestBody);
+
+        @POST("/api/device/measurement/group")
+        Call<List<DeviceMeasurement>> getMeasurementByGroup(@Body RequestBody requestBody);
     }
 
     interface UserService {

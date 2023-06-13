@@ -12,4 +12,8 @@ public abstract class UIInterfaceWrapper {
     public interface FragmentUtil {
         void openFragment(Fragment fragment, boolean addToBackStack);
     }
+
+    public interface INavigate {
+        void setBackPress(boolean canBackPress);
+    }
 }

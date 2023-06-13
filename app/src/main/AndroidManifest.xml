@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -17,7 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AirPower"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".ui.groupinsertionwizard.GroupActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.DeviceStatusActivity"
             android:exported="false" />
@@ -27,22 +30,22 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".ui.insertionwizard.DeviceSetupWizardHolderActivity"
-            android:exported="false">
+            android:name=".ui.deviceinsertionwizard.DeviceSetupWizardHolderActivity"
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".ui.DeviceDetailActivity"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".ui.main.MainHolderActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 

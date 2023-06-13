@@ -37,7 +37,7 @@ import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
 import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
 import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
-import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
+import recife.ifpe.edu.airpower.ui.deviceinsertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
@@ -112,7 +112,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
     private void setupMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.group_map);
         if (mapFragment == null) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "maps fragment is null");
@@ -205,14 +205,15 @@ public class DeviceDetailActivity extends AppCompatActivity {
         ServerManagerImpl.getInstance().getDeviceMeasurement(mDevice,
                 new ServerInterfaceWrapper.MeasurementCallback() {
                     @Override
-                    public void onResult(List<DeviceMeasurement> measurements) {
-                        new ChartAdapter.Builder(findViewById(R.id.my_chart2), measurements)
+                    public void onSuccess(List<DeviceMeasurement> measurements) {
+                        new ChartAdapter.Builder(findViewById(R.id.home_consumption_overview_chart), measurements)
                                 .build();
                     }
 
                     @Override
                     public void onFailure(String message) {
                         AirPowerLog.e(TAG, "onFailure: " + message);
+                        // TODO show message on UI that some error has occurred
                     }
                 });
     }

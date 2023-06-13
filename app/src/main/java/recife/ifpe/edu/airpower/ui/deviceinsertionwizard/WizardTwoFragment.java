@@ -1,4 +1,4 @@
-package recife.ifpe.edu.airpower.ui.insertionwizard;
+package recife.ifpe.edu.airpower.ui.deviceinsertionwizard;
 
 /*
  * Dispositivos Móveis - IFPE 2023
@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;

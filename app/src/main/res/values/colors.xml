@@ -8,5 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="airpower_banner">#C7F2ECEC</color>
+    <color name="airpower_spinner_background">#E4DFDF</color>
     <color name="airpower_mydevices_icon_background">#F2A1C7D9</color>
+    <color name="airpower_group_settings_button">#F2CADCE4</color>
+    <color name="airpower_group_devices_item_selected">#C7CDC7C7</color>
 </resources>

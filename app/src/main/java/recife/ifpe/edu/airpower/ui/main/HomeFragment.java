@@ -7,24 +7,59 @@ package recife.ifpe.edu.airpower.ui.main;
  */
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.model.adapter.ChartAdapter;
+import recife.ifpe.edu.airpower.model.adapter.GroupsAdapter;
+import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.Group;
+import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
+import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
+import recife.ifpe.edu.airpower.ui.groupinsertionwizard.GroupActivity;
+import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 
 public class HomeFragment extends Fragment {
 
     private static final String TAG = HomeFragment.class.getSimpleName();
+    private List<Group> mGroups;
+    private AirPowerRepository mRepo;
+    private Button mButtonAddGroup;
+    private Spinner mGroupsSpinner;
+    private TextView mBannerTitleConsumption;
+    private TextView mBannerTitleLocalization;
+    private GroupsAdapter mGroupAdapter;
+    private Group mCurrentGroup;
+    private SupportMapFragment mapFragment;
+    private GoogleMap mMap;
+    private BarChart mChart;
 
     public HomeFragment() {
-        // Required empty public constructor
     }
 
     public static HomeFragment newInstance() {
@@ -35,16 +70,152 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
-    }
+        this.mRepo = AirPowerRepository.getInstance(getContext());
+        this.mGroups = mRepo.getGroups();
+        this.mCurrentGroup = mRepo.getGroupById(getInteger(getContext()));
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        this.mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.group_map);
+        findViewsByIds(view);
+        groupSpinnerSetup();
+        mButtonAddGroup.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getContext(), GroupActivity.class);
+            intent.setAction(AirPowerConstants.ACTION_NEW_GROUP);
+            startActivity(intent);
+        });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mGroupAdapter.notifyDataSetChanged();
+        mGroups = mRepo.getGroups();
+    }
+
+    private void setupMapFragment() {
+        if (mapFragment == null) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "maps fragment is null");
+            return;
+        }
+        mapFragment.getMapAsync(googleMap -> {
+            mMap = googleMap;
+            String loc = mCurrentGroup.getLocalization();
+            if (loc == null || loc.isEmpty()) {
+                if (AirPowerLog.ISLOGABLE)
+                    AirPowerLog.w(TAG, "group localization is null");
+                Toast.makeText(getContext(), "Localization not set", Toast.LENGTH_SHORT).show();
+                mMap.clear();
+                return;
+            }
+            String[] split = loc.split(",");
+            String lat = split[0];
+            String lon = split[1];
+            if (lon.isEmpty() || lat.isEmpty()) {
+                if (AirPowerLog.ISLOGABLE)
+                    AirPowerLog.w(TAG, "device latitude or longitude is empty");
+                return;
+            }
+            LatLng deviceLocation = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+            mMap.addMarker(new MarkerOptions()
+                    .position(deviceLocation).title("Group Localization"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deviceLocation, 17F));
+        });
+    }
+
+    private static final String PREF_NAME = "lastGroupSelected";
+    private static final String KEY_INTEGER_VALUE = "integerValue";
+
+    public static void saveInteger(Context context, int value) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_INTEGER_VALUE, value);
+        editor.apply();
+    }
+
+    public static int getInteger(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        AirPowerLog.e(TAG, String.valueOf(sharedPreferences.getInt(KEY_INTEGER_VALUE, 0)));
+        return sharedPreferences.getInt(KEY_INTEGER_VALUE, 0);
+    }
+
+    private void groupSpinnerSetup() {
+        mGroupAdapter = new GroupsAdapter(getContext());
+        mGroupsSpinner.setAdapter(mGroupAdapter);
+        mGroupsSpinner.setSelection(getLastSelectedGroup());
+        mGroupsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView,
+                                       View view, int position, long l) {
+                if (AirPowerLog.ISLOGABLE)
+                    AirPowerLog.d(TAG, "group selection: onItemSelected: pos.:" + position);
+                mCurrentGroup = mGroups.get(position);
+                saveInteger(getContext(), mCurrentGroup.getId());
+                updateAllFields();
+                ServerManagerImpl.getInstance().getMeasurementByGroup(mCurrentGroup.getDevices(),
+                        new ServerInterfaceWrapper.MeasurementCallback() {
+                            @Override
+                            public void onSuccess(List<DeviceMeasurement> measurements) {
+                                generateChart(mChart, measurements);
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+
+                            }
+                        });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private int getLastSelectedGroup() {
+        int savedId = getInteger(getContext());
+        for (int i = 0; i< mGroups.size(); i++) {
+            if (mGroups.get(i).getId() == savedId) {
+                AirPowerLog.w(TAG, "saved group:" + mGroups.get(i).getName()); // TODO remover
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private void updateAllFields() {
+        if (mCurrentGroup == null) {
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "current group is null");
+            return;
+        }
+        // TODO show a progress bar dialog
+        mBannerTitleConsumption.setText(mCurrentGroup.getName() + " Consumption");
+        mBannerTitleLocalization.setText(mCurrentGroup.getName() + " Localization");
+        setupMapFragment();
+    }
+
+    private void generateChart(View view, List<DeviceMeasurement> measurements) {
+        new ChartAdapter
+                .Builder(view.findViewById(R.id.home_consumption_overview_chart), measurements)
+                .build();
+    }
+
+    private void findViewsByIds(View view) {
+        mButtonAddGroup = view.findViewById(R.id.home_button_add_group);
+        mGroupsSpinner = view.findViewById(R.id.home_spinner_groups);
+        mBannerTitleConsumption = view.findViewById(R.id.tv_ddetail_consumption_label);
+        mBannerTitleLocalization = view.findViewById(R.id.tv_group_localization_label);
+        mChart = view.findViewById(R.id.home_consumption_overview_chart);
     }
 
     @Override

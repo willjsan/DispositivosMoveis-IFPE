@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.deviceinsertionwizard.DeviceSetupWizardHolderActivity">
+    tools:context=".ui.groupinsertionwizard.GroupActivity">
 
     <FrameLayout
-        android:id="@+id/device_wizard_fragment_holder"
+        android:id="@+id/group_wizard_fragment_holder"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

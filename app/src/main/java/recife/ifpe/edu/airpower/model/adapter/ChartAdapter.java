@@ -24,49 +24,42 @@ import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 public class ChartAdapter {
-    public static final int COLOR_SCHEME = 1;
     private final String TAG = ChartAdapter.class.getSimpleName();
 
-    public enum Colors {
-        LIBERTY, DEFAULT, BLACK
-    }
-
-
     private ChartAdapter(View viewGroup,
-                         List<DeviceMeasurement> measurements) {
+                         List<DeviceMeasurement> measurements,
+                         String description) {
+        if (description == null || description.isEmpty())
+            description = "Daily Consumption";
         try {
             BarChart barChart = (BarChart) viewGroup;
 
             ArrayList<BarEntry> barEntry = new ArrayList<>();
 
             for (DeviceMeasurement m : measurements) {
-                barEntry.add(new BarEntry(m.getX(),m.getY()));
+                barEntry.add(new BarEntry(m.getX(), m.getY()));
             }
-
-            BarDataSet dataSet = new BarDataSet(barEntry,"lala");
-
+            BarDataSet dataSet = new BarDataSet(barEntry, "kWh/day");
             dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
             dataSet.setValueTextColor(Color.BLACK);
             dataSet.setValueTextSize(0);
-
             BarData barData = new BarData(dataSet);
-
             barChart.setFitBars(true);
             barChart.setData(barData);
-            barChart.getDescription().setText("Daily Consumption");
+            barChart.getDescription().setText(description);
             barChart.animateY(2000);
 
         } catch (Exception e) {
-            AirPowerLog.e(TAG, "Fail while building chart \n" +
+            AirPowerLog.e(TAG, "Fail while building single chart \n" +
                     e.getMessage());
         }
     }
 
 
     public static class Builder {
-        private int sViewId;
         private final View sViewGroup;
         private final List<DeviceMeasurement> sMeasurements;
+        private String sDescription;
 
         public Builder(@NonNull View viewGroup,
                        @NonNull List<DeviceMeasurement> measurements) {
@@ -75,12 +68,13 @@ public class ChartAdapter {
         }
 
         public Builder setDescription(String description) {
-
+            sDescription = description;
             return this;
         }
 
         public ChartAdapter build() {
-            return new ChartAdapter(sViewGroup,sMeasurements);
+            return new ChartAdapter(sViewGroup, sMeasurements,
+                    sDescription);
         }
     }
 }

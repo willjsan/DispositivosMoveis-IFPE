@@ -30,7 +30,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tv_ddetail_localization_label"
+                android:id="@+id/tv_group_localization_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/device_detail_banner_localization_label"
@@ -43,12 +43,12 @@
                 app:layout_constraintVertical_bias="0.050000012" />
 
             <fragment
-                android:id="@+id/map"
+                android:id="@+id/group_map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_ddetail_localization_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_group_localization_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

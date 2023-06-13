@@ -40,7 +40,7 @@ public abstract class ServerInterfaceWrapper {
     }
 
     public interface MeasurementCallback {
-        void onResult(List<DeviceMeasurement> measurements);
+        void onSuccess(List<DeviceMeasurement> measurements);
 
         void onFailure(String message);
     }

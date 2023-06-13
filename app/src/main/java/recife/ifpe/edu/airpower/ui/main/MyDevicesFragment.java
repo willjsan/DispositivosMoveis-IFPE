@@ -29,7 +29,7 @@ import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
 import recife.ifpe.edu.airpower.ui.DeviceDetailActivity;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
-import recife.ifpe.edu.airpower.ui.insertionwizard.DeviceSetupWizardHolderActivity;
+import recife.ifpe.edu.airpower.ui.deviceinsertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
@@ -89,7 +89,7 @@ public class MyDevicesFragment extends Fragment {
         });
 
         // Floating button
-        mFloatingActionButton = view.findViewById(R.id.floatingActionButton);
+        mFloatingActionButton = view.findViewById(R.id.home_floatingActionButton);
         mFloatingActionButton.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), DeviceSetupWizardHolderActivity.class);
             i.setAction(AirPowerConstants.ACTION_NEW_DEVICE);

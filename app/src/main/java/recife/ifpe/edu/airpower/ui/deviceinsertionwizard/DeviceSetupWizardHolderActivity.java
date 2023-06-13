@@ -1,4 +1,4 @@
-package recife.ifpe.edu.airpower.ui.insertionwizard;
+package recife.ifpe.edu.airpower.ui.deviceinsertionwizard;
 
 /*
  * Dispositivos Móveis - IFPE 2023
@@ -23,7 +23,7 @@ import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 public class DeviceSetupWizardHolderActivity extends AppCompatActivity
-        implements WizardThreeFragment.INavigate,
+        implements UIInterfaceWrapper.INavigate,
         UIInterfaceWrapper.FragmentUtil {
 
     private static final String TAG = DeviceSetupWizardHolderActivity.class.getSimpleName();
@@ -36,9 +36,9 @@ public class DeviceSetupWizardHolderActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_setup_wizard_holder);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
         Intent intent = getIntent();
         if (intent == null) return;
-        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
         mRepo = AirPowerRepository.getInstance(getApplicationContext());
         mAction = intent.getAction();
         switch (mAction) {

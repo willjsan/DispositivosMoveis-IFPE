@@ -9,11 +9,7 @@ package recife.ifpe.edu.airpower.util;
 public interface AirPowerConstants {
 
     String KEY_COD_DRAWABLE = "drawable";
-    String KEY_DEVICE_DESCRIPTION = "device_description";
-    String DEVICE_ITEM_INDEX = "device_iem_intex";
     String KEY_DEVICE_ID = "key_device_id";
-    String KEY_EDIT_DEVICE = "edit_device";
-    String KEY_ACTION = "key_action";
 
     int DEVICE_CONNECTION_SUCCESS = 1;
     int DEVICE_CONNECTION_FAIL = 2;
@@ -32,4 +28,8 @@ public interface AirPowerConstants {
 
     // HTTP constants
     int HTTP_OK = 200;
+
+    // Group constants
+    String ACTION_NEW_GROUP = "action_new_group";
+    String ACTION_EDIT_GROUP = "action_edit_group";
 }

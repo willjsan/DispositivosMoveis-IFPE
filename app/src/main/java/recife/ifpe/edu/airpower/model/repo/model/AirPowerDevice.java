@@ -35,11 +35,45 @@ public class AirPowerDevice {
     public AirPowerDevice() {
     }
 
+    /**
+     * NEVER use this constructor if
+     * you will STORE the device on DB.
+     * The db is set to AUTO MANAGE devices ids.
+     *
+     * @param id don't create new ids for devices
+     * @param name of device
+     * @param description of device
+     * @param localization of device
+     * @param icon of device
+     * @param token of device
+     * @param deviceSSID of device
+     * @param devicePassword of device
+     * @param deviceURL of device
+     */
     @Ignore
     public AirPowerDevice(int id, String name, String description, String localization,
                           String icon, String token, String deviceSSID,
                           String devicePassword, String deviceURL) {
         this.id = id;
+        this.name = name;
+        this.description = description;
+        this.localization = localization;
+        this.icon = icon;
+        this.token = token;
+        this.deviceSSID = deviceSSID;
+        this.devicePassword = devicePassword;
+        this.deviceURL = deviceURL;
+    }
+
+    @Ignore
+    public AirPowerDevice(String name,
+                          String description,
+                          String localization,
+                          String icon,
+                          String token,
+                          String deviceSSID,
+                          String devicePassword,
+                          String deviceURL) {
         this.name = name;
         this.description = description;
         this.localization = localization;

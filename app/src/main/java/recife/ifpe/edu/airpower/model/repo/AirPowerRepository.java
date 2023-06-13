@@ -1,4 +1,6 @@
-package recife.ifpe.edu.airpower.model.repo;/*
+package recife.ifpe.edu.airpower.model.repo;
+
+/*
  * Dispositivos Móveis - IFPE 2023
  * Author: Willian Santos
  * Project: AirPower
@@ -6,22 +8,48 @@ package recife.ifpe.edu.airpower.model.repo;/*
 
 import android.content.Context;
 
+import com.google.android.gms.maps.model.GroundOverlay;
+
 import java.util.List;
 
 import recife.ifpe.edu.airpower.model.repo.database.AirPowerDatabase;
 import recife.ifpe.edu.airpower.model.repo.database.DeviceDAO;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.Group;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
+import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 public class AirPowerRepository {
     private static String TAG = AirPowerRepository.class.getSimpleName();
     private static AirPowerRepository instance;
-
+    private Group mCurrentGroup;
     private final DeviceDAO mDeviceDAO;
 
     private AirPowerRepository(Context context) {
         AirPowerDatabase mDb = AirPowerDatabase.getDataBaseInstance(context);
         mDeviceDAO = mDb.getDeviceDAOInstance();
+        List<Group> groups = mDeviceDAO.getGroups();
+        if (groups == null || groups.isEmpty()) {
+            createDefaultGroup();
+        }
+        mCurrentGroup = mDeviceDAO.getGroups().get(0);
+    }
+
+    private void createDefaultGroup() {
+        Group group = new Group();
+        group.setName("Default");
+        group.setDescription("My default group");
+        group.setIcon("airpower_launcher_icon");
+        group.setDevices(mDeviceDAO.getDevices());
+        mDeviceDAO.insert(group);
+    }
+
+    private void setCurrentGroup(Group group) {
+        this.mCurrentGroup = group;
+    }
+
+    private Group getCurrentGroup() {
+        return this.mCurrentGroup;
     }
 
     public static AirPowerRepository getInstance(Context context) {
@@ -35,13 +63,26 @@ public class AirPowerRepository {
 
     public void insert(AirPowerDevice device) {
         if (AirPowerLog.ISLOGABLE)
-            AirPowerLog.d(TAG, "insert");
+            AirPowerLog.d(TAG, "insert AirPowerDevice");
         try {
             mDeviceDAO.insert(device);
             AirPowerLog.w(TAG, device.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't insert device on db");
+            AirPowerLog.e(TAG, e.toString());
+        }
+    }
+
+    public void insert(Group group) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "insert Group");
+        try {
+            mDeviceDAO.insert(group);
+            AirPowerLog.w(TAG, group.toString()); // TODO remove it
+        } catch (Exception e) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Couldn't Group on db");
             AirPowerLog.e(TAG, e.toString());
         }
     }
@@ -97,4 +138,30 @@ public class AirPowerRepository {
         return null;
     }
 
+
+    public Group getGroupById(int id) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "getGroupById");
+        try {
+            AirPowerLog.w(TAG, mDeviceDAO.getGroupById(id).toString()); // TODO remove it
+            return mDeviceDAO.getGroupById(id);
+        } catch (Exception e) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Couldn't get group by id from db");
+            AirPowerLog.e(TAG, e.getMessage());
+        }
+        return null;
+    }
+    public List<Group> getGroups() {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "getGroups");
+        try {
+            return mDeviceDAO.getGroups();
+        } catch (Exception e) {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.e(TAG, "Couldn't get groups from db");
+            AirPowerLog.e(TAG, e.getMessage());
+        }
+        return null;
+    }
 }

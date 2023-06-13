@@ -131,7 +131,8 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<DeviceStatus> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<DeviceStatus> call,
+                                          @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure \n"
                                 + t.getMessage());
                         callback.onFailure(t.getMessage());
@@ -181,7 +182,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     public void onResponse(@NonNull Call<List<DeviceMeasurement>> call,
                                            @NonNull Response<List<DeviceMeasurement>> response) {
                         if (response.isSuccessful()) {
-                            callback.onResult(response.body());
+                            callback.onSuccess(response.body());
                         } else {
                             callback.onFailure("Fail to retrieve device measurement");
                         }
@@ -191,7 +192,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     public void onFailure(@NonNull Call<List<DeviceMeasurement>> call,
                                           @NonNull Throwable t) {
                         // callback.onFailure(t.getMessage());// TODO uncomment after tests
-                        callback.onResult(getMockMeasurement()); // TODO remove it after tests
+                        callback.onSuccess(getMockMeasurement()); // TODO remove it after tests
                     }
                 });
 
@@ -229,5 +230,35 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                 new DeviceMeasurement(29, 134),
                 new DeviceMeasurement(30, 231)
         ));
+    }
+
+    public void getMeasurementByGroup(
+            List<AirPowerDevice> devices,
+            ServerInterfaceWrapper.MeasurementCallback callback) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "getMeasurementByGroup");
+        mConnectionManager.getConnection()
+                .create(ServicesInterfaceWrapper.DeviceService.class)
+                .getMeasurementByGroup(RequestBody
+                        .create(MediaType.parse("application/json"),
+                                new Gson().toJson(devices)))
+                .enqueue(new Callback<List<DeviceMeasurement>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<DeviceMeasurement>> call,
+                                           @NonNull Response<List<DeviceMeasurement>> resp) {
+                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK){
+                            callback.onSuccess(resp.body());
+                        } else {
+                            callback.onFailure(String.valueOf(resp.code()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<DeviceMeasurement>> call,
+                                          @NonNull Throwable t) {
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.d(TAG, "onFailure" + t.getMessage());
+                        callback.onFailure(t.getMessage());
+                    }
+                });
     }
 }

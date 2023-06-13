@@ -9,11 +9,14 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.Group;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
-@Database(entities = {AirPowerDevice.class}, version = 5, exportSchema = false)
+@Database(entities = {AirPowerDevice.class, Group.class}, version = 7, exportSchema = false)
+@TypeConverters({AirPowerTypeConverter.class})
 public abstract class AirPowerDatabase extends RoomDatabase {
 
     public static final String TAG = AirPowerDatabase.class.getSimpleName();

@@ -40,12 +40,15 @@ public class MainHolderActivity extends AppCompatActivity
             if (action != null &&
                     action.equals(AirPowerConstants.ACTION_LAUNCH_MY_DEVICES)) {
                 mNavigationView.setSelectedItemId(R.id.b2);
-                //openFragment(MyDevicesFragment.newInstance(), false); // this make another instantiation of MyDevicesFragment
             } else {
+                setTitle("Home");
                 openFragment(HomeFragment.newInstance(), false);
+                lastFragmentOpened = 1;
             }
         }
     }
+
+    private int lastFragmentOpened = -1;
 
     private void setUpBottomNavigationView() {
         mNavigationView = findViewById(R.id.main_bottom_nav);
@@ -58,19 +61,25 @@ public class MainHolderActivity extends AppCompatActivity
             }
             switch (item.getItemId()) {
                 case R.id.b1:
+                    if (lastFragmentOpened == 1) break;
                     actionBar.setTitle("Home");
                     Fragment homeFragment = HomeFragment.newInstance();
                     openFragment(homeFragment, false);
+                    lastFragmentOpened = 1;
                     break;
                 case R.id.b2:
+                    if (lastFragmentOpened == 2) break;
                     actionBar.setTitle("My Devices");
                     Fragment myDevicesFragment = MyDevicesFragment.newInstance();
                     openFragment(myDevicesFragment, false);
+                    lastFragmentOpened = 2;
                     break;
                 case R.id.b3:
+                    if (lastFragmentOpened == 3) break;
                     actionBar.setTitle("Profile");
                     Fragment profile = ProfileFragment.newInstance();
                     openFragment(profile, false);
+                    lastFragmentOpened = 3;
                     break;
             }
             return true;
