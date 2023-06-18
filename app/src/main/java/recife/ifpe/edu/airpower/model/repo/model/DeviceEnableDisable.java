@@ -33,4 +33,12 @@ public class DeviceEnableDisable {
     public void setActivated(boolean activated) {
         isActivated = activated;
     }
+
+    @Override
+    public String toString() {
+        return "DeviceEnableDisable{" +
+                "device=" + device +
+                ", isActivated=" + isActivated +
+                '}';
+    }
 }

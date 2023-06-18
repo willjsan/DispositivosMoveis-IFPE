@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -29,6 +27,7 @@ import retrofit2.Response;
 public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager {
 
     private static final String TAG = ServerManagerImpl.class.getSimpleName();
+    public static final String SERVICE_UNAVAILABLE = "service unavailable";
     private static ServerManagerImpl instance;
     private ConnectionManager mConnectionManager = ConnectionManager.getInstance();
 
@@ -55,13 +54,13 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                 .enqueue(new Callback<AirPowerDevice>() {
                     @Override
                     public void onResponse(@NonNull Call<AirPowerDevice> call,
-                                           @NonNull Response<AirPowerDevice> response) {
-                        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResponse");
-                        if (response.isSuccessful()
-                                && response.code() == AirPowerConstants.HTTP_OK) {
-                            callback.onSuccess(response.body());
+                                           @NonNull Response<AirPowerDevice> resp) {
+                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK) {
+                            callback.onSuccess(resp.body());
                         } else {
-                            callback.onFailure("status not OK");
+                            if (AirPowerLog.ISLOGABLE)
+                                AirPowerLog.w(TAG, "status:" + resp.code());
+                            callback.onFailure(String.valueOf(resp.code()));
                         }
                     }
 
@@ -69,8 +68,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     public void onFailure(@NonNull Call<AirPowerDevice> call,
                                           @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
-                        // callback.onFailure(t.toString()); // TODO uncomment after tests
-                        callback.onSuccess(new AirPowerDevice());// TODO remove it after tests
+                        callback.onFailure(t.getMessage());
                     }
                 });
     }
@@ -78,8 +76,12 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
     @Override
     public void enableDisableDevice(AirPowerDevice device, boolean enable,
                                     ServerInterfaceWrapper.DeviceEnableDisableCallback callback) {
-        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "enableDisableDevice");
-        DeviceEnableDisable enableDisableDevice = new DeviceEnableDisable(device, enable);
+        final DeviceEnableDisable enableDisableDevice = new DeviceEnableDisable(device, enable);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "after set: " + enableDisableDevice.toString()); // TODO remover
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "enableDisableDevice: " + enable); // TODO remover
+
+        String s = new Gson().toJson(enableDisableDevice);
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "after Gson transform: " + s); // TODO remover
         mConnectionManager
                 .getConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
@@ -88,14 +90,15 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                 .enqueue(new Callback<Boolean>() {
                     @Override
                     public void onResponse(@NonNull Call<Boolean> call,
-                                           @NonNull Response<Boolean> response) {
+                                           @NonNull Response<Boolean> resp) {
 
-                        if (response.isSuccessful()
-                                && response.code() == AirPowerConstants.HTTP_OK) {
-                            callback.onResult(Boolean.TRUE.equals(response.body()));
+                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK) {
+                            callback.onResult(Boolean.TRUE.equals(resp.body()));
+                            AirPowerLog.w(TAG, "server response: " + resp.body()); // TODO remover
                         } else {
-                            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "status not OK");
-                            callback.onResult(false);
+                            if (AirPowerLog.ISLOGABLE)
+                                AirPowerLog.w(TAG, "status:" + resp.code());
+                            callback.onResult(false); // TODO maybe this is wrong
                         }
                     }
 
@@ -121,21 +124,22 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                 .enqueue(new Callback<DeviceStatus>() {
                     @Override
                     public void onResponse(@NonNull Call<DeviceStatus> call,
-                                           @NonNull Response<DeviceStatus> response) {
-                        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResponse");
-                        if (response.isSuccessful()) {
-                            callback.onSuccess(response.body());
+                                           @NonNull Response<DeviceStatus> resp) {
+                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK) {
+                            AirPowerLog.w(TAG, "server response:" + resp.body()); // TODO remover
+                            callback.onSuccess(resp.body());
                         } else {
-                            callback.onFailure("status NOT OK");
+                            if (AirPowerLog.ISLOGABLE)
+                                AirPowerLog.w(TAG, "status:" + resp.code());
+                            callback.onFailure(SERVICE_UNAVAILABLE);
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<DeviceStatus> call,
                                           @NonNull Throwable t) {
-                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure \n"
-                                + t.getMessage());
-                        callback.onFailure(t.getMessage());
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
+                        callback.onFailure(SERVICE_UNAVAILABLE);
                     }
                 });
     }
@@ -152,17 +156,22 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                 .enqueue(new Callback<AirPowerDevice>() {
                     @Override
                     public void onResponse(@NonNull Call<AirPowerDevice> call,
-                                           @NonNull Response<AirPowerDevice> response) {
+                                           @NonNull Response<AirPowerDevice> resp) {
                         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onResponse");
-                        callback.onSuccess("success");
+                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK) {
+                            callback.onSuccess("success");
+                        } else {
+                            if (AirPowerLog.ISLOGABLE)
+                                AirPowerLog.w(TAG, "status:" + resp.code());
+                            callback.onFailure("status:" + resp.code());
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<AirPowerDevice> call,
                                           @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
-                        // callback.onFailure(t.getMessage()); // TODO uncomment after tests
-                        callback.onSuccess("this is a fake success"); // TODO remove it after tests
+                        callback.onFailure(t.getMessage());
                     }
                 });
 
@@ -171,6 +180,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
     @Override
     public void getDeviceMeasurement(AirPowerDevice device,
                                      ServerInterfaceWrapper.MeasurementCallback callback) {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "getDeviceMeasurement");
         mConnectionManager
                 .getConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
@@ -180,58 +190,27 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                 .enqueue(new Callback<List<DeviceMeasurement>>() {
                     @Override
                     public void onResponse(@NonNull Call<List<DeviceMeasurement>> call,
-                                           @NonNull Response<List<DeviceMeasurement>> response) {
-                        if (response.isSuccessful()) {
-                            callback.onSuccess(response.body());
+                                           @NonNull Response<List<DeviceMeasurement>> resp) {
+                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK) {
+                            callback.onSuccess(resp.body());
                         } else {
-                            callback.onFailure("Fail to retrieve device measurement");
+                            if (AirPowerLog.ISLOGABLE)
+                                AirPowerLog.w(TAG, "status:" + resp.code());
+                            callback.onFailure("status:" + resp.code());
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<DeviceMeasurement>> call,
                                           @NonNull Throwable t) {
-                        // callback.onFailure(t.getMessage());// TODO uncomment after tests
-                        callback.onSuccess(getMockMeasurement()); // TODO remove it after tests
+                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
+                        callback.onFailure(t.getMessage());
                     }
                 });
 
     }
 
-    private List<DeviceMeasurement> getMockMeasurement() {
-        return new ArrayList<>(Arrays.asList(
-                new DeviceMeasurement(1, 112),
-                new DeviceMeasurement(2, 123),
-                new DeviceMeasurement(3, 155),
-                new DeviceMeasurement(4, 145),
-                new DeviceMeasurement(5, 112),
-                new DeviceMeasurement(6, 162),
-                new DeviceMeasurement(7, 14),
-                new DeviceMeasurement(8, 156),
-                new DeviceMeasurement(9, 14),
-                new DeviceMeasurement(10, 13),
-                new DeviceMeasurement(11, 123),
-                new DeviceMeasurement(12, 156),
-                new DeviceMeasurement(13, 143),
-                new DeviceMeasurement(14, 341),
-                new DeviceMeasurement(15, 165),
-                new DeviceMeasurement(16, 1),
-                new DeviceMeasurement(17, 176),
-                new DeviceMeasurement(18, 1),
-                new DeviceMeasurement(19, 134),
-                new DeviceMeasurement(20, 14),
-                new DeviceMeasurement(22, 134),
-                new DeviceMeasurement(23, 13),
-                new DeviceMeasurement(24, 176),
-                new DeviceMeasurement(25, 13),
-                new DeviceMeasurement(26, 31),
-                new DeviceMeasurement(27, 134),
-                new DeviceMeasurement(28, 41),
-                new DeviceMeasurement(29, 134),
-                new DeviceMeasurement(30, 231)
-        ));
-    }
-
+    @Override
     public void getMeasurementByGroup(
             List<AirPowerDevice> devices,
             ServerInterfaceWrapper.MeasurementCallback callback) {
@@ -245,9 +224,11 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     @Override
                     public void onResponse(@NonNull Call<List<DeviceMeasurement>> call,
                                            @NonNull Response<List<DeviceMeasurement>> resp) {
-                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK){
+                        if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK) {
                             callback.onSuccess(resp.body());
                         } else {
+                            if (AirPowerLog.ISLOGABLE)
+                                AirPowerLog.d(TAG, "status" + resp.code());
                             callback.onFailure(String.valueOf(resp.code()));
                         }
                     }
@@ -256,7 +237,7 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
                     public void onFailure(@NonNull Call<List<DeviceMeasurement>> call,
                                           @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE)
-                            AirPowerLog.d(TAG, "onFailure" + t.getMessage());
+                            AirPowerLog.d(TAG, "onFailure");
                         callback.onFailure(t.getMessage());
                     }
                 });

@@ -25,6 +25,9 @@ public abstract class ServerInterfaceWrapper {
 
         void enableDisableDevice(AirPowerDevice device, boolean enable,
                                  ServerInterfaceWrapper.DeviceEnableDisableCallback callback);
+
+        void getMeasurementByGroup(List<AirPowerDevice> devices,
+                                   ServerInterfaceWrapper.MeasurementCallback callback);
     }
 
     public interface RegisterCallback {
