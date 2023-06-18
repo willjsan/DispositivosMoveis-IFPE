@@ -33,6 +33,7 @@ import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.ChartAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceEnableDisable;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
 import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
@@ -61,7 +62,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private TextView mStatusTVIssue;
     private SwitchCompat mStatusSwActivate;
     private CardView mStatusCard;
-    private boolean mIsActivatedByUser = true;
+    private boolean mIsActivatedByUser;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
@@ -147,15 +148,22 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 new ServerInterfaceWrapper.DeviceStatusCallback() {
                     @Override
                     public void onSuccess(DeviceStatus deviceStatus) {
+                        if (deviceStatus == null) {
+                            if (AirPowerLog.ISLOGABLE)
+                                AirPowerLog.e(TAG, "response is null");
+                            return;
+                        }
                         mIsActivatedByUser = false;
                         mStatusSwActivate.setChecked(deviceStatus.isActivated());
                         mStatusTVStatus.setText(deviceStatus.getStatusMessage());
-                        mStatusTVIssue.setText(deviceStatus.getIssuesValue());
+                        mStatusTVIssue.setText(String.valueOf(deviceStatus.getIssuesCount()));
+
+                        statusSwitchActivateByUser = true;
                     }
 
                     @Override
                     public void onFailure(String message) {
-                        mStatusTVStatus.setText("cant retrieve data");
+                        mStatusTVStatus.setText(message);
                         mStatusSwActivate.setEnabled(false);
                     }
                 });
@@ -176,11 +184,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
         });
 
         mStatusSwActivate.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (!mIsActivatedByUser) {
-                mIsActivatedByUser = true;
-                return;
+            AirPowerLog.w(TAG, "switch setOnCheckedChangeListener: is checked:" + isChecked); // TODO remover
+            if (!statusSwitchActivateByUser) {
+                AirPowerLog.w(TAG, "switch activated by system"); // TODO remover
+                statusSwitchActivateByUser = false;
+            } else {
+                AirPowerLog.w(TAG, "switch activated by user is checked:" + isChecked); // TODO remover
+                enableDisableDevice(mDevice);
             }
-            enableDisableDevice(isChecked);
         });
 
         mStatusCard.setOnClickListener(view -> {
@@ -190,15 +201,21 @@ public class DeviceDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void enableDisableDevice(boolean enable) {
-        ServerManagerImpl.getInstance().enableDisableDevice(mDevice, enable,
-                isComplete -> {
-                    if (!isComplete) {
-                        Toast.makeText(this, "Action not complete", Toast.LENGTH_SHORT).show();
-                        mIsActivatedByUser = false;
-                        mStatusSwActivate.setChecked(!enable);
-                    }
-                });
+    private boolean statusSwitchActivateByUser = false;
+    private void enableDisableDevice(AirPowerDevice device) {
+        AirPowerLog.d(TAG, "enableDisableDevice");
+        ServerManagerImpl.getInstance().enableDisableDevice(device,
+                new ServerInterfaceWrapper.DeviceEnableDisableCallback() {
+            @Override
+            public void onSuccess() {
+                AirPowerLog.w(TAG, "SUCESSO"); // TODO apagar
+            }
+
+            @Override
+            public void onFailure(String message) {
+                AirPowerLog.w(TAG, "FALHA"); // TODO apagar
+            }
+        });
     }
 
     private void retrieveDeviceMeasurement() {

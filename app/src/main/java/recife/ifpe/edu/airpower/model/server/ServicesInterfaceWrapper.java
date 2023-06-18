@@ -10,6 +10,7 @@ import java.util.List;
 
 import okhttp3.RequestBody;
 import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.DeviceEnableDisable;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
 import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
 import retrofit2.Call;

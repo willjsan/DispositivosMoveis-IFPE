@@ -9,28 +9,20 @@ package recife.ifpe.edu.airpower.model.repo.model;
 public class DeviceStatus {
 
     private String statusMessage;
-    private String issuesValue;
-    private boolean isActivated;
+    private int issuesCount;
+    private boolean isActivated = true; // TODO remover "= true"
     private int failLevel;
 
     public DeviceStatus() {
     }
 
     public DeviceStatus(String statusMessage,
-                        String issuesValue,
+                        int issuesValue,
                         boolean isActivated,
                         int failLevel) {
         this.statusMessage = statusMessage;
-        this.issuesValue = issuesValue;
+        this.issuesCount = issuesValue;
         this.isActivated = isActivated;
-        this.failLevel = failLevel;
-    }
-
-    public int getFailLevel() {
-        return failLevel;
-    }
-
-    public void setFailLevel(int failLevel) {
         this.failLevel = failLevel;
     }
 
@@ -42,12 +34,12 @@ public class DeviceStatus {
         this.statusMessage = statusMessage;
     }
 
-    public String getIssuesValue() {
-        return issuesValue;
+    public int getIssuesCount() {
+        return issuesCount;
     }
 
-    public void setIssuesValue(String issuesValue) {
-        this.issuesValue = issuesValue;
+    public void setIssuesCount(int issuesCount) {
+        this.issuesCount = issuesCount;
     }
 
     public boolean isActivated() {
@@ -56,5 +48,24 @@ public class DeviceStatus {
 
     public void setActivated(boolean activated) {
         isActivated = activated;
+        isActivated = true;  // TODO remover
+    }
+
+    public int getFailLevel() {
+        return failLevel;
+    }
+
+    public void setFailLevel(int failLevel) {
+        this.failLevel = failLevel;
+    }
+
+    @Override
+    public String toString() {
+        return "DeviceStatus{" +
+                "statusMessage='" + statusMessage + '\'' +
+                ", issuesCount=" + issuesCount +
+                ", isActivated=" + isActivated +
+                ", failLevel=" + failLevel +
+                '}';
     }
 }
