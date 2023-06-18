@@ -1,4 +1,4 @@
-package recife.ifpe.edu.airpower.model.repo.model;
+package recife.ifpe.edu.airpower.model.repo.model.device;
 
 /*
  * Dispositivos Móveis - IFPE 2023

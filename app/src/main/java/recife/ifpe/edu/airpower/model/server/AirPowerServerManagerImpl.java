@@ -14,40 +14,39 @@ import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceEnableDisable;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceStatus;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager {
+public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPowerServerManager {
 
-    private static final String TAG = ServerManagerImpl.class.getSimpleName();
+    private static final String TAG = AirPowerServerManagerImpl.class.getSimpleName();
     public static final String SERVICE_UNAVAILABLE = "service unavailable";
-    private static ServerManagerImpl instance;
-    private ConnectionManager mConnectionManager = ConnectionManager.getInstance();
+    private static AirPowerServerManagerImpl instance;
+    private final ConnectionManager mConnectionManager = ConnectionManager.getInstance();
 
-    private ServerManagerImpl() {
+    private AirPowerServerManagerImpl() {
 
     }
 
-    public static ServerManagerImpl getInstance() {
+    public static AirPowerServerManagerImpl getInstance() {
         if (instance == null) {
-            instance = new ServerManagerImpl();
+            instance = new AirPowerServerManagerImpl();
         }
         return instance;
     }
 
     @Override
     public void registerDevice(AirPowerDevice device,
-                               ServerInterfaceWrapper.RegisterCallback callback) {
+                               ServersInterfaceWrapper.RegisterCallback callback) {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "registerDevice");
         mConnectionManager
-                .getConnection()
+                .getAirPowerConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
                 .registerDevice(RequestBody.create(MediaType.parse("application/json"),
                         new Gson().toJson(device)))
@@ -75,10 +74,10 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
 
     @Override
     public void getDeviceStatus(AirPowerDevice device,
-                                ServerInterfaceWrapper.DeviceStatusCallback callback) {
+                                ServersInterfaceWrapper.DeviceStatusCallback callback) {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "getDeviceStatus");
         mConnectionManager
-                .getConnection()
+                .getAirPowerConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
                 .getDeviceStatus(RequestBody.create(MediaType.parse("application/json"),
                         new Gson().toJson(device)))
@@ -107,10 +106,10 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
 
     @Override
     public void unregisterDevice(AirPowerDevice device,
-                                 ServerInterfaceWrapper.UnregisterCallback callback) {
+                                 ServersInterfaceWrapper.UnregisterCallback callback) {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "unregisterDevice");
         mConnectionManager
-                .getConnection()
+                .getAirPowerConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
                 .unregisterDevice(RequestBody.create(MediaType.parse("application/json"),
                         new Gson().toJson(device)))
@@ -140,10 +139,10 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
 
     @Override
     public void getDeviceMeasurement(AirPowerDevice device,
-                                     ServerInterfaceWrapper.MeasurementCallback callback) {
+                                     ServersInterfaceWrapper.MeasurementCallback callback) {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "getDeviceMeasurement");
         mConnectionManager
-                .getConnection()
+                .getAirPowerConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
                 .getDeviceMeasurement(RequestBody
                         .create(MediaType.parse("application/json"),
@@ -174,9 +173,9 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
     @Override
     public void getMeasurementByGroup(
             List<AirPowerDevice> devices,
-            ServerInterfaceWrapper.MeasurementCallback callback) {
+            ServersInterfaceWrapper.MeasurementCallback callback) {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "getMeasurementByGroup");
-        mConnectionManager.getConnection()
+        mConnectionManager.getAirPowerConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
                 .getMeasurementByGroup(RequestBody
                         .create(MediaType.parse("application/json"),
@@ -206,11 +205,11 @@ public class ServerManagerImpl implements ServerInterfaceWrapper.IServerManager 
 
     @Override
     public void enableDisableDevice(AirPowerDevice device,
-                                    ServerInterfaceWrapper.DeviceEnableDisableCallback callback) {
+                                    ServersInterfaceWrapper.DeviceEnableDisableCallback callback) {
         if (AirPowerLog.ISLOGABLE)
             AirPowerLog.d(TAG, "enableDisableDevice: " + device.toString());
         mConnectionManager
-                .getConnection()
+                .getAirPowerConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
                 .enableDisableDevice(RequestBody.create(MediaType.parse("application/json"),
                         new Gson().toJson(device)))

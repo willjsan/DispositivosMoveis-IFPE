@@ -12,21 +12,20 @@ import android.graphics.drawable.Drawable;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import recife.ifpe.edu.airpower.R;
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 
 public class AirPowerUtil {
 
     private static String TAG = AirPowerUtil.class.getSimpleName();
 
     public static Drawable getDrawable(String name, Context context) {
+        AirPowerLog.e(TAG, "getDrawable:" + name); // TODO remover
         if (context == null) {
             if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "getDrawable: context is null");
             return null;
@@ -75,5 +74,10 @@ public class AirPowerUtil {
                 new AirPowerDevice("name 10", "desc 10", "local 10", "airpower_launcher_icon", "token 10", "ssid 10", "pass 10", "url 10")
 
         ));
+    }
+
+    public static String kelvinToCelsius(float temperatureKelvin) {
+        float temperatureCelsius = temperatureKelvin - 273.15f;
+        return String.format(Locale.getDefault(), "%.1f°C", temperatureCelsius);
     }
 }

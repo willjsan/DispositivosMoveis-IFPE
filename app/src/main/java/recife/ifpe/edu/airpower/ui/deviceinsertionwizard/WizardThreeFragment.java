@@ -40,9 +40,9 @@ import com.google.android.gms.tasks.Task;
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.DeviceIconAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
-import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
+import recife.ifpe.edu.airpower.model.server.AirPowerServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -61,7 +61,7 @@ public class WizardThreeFragment extends Fragment {
     private Button mSubmitButton;
     private Context mContext;
     private AirPowerRepository mRepo;
-    private ServerInterfaceWrapper.IServerManager mServerManager;
+    private ServersInterfaceWrapper.IAirPowerServerManager mServerManager;
     private ProgressDialog mProgressDialog;
     private Button mSetLocalizationButton;
     private UIInterfaceWrapper.INavigate mNavigateBackPress;
@@ -148,7 +148,7 @@ public class WizardThreeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mContext = getContext();
         mRepo = AirPowerRepository.getInstance(mContext);
-        mServerManager = ServerManagerImpl.getInstance();
+        mServerManager = AirPowerServerManagerImpl.getInstance();
         mProgressDialog = AirPowerUtil.getProgressDialog(getContext(), "waiting");
     }
 
@@ -259,7 +259,7 @@ public class WizardThreeFragment extends Fragment {
             mSubmitButton.setEnabled(false);
             mProgressDialog.show();
             mServerManager.registerDevice(mDevice,
-                    new ServerInterfaceWrapper.RegisterCallback() {
+                    new ServersInterfaceWrapper.RegisterCallback() {
                         @Override
                         public void onSuccess(AirPowerDevice device) {
                             mRepo.insert(device);

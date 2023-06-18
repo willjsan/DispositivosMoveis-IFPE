@@ -8,15 +8,14 @@ package recife.ifpe.edu.airpower.model.repo.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
-import androidx.room.Ignore;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
 
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.repo.model.Group;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.group.Group;
 
 @Dao
 public interface DeviceDAO {

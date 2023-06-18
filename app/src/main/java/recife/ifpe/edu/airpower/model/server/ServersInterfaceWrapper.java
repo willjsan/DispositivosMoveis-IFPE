@@ -8,14 +8,14 @@ package recife.ifpe.edu.airpower.model.server;
 
 import java.util.List;
 
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceEnableDisable;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceStatus;
+import recife.ifpe.edu.airpower.model.repo.model.weather.Weather;
 
-public abstract class ServerInterfaceWrapper {
+public abstract class ServersInterfaceWrapper {
 
-    public interface IServerManager {
+    public interface IAirPowerServerManager {
         void registerDevice(AirPowerDevice device, RegisterCallback callback);
 
         void unregisterDevice(AirPowerDevice device, UnregisterCallback callback);
@@ -25,10 +25,10 @@ public abstract class ServerInterfaceWrapper {
         void getDeviceStatus(AirPowerDevice device, DeviceStatusCallback callback);
 
         void getMeasurementByGroup(List<AirPowerDevice> devices,
-                                   ServerInterfaceWrapper.MeasurementCallback callback);
+                                   ServersInterfaceWrapper.MeasurementCallback callback);
 
         void enableDisableDevice(AirPowerDevice device,
-                                 ServerInterfaceWrapper.DeviceEnableDisableCallback callback);
+                                 ServersInterfaceWrapper.DeviceEnableDisableCallback callback);
 
     }
 
@@ -61,4 +61,13 @@ public abstract class ServerInterfaceWrapper {
         void onFailure(String message);
     }
 
+
+    public interface IWeatherServerManager {
+        void getForecast(String localization, WeatherCallback callback);
+    }
+
+    public interface WeatherCallback{
+        void onSuccess(Weather weather);
+        void onFailure(String msg);
+    }
 }

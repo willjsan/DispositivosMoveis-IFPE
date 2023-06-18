@@ -9,12 +9,14 @@ package recife.ifpe.edu.airpower.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,18 +37,24 @@ import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.ChartAdapter;
 import recife.ifpe.edu.airpower.model.adapter.GroupsAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
-import recife.ifpe.edu.airpower.model.repo.model.Group;
-import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
-import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.group.Group;
+import recife.ifpe.edu.airpower.model.repo.model.weather.Weather;
+import recife.ifpe.edu.airpower.model.repo.model.weather.WeatherDetail;
+import recife.ifpe.edu.airpower.model.repo.model.weather.WeatherInfo;
+import recife.ifpe.edu.airpower.model.server.AirPowerServerManagerImpl;
+import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
+import recife.ifpe.edu.airpower.model.server.WeatherServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.groupinsertionwizard.GroupActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
+import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 
 public class HomeFragment extends Fragment {
 
     private static final String TAG = HomeFragment.class.getSimpleName();
+    public static final String WEATHER_ICON_PREFIX = "weather_icon_";
     private List<Group> mGroups;
     private AirPowerRepository mRepo;
     private Button mButtonAddGroup;
@@ -56,8 +64,24 @@ public class HomeFragment extends Fragment {
     private GroupsAdapter mGroupAdapter;
     private Group mCurrentGroup;
     private SupportMapFragment mapFragment;
+
+    // Weather
+    private ImageView mWeatherCardIcon;
+    private TextView mWeatherTempValue;
+    private TextView mWeatherHumidityValue;
+    private TextView mWeatherDetail;
+    private TextView mWeatherPlaceName;
+    private TextView mWeatherTitle;
+
+    // Maps
     private GoogleMap mMap;
+
+    // Chart
     private BarChart mChart;
+
+    private ServersInterfaceWrapper.IWeatherServerManager weatherServerManager;
+    private static final String PREF_NAME = "lastGroupSelected";
+    private static final String KEY_INTEGER_VALUE = "integerValue";
 
     public HomeFragment() {
     }
@@ -73,7 +97,7 @@ public class HomeFragment extends Fragment {
         this.mRepo = AirPowerRepository.getInstance(getContext());
         this.mGroups = mRepo.getGroups();
         this.mCurrentGroup = mRepo.getGroupById(getInteger(getContext()));
-
+        weatherServerManager = WeatherServerManagerImpl.getInstance();
     }
 
     @Override
@@ -89,8 +113,52 @@ public class HomeFragment extends Fragment {
             intent.setAction(AirPowerConstants.ACTION_NEW_GROUP);
             startActivity(intent);
         });
+        getForecast();
 
         return view;
+    }
+
+    private void getForecast() {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "weatherSetup");
+
+        if (mCurrentGroup.getLocalization() == null
+                || mCurrentGroup.getLocalization().isEmpty()) {
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG,"Group localization is null");
+            mWeatherTitle.setText("Can't get forecast");
+            mWeatherPlaceName.setText("Group localization not set");
+            return;
+        }
+        weatherServerManager.getForecast(mCurrentGroup.getLocalization(),
+                new ServersInterfaceWrapper.WeatherCallback() {
+            @Override
+            public void onSuccess(Weather weather) {
+                WeatherDetail weatherDetail = weather.getWeather().get(0);
+                WeatherInfo weatherInfo = weather.getMain();
+                String placeName = weather.getName();
+                String iconName = weatherDetail.getIcon();
+                String humidity = weatherInfo.getHumidity() + "%";
+                String temp = AirPowerUtil.kelvinToCelsius(weatherInfo.getTemp());
+                String weatherDesc = weatherDetail.getDescription();
+                Drawable iconDrawable = AirPowerUtil.getDrawable(WEATHER_ICON_PREFIX + iconName,
+                        getContext());
+                mWeatherCardIcon.setImageDrawable(iconDrawable);
+                mWeatherTempValue.setText(temp);
+                mWeatherHumidityValue.setText(humidity);
+                mWeatherDetail.setText(weatherDesc);
+                mWeatherPlaceName.setText(placeName);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                mWeatherCardIcon.setVisibility(View.GONE);
+                mWeatherTempValue.setVisibility(View.GONE);
+                mWeatherHumidityValue.setVisibility(View.GONE);
+                mWeatherDetail.setVisibility(View.GONE);
+                mWeatherPlaceName.setVisibility(View.GONE);
+                mWeatherTitle.setText("Can't get forecast");
+            }
+        });
     }
 
     @Override
@@ -131,8 +199,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private static final String PREF_NAME = "lastGroupSelected";
-    private static final String KEY_INTEGER_VALUE = "integerValue";
 
     public static void saveInteger(Context context, int value) {
         SharedPreferences sharedPreferences =
@@ -161,8 +227,8 @@ public class HomeFragment extends Fragment {
                 mCurrentGroup = mGroups.get(position);
                 saveInteger(getContext(), mCurrentGroup.getId());
                 updateAllFields();
-                ServerManagerImpl.getInstance().getMeasurementByGroup(mCurrentGroup.getDevices(),
-                        new ServerInterfaceWrapper.MeasurementCallback() {
+                AirPowerServerManagerImpl.getInstance().getMeasurementByGroup(mCurrentGroup.getDevices(),
+                        new ServersInterfaceWrapper.MeasurementCallback() {
                             @Override
                             public void onSuccess(List<DeviceMeasurement> measurements) {
                                 generateChart(mChart, measurements);
@@ -184,7 +250,7 @@ public class HomeFragment extends Fragment {
 
     private int getLastSelectedGroup() {
         int savedId = getInteger(getContext());
-        for (int i = 0; i< mGroups.size(); i++) {
+        for (int i = 0; i < mGroups.size(); i++) {
             if (mGroups.get(i).getId() == savedId) {
                 AirPowerLog.w(TAG, "saved group:" + mGroups.get(i).getName()); // TODO remover
                 return i;
@@ -202,6 +268,7 @@ public class HomeFragment extends Fragment {
         mBannerTitleConsumption.setText(mCurrentGroup.getName() + " Consumption");
         mBannerTitleLocalization.setText(mCurrentGroup.getName() + " Localization");
         setupMapFragment();
+        getForecast();
     }
 
     private void generateChart(View view, List<DeviceMeasurement> measurements) {
@@ -216,6 +283,12 @@ public class HomeFragment extends Fragment {
         mBannerTitleConsumption = view.findViewById(R.id.tv_ddetail_consumption_label);
         mBannerTitleLocalization = view.findViewById(R.id.tv_group_localization_label);
         mChart = view.findViewById(R.id.home_consumption_overview_chart);
+        mWeatherCardIcon = view.findViewById(R.id.card_weather_icon);
+        mWeatherTempValue = view.findViewById(R.id.card_weather_temp_value);
+        mWeatherHumidityValue = view.findViewById(R.id.card_weather_humidity_value);
+        mWeatherDetail = view.findViewById(R.id.card_weather_icon_label);
+        mWeatherPlaceName = view.findViewById(R.id.card_weather_local_name);
+        mWeatherTitle = view.findViewById(R.id.card_weather_title);
     }
 
     @Override

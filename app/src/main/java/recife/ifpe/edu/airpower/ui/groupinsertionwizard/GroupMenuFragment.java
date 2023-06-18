@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import recife.ifpe.edu.airpower.R;
+import recife.ifpe.edu.airpower.model.repo.model.weather.Weather;
+import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
+import recife.ifpe.edu.airpower.model.server.WeatherServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 

@@ -20,7 +20,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 public class ChartAdapter {

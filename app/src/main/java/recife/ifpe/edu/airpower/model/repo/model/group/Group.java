@@ -1,4 +1,4 @@
-package recife.ifpe.edu.airpower.model.repo.model;
+package recife.ifpe.edu.airpower.model.repo.model.group;
 
 /*
  * Dispositivos Móveis - IFPE 2023
@@ -12,6 +12,8 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.List;
+
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 
 @Entity(tableName = "AIR_POWER_GROUP")
 public class Group {

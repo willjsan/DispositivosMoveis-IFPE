@@ -9,14 +9,16 @@ package recife.ifpe.edu.airpower.model.server;
 import java.util.List;
 
 import okhttp3.RequestBody;
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceEnableDisable;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceStatus;
+import recife.ifpe.edu.airpower.model.repo.model.weather.Weather;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 abstract class ServicesInterfaceWrapper {
 
@@ -38,6 +40,13 @@ abstract class ServicesInterfaceWrapper {
 
         @POST("/api/device/measurement/group")
         Call<List<DeviceMeasurement>> getMeasurementByGroup(@Body RequestBody requestBody);
+    }
+
+    interface WeatherService {
+        @GET("weather")
+        Call<Weather> getWeather(@Query("lat") String latitude,
+                                 @Query("lon") String longitude,
+                                 @Query("appid") String appid);
     }
 
     interface UserService {

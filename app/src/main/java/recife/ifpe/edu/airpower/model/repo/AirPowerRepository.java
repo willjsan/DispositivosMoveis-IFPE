@@ -8,16 +8,13 @@ package recife.ifpe.edu.airpower.model.repo;
 
 import android.content.Context;
 
-import com.google.android.gms.maps.model.GroundOverlay;
-
 import java.util.List;
 
 import recife.ifpe.edu.airpower.model.repo.database.AirPowerDatabase;
 import recife.ifpe.edu.airpower.model.repo.database.DeviceDAO;
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.repo.model.Group;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.group.Group;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
-import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 public class AirPowerRepository {
     private static String TAG = AirPowerRepository.class.getSimpleName();

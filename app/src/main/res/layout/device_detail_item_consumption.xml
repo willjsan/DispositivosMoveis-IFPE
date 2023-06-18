@@ -7,7 +7,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="260dp"
-
+        android:outlineAmbientShadowColor="@color/card_forecast_backgound_icon"
+        android:outlineSpotShadowColor="@color/card_forecast_backgound_icon"
         android:layout_margin="@dimen/card_margin"
         app:cardCornerRadius="@dimen/card_corner"
         app:layout_constraintBottom_toBottomOf="parent"

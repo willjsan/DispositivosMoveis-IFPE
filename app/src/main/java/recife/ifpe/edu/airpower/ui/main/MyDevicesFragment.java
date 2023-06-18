@@ -26,7 +26,7 @@ import java.util.List;
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.MainActivityItemAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 import recife.ifpe.edu.airpower.ui.DeviceDetailActivity;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.deviceinsertionwizard.DeviceSetupWizardHolderActivity;

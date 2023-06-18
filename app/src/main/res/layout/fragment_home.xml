@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:outlineAmbientShadowColor="@color/card_forecast_backgound_icon"
+        android:outlineSpotShadowColor="@color/card_forecast_backgound_icon">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -63,7 +65,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--            TODO add layouts here -->
+            <include layout="@layout/card_weather" />
 
             <include layout="@layout/device_detail_item_consumption" />
 

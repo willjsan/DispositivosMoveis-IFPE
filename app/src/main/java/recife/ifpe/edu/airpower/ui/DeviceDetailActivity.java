@@ -32,12 +32,11 @@ import java.util.List;
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.ChartAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
-import recife.ifpe.edu.airpower.model.repo.model.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceEnableDisable;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceMeasurement;
-import recife.ifpe.edu.airpower.model.repo.model.DeviceStatus;
-import recife.ifpe.edu.airpower.model.server.ServerInterfaceWrapper;
-import recife.ifpe.edu.airpower.model.server.ServerManagerImpl;
+import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
+import recife.ifpe.edu.airpower.model.repo.model.device.DeviceStatus;
+import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
+import recife.ifpe.edu.airpower.model.server.AirPowerServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.deviceinsertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -144,8 +143,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private void retrieveDeviceStatus() {
-        ServerManagerImpl.getInstance().getDeviceStatus(mDevice,
-                new ServerInterfaceWrapper.DeviceStatusCallback() {
+        AirPowerServerManagerImpl.getInstance().getDeviceStatus(mDevice,
+                new ServersInterfaceWrapper.DeviceStatusCallback() {
                     @Override
                     public void onSuccess(DeviceStatus deviceStatus) {
                         if (deviceStatus == null) {
@@ -205,8 +204,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private boolean statusSwitchActivateByUser = false;
     private void enableDisableDevice(AirPowerDevice device) {
         AirPowerLog.d(TAG, "enableDisableDevice");
-        ServerManagerImpl.getInstance().enableDisableDevice(device,
-                new ServerInterfaceWrapper.DeviceEnableDisableCallback() {
+        AirPowerServerManagerImpl.getInstance().enableDisableDevice(device,
+                new ServersInterfaceWrapper.DeviceEnableDisableCallback() {
             @Override
             public void onSuccess() {
                 AirPowerLog.w(TAG, "SUCESSO"); // TODO apagar
@@ -220,8 +219,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private void retrieveDeviceMeasurement() {
-        ServerManagerImpl.getInstance().getDeviceMeasurement(mDevice,
-                new ServerInterfaceWrapper.MeasurementCallback() {
+        AirPowerServerManagerImpl.getInstance().getDeviceMeasurement(mDevice,
+                new ServersInterfaceWrapper.MeasurementCallback() {
                     @Override
                     public void onSuccess(List<DeviceMeasurement> measurements) {
                         new ChartAdapter.Builder(findViewById(R.id.home_consumption_overview_chart), measurements)
@@ -259,8 +258,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private void unregisterDevice() {
-        ServerManagerImpl.getInstance().unregisterDevice(
-                mDevice, new ServerInterfaceWrapper.UnregisterCallback() {
+        AirPowerServerManagerImpl.getInstance().unregisterDevice(
+                mDevice, new ServersInterfaceWrapper.UnregisterCallback() {
                     @Override
                     public void onSuccess(String message) {
                         mHandler.sendEmptyMessage(AirPowerConstants.DEVICE_CONNECTION_SUCCESS);
