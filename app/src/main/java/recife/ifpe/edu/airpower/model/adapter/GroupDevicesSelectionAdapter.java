@@ -100,7 +100,6 @@ public class GroupDevicesSelectionAdapter extends BaseAdapter {
                     mContext.getResources().getColor(R.color.airpower_group_devices_item_selected));
         }
         super.notifyDataSetChanged();
-        AirPowerLog.w(TAG, "getView: selected devices: " + mSelectedDevices.size()); // TODO remover
     }
 
     private static class ViewHolder {

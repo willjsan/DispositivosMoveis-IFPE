@@ -34,10 +34,10 @@ public class AirPowerUtil {
         try {
             int idDrawable = resources.getIdentifier(name, AirPowerConstants.KEY_COD_DRAWABLE,
                     context.getPackageName());
-            drawable = ResourcesCompat.getDrawable(resources, idDrawable, null); // TODO test it
+            drawable = ResourcesCompat.getDrawable(resources, idDrawable, null);
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
-                AirPowerLog.w(TAG, "Can't retrieve drawable resource");
+                AirPowerLog.w(TAG, "can't retrieve drawable resource: getting default");
             drawable = ResourcesCompat
                     .getDrawable(resources, R.drawable.airpower_launcher_icon, null);
         }

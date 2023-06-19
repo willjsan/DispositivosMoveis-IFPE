@@ -45,7 +45,7 @@ public class WeatherServerManagerImpl implements
 
         mConnectionManager.getWeatherConnection().create(
                         ServicesInterfaceWrapper.WeatherService.class)
-                .getWeather(lat, lon,  API_KEY)
+                .getWeather(lat, lon, API_KEY)
                 .enqueue(new Callback<Weather>() {
                     @Override
                     public void onResponse(@NonNull Call<Weather> call,
@@ -54,7 +54,7 @@ public class WeatherServerManagerImpl implements
                             callback.onSuccess(resp.body());
                         } else {
                             if (AirPowerLog.ISLOGABLE)
-                                AirPowerLog.w(TAG, "status:" + resp.code());
+                                AirPowerLog.w(TAG, "getForecast: status:" + resp.code());
                             callback.onFailure(String.valueOf(resp.code()));
                         }
                     }
@@ -63,7 +63,7 @@ public class WeatherServerManagerImpl implements
                     public void onFailure(@NonNull Call<Weather> call,
                                           @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE)
-                            AirPowerLog.e(TAG, "onFailure");
+                            AirPowerLog.e(TAG, "getForecast: onFailure");
                         callback.onFailure(t.getMessage());
                     }
                 });

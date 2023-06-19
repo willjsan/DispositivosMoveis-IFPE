@@ -307,10 +307,7 @@ public class WizardThreeFragment extends Fragment {
         boolean granted = (grantResults.length > 0) &&
                 (grantResults[0] == PackageManager.PERMISSION_GRANTED);
         this.mLocationGrantedByUser = (requestCode == FINE_LOCATION_REQUEST) && granted;
-        AirPowerLog.w(TAG, "granted:" + granted); // TODO remover
     }
-
-    String a = "";
 
     public void setDeviceLocation() {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "setDeviceLocation");
@@ -334,7 +331,6 @@ public class WizardThreeFragment extends Fragment {
                 mDevice.setLocalization(localization);
                 mSetLocalizationButton.setEnabled(false);
                 mSetLocalizationButton.setText("Done");
-                AirPowerLog.e(TAG, "device location:" + mDevice.getLocalization()); // TODO remover
             });
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)

@@ -58,16 +58,17 @@ public abstract class ServersInterfaceWrapper {
 
     public interface DeviceEnableDisableCallback {
         void onSuccess();
+
         void onFailure(String message);
     }
-
 
     public interface IWeatherServerManager {
         void getForecast(String localization, WeatherCallback callback);
     }
 
-    public interface WeatherCallback{
+    public interface WeatherCallback {
         void onSuccess(Weather weather);
+
         void onFailure(String msg);
     }
 }

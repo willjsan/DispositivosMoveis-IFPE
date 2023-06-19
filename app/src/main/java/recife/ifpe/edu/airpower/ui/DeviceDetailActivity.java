@@ -35,8 +35,8 @@ import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
 import recife.ifpe.edu.airpower.model.repo.model.device.DeviceStatus;
-import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
 import recife.ifpe.edu.airpower.model.server.AirPowerServerManagerImpl;
+import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.deviceinsertionwizard.DeviceSetupWizardHolderActivity;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -61,7 +61,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private TextView mStatusTVIssue;
     private SwitchCompat mStatusSwActivate;
     private CardView mStatusCard;
-    private boolean mIsActivatedByUser;
+    private AirPowerServerManagerImpl mAirPowerServer;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message message) {
@@ -96,13 +96,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
         if (intent == null || intent.getAction() == null) {
             return;
         }
+        mAirPowerServer = AirPowerServerManagerImpl.getInstance();
         mRepo = AirPowerRepository.getInstance(getApplicationContext());
         if (intent.getAction().equals(AirPowerConstants.ACTION_LAUNCH_DETAIL)) {
             mDevice = mRepo.getDeviceById(intent
                     .getIntExtra(AirPowerConstants.KEY_DEVICE_ID, INVALID_ID));
             if (mDevice == null) return;
         }
-
         findViewsById();
         retrieveDeviceMeasurement();
         retrieveDeviceStatus();
@@ -143,7 +143,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private void retrieveDeviceStatus() {
-        AirPowerServerManagerImpl.getInstance().getDeviceStatus(mDevice,
+        mAirPowerServer.getDeviceStatus(mDevice,
                 new ServersInterfaceWrapper.DeviceStatusCallback() {
                     @Override
                     public void onSuccess(DeviceStatus deviceStatus) {
@@ -152,11 +152,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
                                 AirPowerLog.e(TAG, "response is null");
                             return;
                         }
-                        mIsActivatedByUser = false;
                         mStatusSwActivate.setChecked(deviceStatus.isActivated());
                         mStatusTVStatus.setText(deviceStatus.getStatusMessage());
                         mStatusTVIssue.setText(String.valueOf(deviceStatus.getIssuesCount()));
-
                         statusSwitchActivateByUser = true;
                     }
 
@@ -171,10 +169,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
     private void setListeners() {
         mDeleteDeviceButton.setOnClickListener(v -> {
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "delete device");
             performUnregisterDevice();
         });
 
         mEditDeviceButton.setOnClickListener(v -> {
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "edit device");
             performEditDevice();
             finish();
         });
@@ -183,18 +183,20 @@ public class DeviceDetailActivity extends AppCompatActivity {
         });
 
         mStatusSwActivate.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            AirPowerLog.w(TAG, "switch setOnCheckedChangeListener: is checked:" + isChecked); // TODO remover
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.d(TAG, "device status switch changed:is checked:" + isChecked);
             if (!statusSwitchActivateByUser) {
-                AirPowerLog.w(TAG, "switch activated by system"); // TODO remover
+                if (AirPowerLog.ISLOGABLE)
+                    AirPowerLog.d(TAG, "switch changed by system:is checked:" + isChecked);
                 statusSwitchActivateByUser = false;
             } else {
-                AirPowerLog.w(TAG, "switch activated by user is checked:" + isChecked); // TODO remover
                 enableDisableDevice(mDevice);
-
             }
         });
 
         mStatusCard.setOnClickListener(view -> {
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.d(TAG, "device status");
             Intent i = new Intent(DeviceDetailActivity.this,
                     DeviceStatusActivity.class);
             startActivity(i);
@@ -202,24 +204,22 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private boolean statusSwitchActivateByUser = false;
-    private void enableDisableDevice(AirPowerDevice device) {
-        AirPowerLog.d(TAG, "enableDisableDevice");
-        AirPowerServerManagerImpl.getInstance().enableDisableDevice(device,
-                new ServersInterfaceWrapper.DeviceEnableDisableCallback() {
-            @Override
-            public void onSuccess() {
-                AirPowerLog.w(TAG, "SUCESSO"); // TODO apagar
-            }
 
-            @Override
-            public void onFailure(String message) {
-                AirPowerLog.w(TAG, "FALHA"); // TODO apagar
-            }
-        });
+    private void enableDisableDevice(AirPowerDevice device) {
+        mAirPowerServer.enableDisableDevice(device,
+                new ServersInterfaceWrapper.DeviceEnableDisableCallback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                    }
+                });
     }
 
     private void retrieveDeviceMeasurement() {
-        AirPowerServerManagerImpl.getInstance().getDeviceMeasurement(mDevice,
+        mAirPowerServer.getDeviceMeasurement(mDevice,
                 new ServersInterfaceWrapper.MeasurementCallback() {
                     @Override
                     public void onSuccess(List<DeviceMeasurement> measurements) {
@@ -229,8 +229,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(String message) {
-                        AirPowerLog.e(TAG, "onFailure: " + message);
-                        // TODO show message on UI that some error has occurred
                     }
                 });
     }
@@ -258,7 +256,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private void unregisterDevice() {
-        AirPowerServerManagerImpl.getInstance().unregisterDevice(
+        mAirPowerServer.unregisterDevice(
                 mDevice, new ServersInterfaceWrapper.UnregisterCallback() {
                     @Override
                     public void onSuccess(String message) {

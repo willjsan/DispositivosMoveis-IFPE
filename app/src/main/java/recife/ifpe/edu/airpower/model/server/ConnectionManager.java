@@ -25,7 +25,7 @@ class ConnectionManager {
         Gson gson = new GsonBuilder().create();
         mAirPowerServerConnection = new Retrofit.Builder()
                 .baseUrl(AIR_POWER_SERVER_DOMAIN)
-                .client(AirPowerLog.getLoggerClient().build()) // log interceptor
+                .client(AirPowerLog.getLoggerClient().build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

@@ -58,7 +58,7 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                             callback.onSuccess(resp.body());
                         } else {
                             if (AirPowerLog.ISLOGABLE)
-                                AirPowerLog.w(TAG, "status:" + resp.code());
+                                AirPowerLog.w(TAG, "registerDevice: status:" + resp.code());
                             callback.onFailure(String.valueOf(resp.code()));
                         }
                     }
@@ -66,7 +66,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                     @Override
                     public void onFailure(@NonNull Call<AirPowerDevice> call,
                                           @NonNull Throwable t) {
-                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.w(TAG, "registerDevice: onFailure");
                         callback.onFailure(t.getMessage());
                     }
                 });
@@ -86,11 +87,10 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                     public void onResponse(@NonNull Call<DeviceStatus> call,
                                            @NonNull Response<DeviceStatus> resp) {
                         if (resp.isSuccessful() && resp.code() == AirPowerConstants.HTTP_OK) {
-                            AirPowerLog.w(TAG, "server response:" + resp.body()); // TODO remover
                             callback.onSuccess(resp.body());
                         } else {
                             if (AirPowerLog.ISLOGABLE)
-                                AirPowerLog.w(TAG, "status:" + resp.code());
+                                AirPowerLog.w(TAG, "getDeviceStatus: status:" + resp.code());
                             callback.onFailure(SERVICE_UNAVAILABLE);
                         }
                     }
@@ -98,7 +98,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                     @Override
                     public void onFailure(@NonNull Call<DeviceStatus> call,
                                           @NonNull Throwable t) {
-                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.w(TAG, "getDeviceStatus: onFailure");
                         callback.onFailure(SERVICE_UNAVAILABLE);
                     }
                 });
@@ -122,7 +123,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                             callback.onSuccess("success");
                         } else {
                             if (AirPowerLog.ISLOGABLE)
-                                AirPowerLog.w(TAG, "status:" + resp.code());
+                                AirPowerLog.w(TAG, "unregisterDevice: status:" +
+                                        resp.code());
                             callback.onFailure("status:" + resp.code());
                         }
                     }
@@ -130,7 +132,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                     @Override
                     public void onFailure(@NonNull Call<AirPowerDevice> call,
                                           @NonNull Throwable t) {
-                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.w(TAG, "unregisterDevice: onFailure");
                         callback.onFailure(t.getMessage());
                     }
                 });
@@ -155,7 +158,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                             callback.onSuccess(resp.body());
                         } else {
                             if (AirPowerLog.ISLOGABLE)
-                                AirPowerLog.w(TAG, "status:" + resp.code());
+                                AirPowerLog.w(TAG, "getDeviceMeasurement status:" +
+                                        resp.code());
                             callback.onFailure("status:" + resp.code());
                         }
                     }
@@ -163,7 +167,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                     @Override
                     public void onFailure(@NonNull Call<List<DeviceMeasurement>> call,
                                           @NonNull Throwable t) {
-                        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "onFailure");
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.w(TAG, "getDeviceMeasurement: onFailure");
                         callback.onFailure(t.getMessage());
                     }
                 });
@@ -188,7 +193,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                             callback.onSuccess(resp.body());
                         } else {
                             if (AirPowerLog.ISLOGABLE)
-                                AirPowerLog.d(TAG, "status" + resp.code());
+                                AirPowerLog.d(TAG, "getMeasurementByGroup: status" +
+                                        resp.code());
                             callback.onFailure(String.valueOf(resp.code()));
                         }
                     }
@@ -197,7 +203,7 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                     public void onFailure(@NonNull Call<List<DeviceMeasurement>> call,
                                           @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE)
-                            AirPowerLog.d(TAG, "onFailure");
+                            AirPowerLog.d(TAG, "getMeasurementByGroup: onFailure");
                         callback.onFailure(t.getMessage());
                     }
                 });
@@ -207,7 +213,7 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
     public void enableDisableDevice(AirPowerDevice device,
                                     ServersInterfaceWrapper.DeviceEnableDisableCallback callback) {
         if (AirPowerLog.ISLOGABLE)
-            AirPowerLog.d(TAG, "enableDisableDevice: " + device.toString());
+            AirPowerLog.d(TAG, "enableDisableDevice");
         mConnectionManager
                 .getAirPowerConnection()
                 .create(ServicesInterfaceWrapper.DeviceService.class)
@@ -221,7 +227,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                             callback.onSuccess();
                         } else {
                             if (AirPowerLog.ISLOGABLE)
-                                AirPowerLog.d(TAG, "status: " + resp.code());
+                                AirPowerLog.d(TAG, "enableDisableDevice: status: "
+                                        + resp.code());
                             callback.onFailure(String.valueOf(resp.code()));
                         }
                     }
@@ -230,7 +237,8 @@ public class AirPowerServerManagerImpl implements ServersInterfaceWrapper.IAirPo
                     public void onFailure(@NonNull Call<Boolean> call,
                                           @NonNull Throwable t) {
                         if (AirPowerLog.ISLOGABLE)
-                            AirPowerLog.d(TAG, "onFailure:" + t.getMessage());
+                            AirPowerLog.d(TAG, "enableDisableDevice: onFailure:" +
+                                    t.getMessage());
                         callback.onFailure(t.getMessage());
                     }
                 });
