@@ -23,8 +23,8 @@ public class AirPowerRepository {
     private final DeviceDAO mDeviceDAO;
 
     private AirPowerRepository(Context context) {
-        AirPowerDatabase mDb = AirPowerDatabase.getDataBaseInstance(context);
-        mDeviceDAO = mDb.getDeviceDAOInstance();
+        AirPowerDatabase db = AirPowerDatabase.getDataBaseInstance(context);
+        mDeviceDAO = db.getDeviceDAOInstance();
         List<Group> groups = mDeviceDAO.getGroups();
         if (groups == null || groups.isEmpty()) {
             createDefaultGroup();
@@ -37,7 +37,6 @@ public class AirPowerRepository {
         group.setName("Default");
         group.setDescription("My default group");
         group.setIcon("airpower_launcher_icon");
-        group.setDevices(mDeviceDAO.getDevices());
         mDeviceDAO.insert(group);
     }
 
@@ -63,7 +62,6 @@ public class AirPowerRepository {
             AirPowerLog.d(TAG, "insert AirPowerDevice");
         try {
             mDeviceDAO.insert(device);
-            AirPowerLog.w(TAG, device.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't insert device on db");
@@ -76,7 +74,6 @@ public class AirPowerRepository {
             AirPowerLog.d(TAG, "insert Group");
         try {
             mDeviceDAO.insert(group);
-            AirPowerLog.w(TAG, group.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't Group on db");
@@ -89,7 +86,6 @@ public class AirPowerRepository {
             AirPowerLog.d(TAG, "update");
         try {
             mDeviceDAO.update(device);
-            AirPowerLog.w(TAG, device.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't update device from db");
@@ -101,7 +97,6 @@ public class AirPowerRepository {
             AirPowerLog.d(TAG, "delete");
         try {
             mDeviceDAO.delete(device);
-            AirPowerLog.w(TAG, device.toString()); // TODO remove it
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "Couldn't delete device from db");
@@ -125,7 +120,6 @@ public class AirPowerRepository {
         if (AirPowerLog.ISLOGABLE)
             AirPowerLog.d(TAG, "getDeviceById");
         try {
-            AirPowerLog.w(TAG, mDeviceDAO.getDeviceById(id).toString()); // TODO remove it
             return mDeviceDAO.getDeviceById(id);
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)
@@ -140,7 +134,6 @@ public class AirPowerRepository {
         if (AirPowerLog.ISLOGABLE)
             AirPowerLog.d(TAG, "getGroupById");
         try {
-            AirPowerLog.w(TAG, mDeviceDAO.getGroupById(id).toString()); // TODO remove it
             return mDeviceDAO.getGroupById(id);
         } catch (Exception e) {
             if (AirPowerLog.ISLOGABLE)

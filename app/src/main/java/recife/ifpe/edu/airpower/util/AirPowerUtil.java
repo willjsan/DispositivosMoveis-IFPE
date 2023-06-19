@@ -25,7 +25,6 @@ public class AirPowerUtil {
     private static String TAG = AirPowerUtil.class.getSimpleName();
 
     public static Drawable getDrawable(String name, Context context) {
-        AirPowerLog.e(TAG, "getDrawable:" + name); // TODO remover
         if (context == null) {
             if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "getDrawable: context is null");
             return null;

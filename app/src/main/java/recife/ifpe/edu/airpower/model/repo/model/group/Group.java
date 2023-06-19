@@ -114,10 +114,12 @@ public class Group {
     @Override
     public String toString() {
         return "Group{" +
-                "devices=" + devices +
+                "id=" + id +
+                ", devices=" + devices +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", localization='" + localization + '\'' +
+                ", icon='" + icon + '\'' +
                 '}';
     }
 }

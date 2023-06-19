@@ -46,6 +46,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Cordeiro"
                 android:textSize="@dimen/card_label"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/card_weather_title"
                 app:layout_constraintStart_toStartOf="@+id/card_weather_title"
                 app:layout_constraintTop_toBottomOf="@+id/card_weather_title" />
@@ -56,13 +57,13 @@
                 android:layout_height="94dp"
                 android:outlineAmbientShadowColor="@color/card_forecast_backgound_icon"
                 android:outlineSpotShadowColor="@color/card_forecast_backgound_icon"
+                app:cardCornerRadius="@dimen/card_corner"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/card_weather_local_name"
-                app:layout_constraintVertical_bias="0.10"
-                app:cardCornerRadius="@dimen/card_corner">
+                app:layout_constraintTop_toTopOf="@+id/card_weather_local_name"
+                app:layout_constraintVertical_bias="0.10">
 
                 <ImageView
                     android:id="@+id/card_weather_background"
@@ -107,12 +108,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
-                android:text="Current Temperature"
+                android:text="Temperature"
                 android:textSize="@dimen/card_label"
                 app:layout_constraintBottom_toBottomOf="@+id/cv"
                 app:layout_constraintStart_toEndOf="@+id/cv"
                 app:layout_constraintTop_toTopOf="@+id/cv"
-                app:layout_constraintVertical_bias="0.13" />
+                app:layout_constraintVertical_bias="0.49" />
 
             <TextView
                 android:id="@+id/card_weather_temp_value"
@@ -122,6 +123,8 @@
                 android:text="29ºC"
                 android:textSize="@dimen/card_label"
                 app:layout_constraintBottom_toBottomOf="@+id/card_weather_temp_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/card_weather_temp_label"
                 app:layout_constraintTop_toTopOf="@+id/card_weather_temp_label" />
 

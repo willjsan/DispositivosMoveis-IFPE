@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "onCreate");
         this.mRepo = AirPowerRepository.getInstance(getContext());
         this.mGroups = mRepo.getGroups();
-        this.mCurrentGroup = mRepo.getGroupById(getInteger(getContext()));
+        this.mCurrentGroup = mRepo.getGroupById(getGroupIdFromSP(getContext())); // TODO WTF
         weatherServerManager = WeatherServerManagerImpl.getInstance();
     }
 
@@ -121,44 +121,56 @@ public class HomeFragment extends Fragment {
     private void getForecast() {
         if (AirPowerLog.ISLOGABLE)
             AirPowerLog.d(TAG, "weatherSetup");
-
         if (mCurrentGroup.getLocalization() == null
                 || mCurrentGroup.getLocalization().isEmpty()) {
-            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG,"Group localization is null");
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "Group localization is null");
             mWeatherTitle.setText("Can't get forecast");
             mWeatherPlaceName.setText("Group localization not set");
+            mWeatherCardIcon.setVisibility(View.GONE);
+            mWeatherTempValue.setVisibility(View.GONE);
+            mWeatherHumidityValue.setVisibility(View.GONE);
+            mWeatherDetail.setVisibility(View.GONE);
+            mWeatherPlaceName.setVisibility(View.GONE);
             return;
         }
         weatherServerManager.getForecast(mCurrentGroup.getLocalization(),
                 new ServersInterfaceWrapper.WeatherCallback() {
-            @Override
-            public void onSuccess(Weather weather) {
-                WeatherDetail weatherDetail = weather.getWeather().get(0);
-                WeatherInfo weatherInfo = weather.getMain();
-                String placeName = weather.getName();
-                String iconName = weatherDetail.getIcon();
-                String humidity = weatherInfo.getHumidity() + "%";
-                String temp = AirPowerUtil.kelvinToCelsius(weatherInfo.getTemp());
-                String weatherDesc = weatherDetail.getDescription();
-                Drawable iconDrawable = AirPowerUtil.getDrawable(WEATHER_ICON_PREFIX + iconName,
-                        getContext());
-                mWeatherCardIcon.setImageDrawable(iconDrawable);
-                mWeatherTempValue.setText(temp);
-                mWeatherHumidityValue.setText(humidity);
-                mWeatherDetail.setText(weatherDesc);
-                mWeatherPlaceName.setText(placeName);
-            }
+                    @Override
+                    public void onSuccess(Weather weather) {
+                        WeatherDetail weatherDetail = weather.getWeather().get(0);
+                        WeatherInfo weatherInfo = weather.getMain();
+                        String placeName = weather.getName();
+                        String iconName = weatherDetail.getIcon();
+                        String humidity = weatherInfo.getHumidity() + "%";
+                        String temp = AirPowerUtil.kelvinToCelsius(weatherInfo.getTemp());
+                        String weatherDesc = weatherDetail.getDescription();
+                        Drawable iconDrawable = AirPowerUtil.getDrawable(WEATHER_ICON_PREFIX + iconName,
+                                getContext());
+                        mWeatherCardIcon.setVisibility(View.VISIBLE);
+                        mWeatherTempValue.setVisibility(View.VISIBLE);
+                        mWeatherHumidityValue.setVisibility(View.VISIBLE);
+                        mWeatherDetail.setVisibility(View.VISIBLE);
+                        mWeatherPlaceName.setVisibility(View.VISIBLE);
+                        mWeatherTitle.setText("Forecast");
+                        mWeatherCardIcon.setImageDrawable(iconDrawable);
+                        mWeatherTempValue.setText(temp);
+                        mWeatherHumidityValue.setText(humidity);
+                        mWeatherDetail.setText(weatherDesc);
+                        mWeatherPlaceName.setText(placeName);
+                    }
 
-            @Override
-            public void onFailure(String msg) {
-                mWeatherCardIcon.setVisibility(View.GONE);
-                mWeatherTempValue.setVisibility(View.GONE);
-                mWeatherHumidityValue.setVisibility(View.GONE);
-                mWeatherDetail.setVisibility(View.GONE);
-                mWeatherPlaceName.setVisibility(View.GONE);
-                mWeatherTitle.setText("Can't get forecast");
-            }
-        });
+                    @Override
+                    public void onFailure(String msg) {
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.w(TAG, "getForecast: onFailure");
+                        mWeatherCardIcon.setVisibility(View.GONE);
+                        mWeatherTempValue.setVisibility(View.GONE);
+                        mWeatherHumidityValue.setVisibility(View.GONE);
+                        mWeatherDetail.setVisibility(View.GONE);
+                        mWeatherPlaceName.setVisibility(View.GONE);
+                        mWeatherTitle.setText("Can't get forecast");
+                    }
+                });
     }
 
     @Override
@@ -208,10 +220,18 @@ public class HomeFragment extends Fragment {
         editor.apply();
     }
 
-    public static int getInteger(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        AirPowerLog.e(TAG, String.valueOf(sharedPreferences.getInt(KEY_INTEGER_VALUE, 0)));
-        return sharedPreferences.getInt(KEY_INTEGER_VALUE, 0);
+    public int getGroupIdFromSP(Context context) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        int id = sharedPreferences.getInt(KEY_INTEGER_VALUE, 0);
+        if (id == 0) {
+            if (AirPowerLog.ISLOGABLE){
+                int id2 = mRepo.getGroups().get(0).getId();
+                AirPowerLog.e(TAG, "Error, can't get id from shared pref:  id:" + id2);
+                return id2;
+            }
+        }
+        return id;
     }
 
     private void groupSpinnerSetup() {
@@ -227,7 +247,8 @@ public class HomeFragment extends Fragment {
                 mCurrentGroup = mGroups.get(position);
                 saveInteger(getContext(), mCurrentGroup.getId());
                 updateAllFields();
-                AirPowerServerManagerImpl.getInstance().getMeasurementByGroup(mCurrentGroup.getDevices(),
+                AirPowerServerManagerImpl.getInstance()
+                        .getMeasurementByGroup(mCurrentGroup.getDevices(),
                         new ServersInterfaceWrapper.MeasurementCallback() {
                             @Override
                             public void onSuccess(List<DeviceMeasurement> measurements) {
@@ -249,7 +270,7 @@ public class HomeFragment extends Fragment {
     }
 
     private int getLastSelectedGroup() {
-        int savedId = getInteger(getContext());
+        int savedId = getGroupIdFromSP(getContext());
         for (int i = 0; i < mGroups.size(); i++) {
             if (mGroups.get(i).getId() == savedId) {
                 AirPowerLog.w(TAG, "saved group:" + mGroups.get(i).getName()); // TODO remover
