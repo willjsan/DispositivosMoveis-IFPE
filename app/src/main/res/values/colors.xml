@@ -13,5 +13,6 @@
     <color name="airpower_group_settings_button">#F2CADCE4</color>
     <color name="airpower_group_devices_item_selected">#C7CDC7C7</color>
     <color name="card_forecast_backgound_icon">#E3D1D6DA</color>
+    <color name="airpower_gray">#E36B6D6F</color>
 
 </resources>

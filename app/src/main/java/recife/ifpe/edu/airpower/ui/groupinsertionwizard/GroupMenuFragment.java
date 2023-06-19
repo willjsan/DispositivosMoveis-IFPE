@@ -84,7 +84,7 @@ public class GroupMenuFragment extends Fragment {
     }
 
     private void findViewsByIds(View view) {
-        mNewGroupButton = view.findViewById(R.id.bt_group_menu_item_add_group);
+        mNewGroupButton = view.findViewById(R.id.card_menu_new_group_button);
         nEditGroupButton = view.findViewById(R.id.bt_group_menu_item_edit_group);
         nDeleteGroupButton = view.findViewById(R.id.bt_group_menu_item_delete_group);
         nAddGuestButton = view.findViewById(R.id.bt_group_menu_item_add_guest);

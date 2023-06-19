@@ -12,19 +12,32 @@
         android:gravity="center_vertical"
         android:text="Default"
         android:textSize="@dimen/card_label"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_home_groups_item_dropdown_icon"
-        app:layout_constraintStart_toEndOf="@+id/iv_home_groups_item_dropdown_icon"
-        app:layout_constraintTop_toTopOf="@+id/iv_home_groups_item_dropdown_icon" />
+        app:layout_constraintBottom_toBottomOf="@+id/dropdown_cv"
+        app:layout_constraintStart_toEndOf="@+id/dropdown_cv"
+        app:layout_constraintTop_toTopOf="@+id/dropdown_cv" />
 
-    <ImageView
-        android:id="@+id/iv_home_groups_item_dropdown_icon"
-        android:layout_width="47dp"
-        android:layout_height="39dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/dropdown_cv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBaseline_toBaselineOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/airpower_launcher_icon" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_home_groups_item_dropdown_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/airpower_launcher_icon" />
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

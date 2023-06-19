@@ -126,7 +126,6 @@ public class HomeFragment extends Fragment {
             if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "Group localization is null");
             mWeatherTitle.setText("Can't get forecast");
             mWeatherPlaceName.setText("Group localization not set");
-            mWeatherCardIcon.setVisibility(View.GONE);
             mWeatherTempValue.setVisibility(View.GONE);
             mWeatherHumidityValue.setVisibility(View.GONE);
             mWeatherDetail.setVisibility(View.GONE);
