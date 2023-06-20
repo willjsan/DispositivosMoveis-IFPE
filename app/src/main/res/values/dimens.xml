@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_title">28sp</dimen>
+    <dimen name="card_status">20sp</dimen>
+    <dimen name="card_label">20sp</dimen>
+    <dimen name="card_info">18sp</dimen>
+    <dimen name="card_corner">20dp</dimen>
+    <dimen name="card_margin">10dp</dimen>
+    <dimen name="card_menu_button_height">50dp</dimen>
+    <dimen name="card_group_menu_button_text_size">16sp</dimen>
+    <dimen name="card_detail">12sp</dimen>
+</resources>

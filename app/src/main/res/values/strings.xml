@@ -1,0 +1,39 @@
+<!-- Resources naming strategy -->
+<!-- <associated screen>_<element type>_<item>_<specific>-->
+<resources>
+    <string name="all_text_app_title">AirPower</string>
+    <string name="all_button_menu_home">Home</string>
+    <string name="all_button_menu_dashboard">Board</string>
+    <string name="all_button_menu_devices">Devices</string>
+    <string name="all_button_menu_profile">Profile</string>
+    <string name="all_button_menu_context">Context Button</string>
+
+    <string name="main_text_item_label">Item Label</string>
+    <string name="main_text_item_description">Item Description</string>
+    <string name="main_image_item_description">"menu item icon "</string>
+
+    <string name="device_insertion_appearance_banner_label">Appearance</string>
+    <string name="device_insertion_localization_value">41.40338, 2.17403</string>
+    <string name="device_insertion_localization_reset">Reset</string>
+    <string name="device_insertion_localization_set">Set</string>
+    <string name="device_insertion_localization_banner_label">Device Localization</string>
+    <string name="device_insertion_menu_banner_label">Save Device</string>
+    <string name="device_insertion_button_menu_discard">Discard</string>
+    <string name="device_insertion_button_menu_save">Save</string>
+    <string name="device_insertion_info_banner_label">Device Info</string>
+    <string name="device_insertion_info_name_label">Device Name</string>
+    <string name="device_insertion_info_description_label">Device Description</string>
+
+    <string name="device_detail_button_menu_context">Detail context button</string>
+    <string name="device_detail_button_menu_1">1</string>
+    <string name="device_detail_button_menu_2">2</string>
+    <string name="device_detail_button_menu_3">3</string>
+    <string name="device_detail_button_menu_4">4</string>
+    <string name="device_detail_banner_consumption_label">Daily Consumption</string>
+    <string name="device_detail_banner_localization_label">Device Localization</string>
+    <string name="device_detail_banner_miscellaneous_label">Miscellaneous</string>
+
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/b1"
+        android:enabled="true"
+        android:icon="@drawable/home_icon"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/b2"
+        android:enabled="true"
+        android:icon="@drawable/dashboard_icon"
+        android:title="My Devices" />
+
+    <item
+        android:id="@+id/b3"
+        android:enabled="true"
+        android:icon="@drawable/menu_icon"
+        android:title="Profile" />
+
+</menu>

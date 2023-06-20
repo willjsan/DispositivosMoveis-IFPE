@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_detail_status"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <ImageView
+            android:id="@+id/image_device_banner_consumption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/airpower_banner" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_ddetail_status_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:textSize="@dimen/card_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.07" />
+
+            <TextView
+                android:id="@+id/tv_ddetail_status_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Everythinhg is ok here"
+                android:textSize="@dimen/card_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ddetail_status_label" />
+
+            <TextView
+                android:id="@+id/tv_ddetail_status_issue_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Issues:"
+                android:textSize="@dimen/card_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.15"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ddetail_status_status"
+                app:layout_constraintVertical_bias="0.36" />
+
+            <TextView
+                android:id="@+id/tv_ddetail_status_issue_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="0"
+                android:textSize="@dimen/card_info"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_ddetail_status_issue_label"
+                app:layout_constraintStart_toEndOf="@+id/tv_ddetail_status_issue_label"
+                app:layout_constraintTop_toTopOf="@+id/tv_ddetail_status_issue_label"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/tv_ddetail_status_activate_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Activated"
+                android:textSize="@dimen/card_label"
+                app:layout_constraintStart_toStartOf="@+id/tv_ddetail_status_issue_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ddetail_status_issue_label" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/sw_ddetail_status"
+                android:layout_width="56dp"
+                android:layout_height="54dp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_ddetail_status_activate_label"
+                app:layout_constraintStart_toEndOf="@+id/tv_ddetail_status_activate_label"
+                app:layout_constraintTop_toTopOf="@+id/tv_ddetail_status_activate_label"
+                app:layout_constraintVertical_bias="0.5"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
