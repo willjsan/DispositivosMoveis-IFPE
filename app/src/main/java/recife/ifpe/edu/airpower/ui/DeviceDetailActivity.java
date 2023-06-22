@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private TextView mStatusTVIssue;
     private SwitchCompat mStatusSwActivate;
     private CardView mStatusCard;
+    private CardView mCardLocalization;
+    private CardView mCardConsumption;
     private AirPowerServerManagerImpl mAirPowerServer;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -104,13 +107,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
             if (mDevice == null) return;
         }
         findViewsById();
+        setListeners();
         retrieveDeviceMeasurement();
         retrieveDeviceStatus();
-        setListeners();
-        setupMapFragment();
+        retrieveMap();
     }
 
-    private void setupMapFragment() {
+    private void retrieveMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.group_map);
         if (mapFragment == null) {
@@ -118,6 +121,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 AirPowerLog.e(TAG, "maps fragment is null");
             return;
         }
+        if (mDevice.getLocalization() == null || mDevice.getLocalization().isEmpty()) {
+            mCardLocalization.setVisibility(View.GONE);
+            if (AirPowerLog.ISLOGABLE)
+                AirPowerLog.w(TAG, "device localization is null");
+            return;
+        }
+        mCardLocalization.setVisibility(View.VISIBLE);
         mapFragment.getMapAsync(googleMap -> {
             mMap = googleMap;
             String localization = mDevice.getLocalization();
@@ -223,12 +233,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 new ServersInterfaceWrapper.MeasurementCallback() {
                     @Override
                     public void onSuccess(List<DeviceMeasurement> measurements) {
+                        mCardConsumption.setVisibility(View.VISIBLE);
                         new ChartAdapter.Builder(findViewById(R.id.home_consumption_overview_chart), measurements)
                                 .build();
                     }
 
                     @Override
                     public void onFailure(String message) {
+                        mCardConsumption.setVisibility(View.GONE);
                     }
                 });
     }
@@ -288,6 +300,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
         mStatusTVIssue = findViewById(R.id.tv_ddetail_status_issue_value);
         mStatusSwActivate = findViewById(R.id.sw_ddetail_status);
         mStatusCard = findViewById(R.id.card_detail_status);
+        mCardLocalization = findViewById(R.id.card_localization);
+        mCardConsumption = findViewById(R.id.card_consumption);
     }
 
     @Override

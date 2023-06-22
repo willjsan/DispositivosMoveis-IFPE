@@ -21,7 +21,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -64,7 +63,7 @@ public class HomeFragment extends Fragment {
     private TextView mBannerTitleLocalization;
     private GroupsAdapter mGroupAdapter;
     private Group mCurrentGroup;
-    private SupportMapFragment mapFragment;
+    private SupportMapFragment mMapFragment;
 
     // Weather
     private ImageView mWeatherCardIcon;
@@ -77,9 +76,11 @@ public class HomeFragment extends Fragment {
 
     // Maps
     private GoogleMap mMap;
+    private CardView mCardLocalization;
 
     // Chart
     private BarChart mChart;
+    private CardView mCardConsumption;
 
     private ServersInterfaceWrapper.IWeatherServerManager mWeatherServerManager;
     private ServersInterfaceWrapper.IAirPowerServerManager mAirPowerServerManager;
@@ -108,18 +109,19 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        this.mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.group_map);
         findViewsByIds(view);
         groupSpinnerSetup();
+        newGroupButtonSetup();
+        updateAllFields();
+        return view;
+    }
+
+    private void newGroupButtonSetup() {
         mButtonAddGroup.setOnClickListener(view1 -> {
             Intent intent = new Intent(getContext(), GroupActivity.class);
             intent.setAction(AirPowerConstants.ACTION_NEW_GROUP);
             startActivity(intent);
         });
-        getForecast();
-
-        return view;
     }
 
     private void getForecast() {
@@ -128,8 +130,6 @@ public class HomeFragment extends Fragment {
         if (mCurrentGroup.getLocalization() == null
                 || mCurrentGroup.getLocalization().isEmpty()) {
             if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "Group localization is null");
-            mWeatherTitle.setText("Can't get forecast");
-            mWeatherPlaceName.setText("Group localization not set");
             mCardWeather.setVisibility(View.GONE);
             return;
         }
@@ -159,12 +159,7 @@ public class HomeFragment extends Fragment {
                     public void onFailure(String msg) {
                         if (AirPowerLog.ISLOGABLE)
                             AirPowerLog.w(TAG, "getForecast: onFailure");
-                        mWeatherCardIcon.setVisibility(View.GONE);
-                        mWeatherTempValue.setVisibility(View.GONE);
-                        mWeatherHumidityValue.setVisibility(View.GONE);
-                        mWeatherDetail.setVisibility(View.GONE);
-                        mWeatherPlaceName.setVisibility(View.GONE);
-                        mWeatherTitle.setText("Can't get forecast");
+                        mCardWeather.setVisibility(View.GONE);
                     }
                 });
     }
@@ -176,22 +171,21 @@ public class HomeFragment extends Fragment {
         mGroups = mRepo.getGroups();
     }
 
-    private void setupMapFragment() {
-        if (mapFragment == null) {
+    private void getMap() {
+        if (mMapFragment == null) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "maps fragment is null");
             return;
         }
-        mapFragment.getMapAsync(googleMap -> {
+        if (mCurrentGroup.getLocalization() == null || mCurrentGroup.getLocalization().isEmpty()){
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "group localization is null");
+            mCardLocalization.setVisibility(View.GONE);
+            return;
+        }
+        mCardLocalization.setVisibility(View.VISIBLE);
+        mMapFragment.getMapAsync(googleMap -> {
             mMap = googleMap;
             String loc = mCurrentGroup.getLocalization();
-            if (loc == null || loc.isEmpty()) {
-                if (AirPowerLog.ISLOGABLE)
-                    AirPowerLog.w(TAG, "group localization is null");
-                Toast.makeText(getContext(), "Localization not set", Toast.LENGTH_SHORT).show();
-                mMap.clear();
-                return;
-            }
             String[] split = loc.split(",");
             String lat = split[0];
             String lon = split[1];
@@ -243,18 +237,6 @@ public class HomeFragment extends Fragment {
                 mCurrentGroup = mGroups.get(position);
                 saveInteger(getContext(), mCurrentGroup.getId());
                 updateAllFields();
-                mAirPowerServerManager.getMeasurementByGroup(mCurrentGroup.getDevices(),
-                        new ServersInterfaceWrapper.MeasurementCallback() {
-                            @Override
-                            public void onSuccess(List<DeviceMeasurement> measurements) {
-                                generateChart(mChart, measurements);
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-
-                            }
-                        });
             }
 
             @Override
@@ -262,6 +244,22 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void getMeasurement() {
+        mAirPowerServerManager.getMeasurementByGroup(mCurrentGroup.getDevices(),
+                new ServersInterfaceWrapper.MeasurementCallback() {
+                    @Override
+                    public void onSuccess(List<DeviceMeasurement> measurements) {
+                        mCardConsumption.setVisibility(View.VISIBLE);
+                        generateChart(mChart, measurements);
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        mCardConsumption.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private int getLastSelectedGroupIndex() {
@@ -277,17 +275,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateAllFields() {
-        if (AirPowerLog.ISLOGABLE)
-            AirPowerLog.d(TAG, "updateAllFields");
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "updateAllFields");
         if (mCurrentGroup == null) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.w(TAG, "current group is null");
             return;
         }
-        mBannerTitleConsumption.setText(mCurrentGroup.getName() + " Consumption");
-        mBannerTitleLocalization.setText(mCurrentGroup.getName() + " Localization");
-        setupMapFragment();
+        getMap();
         getForecast();
+        getMeasurement();
     }
 
     private void generateChart(View view, List<DeviceMeasurement> measurements) {
@@ -297,6 +293,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void findViewsByIds(View view) {
+        mMapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.group_map);
         mButtonAddGroup = view.findViewById(R.id.home_button_add_group);
         mGroupsSpinner = view.findViewById(R.id.home_spinner_groups);
         mBannerTitleConsumption = view.findViewById(R.id.tv_ddetail_consumption_label);
@@ -309,5 +307,7 @@ public class HomeFragment extends Fragment {
         mWeatherPlaceName = view.findViewById(R.id.card_weather_local_name);
         mWeatherTitle = view.findViewById(R.id.card_weather_title);
         mCardWeather = view.findViewById(R.id.card_weather);
+        mCardLocalization = view.findViewById(R.id.card_localization);
+        mCardConsumption = view.findViewById(R.id.card_consumption);
     }
 }
