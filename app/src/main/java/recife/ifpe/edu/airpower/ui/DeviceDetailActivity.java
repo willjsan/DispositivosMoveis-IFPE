@@ -114,6 +114,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private void retrieveMap() {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "retrieveMap");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.group_map);
         if (mapFragment == null) {
@@ -234,8 +235,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(List<DeviceMeasurement> measurements) {
                         mCardConsumption.setVisibility(View.VISIBLE);
-                        new ChartAdapter.Builder(findViewById(R.id.home_consumption_overview_chart), measurements)
-                                .build();
+                        new ChartAdapter.Builder(findViewById(R.id.home_consumption_overview_chart),
+                                measurements).build();
                     }
 
                     @Override

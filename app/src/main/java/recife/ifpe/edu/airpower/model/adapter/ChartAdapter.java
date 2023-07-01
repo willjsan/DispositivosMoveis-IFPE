@@ -39,6 +39,7 @@ public class ChartAdapter {
             for (DeviceMeasurement m : measurements) {
                 barEntry.add(new BarEntry(m.getX(), m.getY()));
             }
+
             BarDataSet dataSet = new BarDataSet(barEntry, "kWh/day");
             dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
             dataSet.setValueTextColor(Color.BLACK);

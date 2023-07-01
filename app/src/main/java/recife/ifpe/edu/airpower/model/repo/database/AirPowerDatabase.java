@@ -13,9 +13,11 @@ import androidx.room.TypeConverters;
 
 import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.group.Group;
+import recife.ifpe.edu.airpower.model.repo.model.user.AirPowerUser;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
-@Database(entities = {AirPowerDevice.class, Group.class}, version = 7, exportSchema = false)
+@Database(entities = {AirPowerDevice.class, Group.class, AirPowerUser.class}, version = 8,
+        exportSchema = false)
 @TypeConverters({AirPowerTypeConverter.class})
 public abstract class AirPowerDatabase extends RoomDatabase {
 
@@ -34,5 +36,5 @@ public abstract class AirPowerDatabase extends RoomDatabase {
         return dbInstance;
     }
 
-    public abstract DeviceDAO getDeviceDAOInstance();
+    public abstract EntitiesDAO getDeviceDAOInstance();
 }

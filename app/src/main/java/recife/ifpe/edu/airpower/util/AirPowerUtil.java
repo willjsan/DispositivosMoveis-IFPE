@@ -12,8 +12,10 @@ import android.graphics.drawable.Drawable;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -78,5 +80,12 @@ public class AirPowerUtil {
     public static String kelvinToCelsius(float temperatureKelvin) {
         float temperatureCelsius = temperatureKelvin - 273.15f;
         return String.format(Locale.getDefault(), "%.1f°C", temperatureCelsius);
+    }
+
+    public static String getCurrentDateTime() {
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date currentDate = new Date();
+        return dateFormat.format(currentDate);
     }
 }

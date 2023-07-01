@@ -16,9 +16,10 @@ import java.util.List;
 
 import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.group.Group;
+import recife.ifpe.edu.airpower.model.repo.model.user.AirPowerUser;
 
 @Dao
-public interface DeviceDAO {
+public interface EntitiesDAO {
 
     @Insert
     void insert(AirPowerDevice device);
@@ -45,4 +46,14 @@ public interface DeviceDAO {
     @Query("SELECT * from AIR_POWER_GROUP WHERE GROUP_ID = :id")
     Group getGroupById(int id);
 
+    @Insert
+    void insert(AirPowerUser user);
+    @Update
+    void update(AirPowerUser user);
+    @Delete
+    void delete(AirPowerUser user);
+    @Query("SELECT * from AIR_POWER_USER WHERE USER_ID = :id")
+    AirPowerUser getUserById(int id);
+    @Query("SELECT * from AIR_POWER_USER")
+    List<AirPowerUser> getUsers();
 }

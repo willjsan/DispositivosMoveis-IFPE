@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "771596163882",
+    "project_id": "airpower-37f04",
+    "storage_bucket": "airpower-37f04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771596163882:android:5eec51452a05f725439c53",
+        "android_client_info": {
+          "package_name": "recife.ifpe.edu.airpower"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771596163882-6v08dkkvdqel9g6uopn51sk1ts0bg1o3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfVGbOBjXroFicoKWnhMSanEKP_gX0rbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771596163882-6v08dkkvdqel9g6uopn51sk1ts0bg1o3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

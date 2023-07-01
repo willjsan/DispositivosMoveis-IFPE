@@ -11,6 +11,7 @@ import java.util.List;
 import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.device.DeviceMeasurement;
 import recife.ifpe.edu.airpower.model.repo.model.device.DeviceStatus;
+import recife.ifpe.edu.airpower.model.repo.model.user.AirPowerUser;
 import recife.ifpe.edu.airpower.model.repo.model.weather.Weather;
 
 public abstract class ServersInterfaceWrapper {
@@ -69,6 +70,18 @@ public abstract class ServersInterfaceWrapper {
     public interface WeatherCallback {
         void onSuccess(Weather weather);
 
+        void onFailure(String msg);
+    }
+
+    public interface IAirPowerAuthManager {
+        void register(AirPowerUser user, IUserAuthCallback callback);
+        void signIn(AirPowerUser user, IUserAuthCallback callback);
+        void signOut(IUserAuthCallback callback);
+        void unRegister(AirPowerUser user, IUserAuthCallback callback);
+    }
+
+    public interface IUserAuthCallback {
+        void onSuccess(String msg);
         void onFailure(String msg);
     }
 }
