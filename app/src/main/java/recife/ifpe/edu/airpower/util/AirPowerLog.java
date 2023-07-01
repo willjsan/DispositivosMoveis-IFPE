@@ -16,7 +16,7 @@ public class AirPowerLog {
     public static final boolean ISLOGABLE = true;
 
     public static void d(String subtag, String message) {
-        Log.d(TAG, " [" + subtag + "] : " + message);
+        Log.d(TAG, " [" + subtag + "]: " + message);
     }
 
     public static void d(String subtag, Thread thread, String message) {
@@ -24,11 +24,11 @@ public class AirPowerLog {
     }
 
     public static void e(String subtag, String message) {
-        Log.e(TAG, " [" + subtag + "] : " + message);
+        Log.e(TAG, " [" + subtag + "]: " + message);
     }
 
     public static void w(String subtag, String message) {
-        Log.w(TAG, " [" + subtag + "] : " + message);
+        Log.w(TAG, " [" + subtag + "]: " + message);
     }
 
     public static OkHttpClient.Builder getLoggerClient() {

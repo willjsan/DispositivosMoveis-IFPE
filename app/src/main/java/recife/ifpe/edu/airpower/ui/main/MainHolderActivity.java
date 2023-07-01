@@ -27,6 +27,7 @@ public class MainHolderActivity extends AppCompatActivity
 
     private static final String TAG = MainHolderActivity.class.getSimpleName();
     private BottomNavigationView mNavigationView;
+    private int lastFragmentOpened = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,6 @@ public class MainHolderActivity extends AppCompatActivity
         }
     }
 
-    private int lastFragmentOpened = -1;
 
     private void setUpBottomNavigationView() {
         mNavigationView = findViewById(R.id.main_bottom_nav);

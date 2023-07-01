@@ -7,6 +7,7 @@ package recife.ifpe.edu.airpower.ui.groupinsertionwizard;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import recife.ifpe.edu.airpower.R;
-import recife.ifpe.edu.airpower.model.repo.model.weather.Weather;
+import recife.ifpe.edu.airpower.model.repo.model.user.AirPowerUser;
+import recife.ifpe.edu.airpower.model.server.AirPowerAuthenticationManagerImpl;
 import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
-import recife.ifpe.edu.airpower.model.server.WeatherServerManagerImpl;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
+import recife.ifpe.edu.airpower.ui.access.AuthActivity;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
 
 
@@ -65,11 +67,12 @@ public class GroupMenuFragment extends Fragment {
 
     private void setListeners() {
         mNewGroupButton.setOnClickListener(view -> {
-            // NEW GROUP
             mFragmentUtil.openFragment(GroupInsertionFragment.newInstance(), true);
         });
         nEditGroupButton.setOnClickListener(view -> {
-            popUpToast("Not Implemented yet");
+            Intent intent = new Intent(getContext(), AuthActivity.class);
+            popUpToast("test");
+            startActivity(intent);
         });
         nDeleteGroupButton.setOnClickListener(view -> {
             popUpToast("Not Implemented yet");
