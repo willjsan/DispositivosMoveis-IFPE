@@ -6,13 +6,11 @@ package recife.ifpe.edu.airpower.ui.deviceinsertionwizard;
  * Project: AirPower
  */
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,22 +25,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.tasks.Task;
+import androidx.fragment.app.FragmentActivity;
 
 import recife.ifpe.edu.airpower.R;
 import recife.ifpe.edu.airpower.model.adapter.DeviceIconAdapter;
 import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
-import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
 import recife.ifpe.edu.airpower.model.server.AirPowerServerManagerImpl;
+import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerConstants;
@@ -181,17 +172,12 @@ public class WizardThreeFragment extends Fragment {
                     .setTitle("Set localization")
                     .setMessage("Do you want to use your real localization and set this in device?")
                     .setPositiveButton("Yes", (dialogInterface, i) -> {
-                        setDeviceLocalization();
+                        setDeviceLocation();
                     })
                     .setNegativeButton("No", (dialogInterface, i) -> {
                     });
             builder.create().show();
         });
-    }
-
-    private void setDeviceLocalization() {
-        requestPermission();
-        setDeviceLocation();
     }
 
     private void iconSpinnerSetup() {
@@ -274,67 +260,21 @@ public class WizardThreeFragment extends Fragment {
         });
     }
 
-    private final int FINE_LOCATION_REQUEST = 10;
-    private boolean mLocationGrantedByUser = false;
-
-    private void requestPermission() {
-        try {
-            int permissionCheck = ContextCompat.checkSelfPermission(getContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION);
-            mLocationGrantedByUser = (permissionCheck == PackageManager.PERMISSION_GRANTED);
-            if (mLocationGrantedByUser) return;
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    FINE_LOCATION_REQUEST);
-        } catch (Exception e) {
-            if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "error while getting permission");
-        }
-    }
-
-    private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
-        @Override
-        public void onMapReady(@NonNull GoogleMap googleMap) {
-
-        }
-    };
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        boolean granted = (grantResults.length > 0) &&
-                (grantResults[0] == PackageManager.PERMISSION_GRANTED);
-        this.mLocationGrantedByUser = (requestCode == FINE_LOCATION_REQUEST) && granted;
-    }
-
     public void setDeviceLocation() {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "setDeviceLocation");
-        try {
-            FusedLocationProviderClient fusedLocationProviderClient =
-                    LocationServices.getFusedLocationProviderClient(getActivity());
-            if (ActivityCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION);
-            }
-            Task<Location> task = fusedLocationProviderClient.getLastLocation();
-            task.addOnSuccessListener(location -> {
-                if (location == null) {
-                    if (AirPowerLog.ISLOGABLE)
-                        AirPowerLog.w(TAG, "location is null");
-                    return;
-                }
-                String localization = location.getLatitude() + "," + location.getLongitude();
-                mDevice.setLocalization(localization);
-                mSetLocalizationButton.setEnabled(false);
-                mSetLocalizationButton.setText("Done");
-            });
-        } catch (Exception e) {
+        Context context = getContext();
+        FragmentActivity activity = getActivity();
+        if (context == null || activity == null) {
             if (AirPowerLog.ISLOGABLE)
-                AirPowerLog.e(TAG, "error while getting localization\n" + e.getMessage());
+                AirPowerLog.e(TAG, "context is or activity null");
+            return;
         }
+        AirPowerUtil.getCurrentLocation(context, activity,
+                localization -> {
+                    mDevice.setLocalization(localization);
+                    mSetLocalizationButton.setEnabled(false);
+                    mSetLocalizationButton.setText("Done");
+                }
+        );
     }
 }

@@ -1,10 +1,8 @@
 package recife.ifpe.edu.airpower.ui.groupinsertionwizard;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -36,6 +30,7 @@ import recife.ifpe.edu.airpower.model.repo.AirPowerRepository;
 import recife.ifpe.edu.airpower.model.repo.model.device.AirPowerDevice;
 import recife.ifpe.edu.airpower.model.repo.model.group.Group;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
+import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 
 public class GroupInsertionFragment extends Fragment {
@@ -51,8 +46,6 @@ public class GroupInsertionFragment extends Fragment {
     private String mDeviceLocalization = "";
     private AirPowerRepository mRepo;
     private GoogleMap mMap;
-    private boolean mLocationGrantedByUser = false;;
-    private int FINE_LOCATION_REQUEST = 11;
     private Group mGroup;
     private SupportMapFragment mapFragment;
 
@@ -97,7 +90,7 @@ public class GroupInsertionFragment extends Fragment {
             try {
                 getActivity().finish();
             } catch (Exception e) {
-                if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG,"fail to finish activity");
+                if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "fail to finish activity");
             }
         });
         groupLocalizationSetup();
@@ -105,31 +98,17 @@ public class GroupInsertionFragment extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        boolean granted = (grantResults.length > 0) &&
-                (grantResults[0] == PackageManager.PERMISSION_GRANTED);
-        this.mLocationGrantedByUser = (requestCode == FINE_LOCATION_REQUEST) && granted;
-        AirPowerLog.w(TAG, "granted:" + granted); // TODO remover
-    }
-
-    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
     }
 
-    /**
-     * Boiler plate
-     */
     private void groupLocalizationSetup() {
         mSetLocalizationButton.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                     .setTitle("Set Group localization")
                     .setMessage("Do you want to use your real localization and set this in this group?")
                     .setPositiveButton("Yes", (dialogInterface, i) -> {
-                        setGroupLocalization();
+                        setGroupLocation();
                     })
                     .setNegativeButton("No", (dialogInterface, i) -> {
                     });
@@ -137,59 +116,27 @@ public class GroupInsertionFragment extends Fragment {
         });
     }
 
-    private void setGroupLocalization() {
-        requestPermission();
-        setGroupLocation();
-    }
-
-    /**
-     * Boiler plate
-     */
-    private void requestPermission() {
-        try {
-            int permissionCheck = ContextCompat.checkSelfPermission(getContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION);
-            mLocationGrantedByUser = (permissionCheck == PackageManager.PERMISSION_GRANTED);
-            if (mLocationGrantedByUser) return;
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    FINE_LOCATION_REQUEST);
-        } catch (Exception e) {
-            if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "error while getting permission");
-        }
-    }
-
-    /**
-     * Boiler plate
-     */
     public void setGroupLocation() {
         if (AirPowerLog.ISLOGABLE) AirPowerLog.d(TAG, "setGroupLocation");
-        try {
-            FusedLocationProviderClient fusedLocationProviderClient =
-                    LocationServices.getFusedLocationProviderClient(getActivity());
-            if (ActivityCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION);
-            }
-            Task<Location> task = fusedLocationProviderClient.getLastLocation();
-            task.addOnSuccessListener(location -> {
-                if (location == null) {
-                    if (AirPowerLog.ISLOGABLE)
-                        AirPowerLog.w(TAG, "addOnSuccessListener: location is null");
-                    return;
-                }
-                mDeviceLocalization = location.getLatitude() + "," + location.getLongitude();
-                mSetLocalizationButton.setEnabled(false);
-                Toast.makeText(getContext(), "Localization set", Toast.LENGTH_SHORT).show();
-                AirPowerLog.e(TAG, "group location:" + mDeviceLocalization); // TODO remover
-                setupMapFragment();
-            });
-        } catch (Exception e) {
+        Context context = getContext();
+        FragmentActivity activity = getActivity();
+        if (context == null || activity == null) {
             if (AirPowerLog.ISLOGABLE)
-                AirPowerLog.e(TAG, "error while getting localization\n" + e.getMessage());
+                AirPowerLog.e(TAG, "context or activity is null");
+            return;
         }
+        AirPowerUtil.getCurrentLocation(context, activity,
+                location -> {
+                    if (location == null) {
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.w(TAG, "addOnSuccessListener: location is null");
+                        return;
+                    }
+                    mDeviceLocalization = location;
+                    mSetLocalizationButton.setEnabled(false);
+                    Toast.makeText(getContext(), "Localization set", Toast.LENGTH_SHORT).show();
+                    setupMapFragment();
+                });
     }
 
     private void setupMapFragment() {

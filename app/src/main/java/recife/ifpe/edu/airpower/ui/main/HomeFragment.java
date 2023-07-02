@@ -172,6 +172,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getMap() {
+        if (AirPowerLog.ISLOGABLE) AirPowerLog.w(TAG, "getMap");
         if (mMapFragment == null) {
             if (AirPowerLog.ISLOGABLE)
                 AirPowerLog.e(TAG, "maps fragment is null");

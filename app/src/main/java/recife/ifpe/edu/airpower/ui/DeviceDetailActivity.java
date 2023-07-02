@@ -125,7 +125,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
         if (mDevice.getLocalization() == null || mDevice.getLocalization().isEmpty()) {
             mCardLocalization.setVisibility(View.GONE);
             if (AirPowerLog.ISLOGABLE)
-                AirPowerLog.w(TAG, "device localization is null");
+                AirPowerLog.w(TAG, "device localization not set");
             return;
         }
         mCardLocalization.setVisibility(View.VISIBLE);
