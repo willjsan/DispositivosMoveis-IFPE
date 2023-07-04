@@ -28,7 +28,6 @@ import recife.ifpe.edu.airpower.model.server.AirPowerAuthenticationManagerImpl;
 import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
-import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 public class RegisterFragment extends Fragment {
 
@@ -43,7 +42,6 @@ public class RegisterFragment extends Fragment {
     private final int USER_VALIDATION_EMPTY_FIELD = 2;
     private ServersInterfaceWrapper.IAirPowerAuthManager authManager;
     private AirPowerRepository mRepo;
-
 
     public RegisterFragment() {
     }

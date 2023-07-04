@@ -28,7 +28,6 @@ import recife.ifpe.edu.airpower.model.server.ServersInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.UIInterfaceWrapper;
 import recife.ifpe.edu.airpower.ui.main.MainHolderActivity;
 import recife.ifpe.edu.airpower.util.AirPowerLog;
-import recife.ifpe.edu.airpower.util.AirPowerUtil;
 
 
 public class LoginFragment extends Fragment {
@@ -99,7 +98,6 @@ public class LoginFragment extends Fragment {
                 }
             });
         });
-
         mRegister.setOnClickListener(view -> {
             mFragmentUtil.openFragment(RegisterFragment.newInstance(), false);
         });
@@ -119,16 +117,4 @@ public class LoginFragment extends Fragment {
         }
         super.onAttach(context);
     }
-
-//    private void setSessionStatus(boolean isLoggedIn) {
-//        String timestamp = AirPowerUtil.getCurrentDateTime();
-//        SharedPreferences sharedPreferences =
-//                mContext.getSharedPreferences(AuthActivity.PREF_USER_STATE, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putBoolean(AuthActivity.KEY_USER_STATE, isLoggedIn);
-//        editor.putString(AuthActivity.KEY_AUTH_TIMESTAMP, timestamp);
-//        editor.apply();
-//        if (AirPowerLog.ISLOGABLE)
-//            AirPowerLog.d(TAG, "setSessionStatus:" + isLoggedIn + " timestamp:" + timestamp);
-//    }
 }

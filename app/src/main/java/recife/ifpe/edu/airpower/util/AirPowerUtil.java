@@ -5,12 +5,24 @@ package recife.ifpe.edu.airpower.util;
  * Project: AirPower
  */
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +71,7 @@ public class AirPowerUtil {
      * @return list of mocked devices
      */
     @Deprecated
-    public static List<AirPowerDevice> getDevicesMock(){
+    public static List<AirPowerDevice> getDevicesMock() {
         if (AirPowerLog.ISLOGABLE)
             AirPowerLog.e(TAG, "getDevicesMock. FIX ME");
         return new ArrayList<>(Arrays.asList(
@@ -78,14 +90,83 @@ public class AirPowerUtil {
     }
 
     public static String kelvinToCelsius(float temperatureKelvin) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "kelvinToCelsius");
         float temperatureCelsius = temperatureKelvin - 273.15f;
         return String.format(Locale.getDefault(), "%.1f°C", temperatureCelsius);
     }
 
     public static String getCurrentDateTime() {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "getCurrentDateTime");
         SimpleDateFormat dateFormat =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date currentDate = new Date();
         return dateFormat.format(currentDate);
+    }
+
+
+    public static void getCurrentLocation(Context context,
+                                          Activity activity,
+                                          ILocationCallback callback) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "getCurrentLocation");
+        requestPermission(context, activity);
+        if (ActivityCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        FusedLocationProviderClient providerClient =
+                LocationServices.getFusedLocationProviderClient(context);
+        providerClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
+                        new CancellationToken() {
+                            @NonNull
+                            @Override
+                            public CancellationToken onCanceledRequested(
+                                    @NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                                return null;
+                            }
+
+                            @Override
+                            public boolean isCancellationRequested() {
+                                return false;
+                            }
+                        })
+                .addOnSuccessListener(location -> {
+                    if (location == null) {
+                        if (AirPowerLog.ISLOGABLE)
+                            AirPowerLog.w(TAG, "location is null");
+                        return;
+                    }
+                    if (AirPowerLog.ISLOGABLE)
+                        AirPowerLog.d(TAG, "lat,lon:" + location.getLatitude() + ","
+                                + location.getLongitude());
+                    callback.onSuccess(location.getLatitude() + ","
+                            + location.getLongitude());
+                });
+    }
+
+    private static void requestPermission(Context context, Activity activity) {
+        if (AirPowerLog.ISLOGABLE)
+            AirPowerLog.d(TAG, "requestPermission");
+        final int FINE_LOCATION_REQUEST = 10;
+        try {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION);
+            boolean locationGrantedByUser = (permissionCheck == PackageManager.PERMISSION_GRANTED);
+            if (locationGrantedByUser) return;
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    FINE_LOCATION_REQUEST);
+        } catch (Exception e) {
+            if (AirPowerLog.ISLOGABLE) AirPowerLog.e(TAG, "error while getting permission");
+        }
+    }
+
+    public interface ILocationCallback {
+        void onSuccess(String localization);
     }
 }

@@ -100,15 +100,6 @@ public class AuthActivity extends AppCompatActivity implements UIInterfaceWrappe
         }
     }
 
-//    private boolean isUserLoggedIn() {
-//        SharedPreferences sharedPreferences =
-//                getSharedPreferences(PREF_USER_STATE, Context.MODE_PRIVATE);
-//        boolean result = sharedPreferences.getBoolean(KEY_USER_STATE, false);
-//        if (AirPowerLog.ISLOGABLE)
-//            AirPowerLog.d(TAG, "isUserLoggedIn:" + result);
-//        return result;
-//    }
-
     @Override
     public void openFragment(Fragment fragment, boolean addToBackStack) {
         try {
